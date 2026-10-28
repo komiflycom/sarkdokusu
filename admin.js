@@ -1,4 +1,4 @@
-/* BUILD: 2026-10-28-fix1 (fetchSettings .single() kaldirildi) */
+/* BUILD: 2026-10-28-fix3 (dil bazli site adi, logo/banner boyutu) */
 /* ==========================================================================
    ŞARK DOKUSU — admin.js (v2)
    Çok panelli yönetim: ürünler, kategoriler, banner, ayarlar, hakkımızda, hesap.
@@ -717,7 +717,15 @@
   }
   function renderSettingsForm(){
     if (!els.sStoreName) return;
-    els.sStoreName.value = settings.store_name || '';
+    var nm = settings.store_name_i18n;
+    try { if (typeof nm==='string') nm = JSON.parse(nm); } catch(e){ nm = null; }
+    nm = nm && typeof nm==='object' ? nm : {};
+    LANGS.forEach(function(l){
+      var el = els['sStoreName_'+l]; if (!el) return;
+      el.value = nm[l] || (l==='tr' ? (settings.store_name||'') : '');
+    });
+    if (els.sLogoW) els.sLogoW.value = settings.logo_width || '';
+    if (els.sLogoH) els.sLogoH.value = settings.logo_height || '';
     els.sWhatsapp.value = settings.whatsapp || '';
     els.sPhone.value = settings.phone || '';
     els.sEmail.value = settings.email || '';
@@ -750,10 +758,21 @@
     return sb.storage.from(ASSETS_BUCKET).upload(path, file, {cacheControl:'3600',upsert:false,contentType:file.type})
       .then(function(res){ if (res.error) throw res.error; return path; });
   }
+  function numOrNull(el, min, max){
+    if (!el) return null;
+    var n = parseInt(el.value, 10);
+    if (!isFinite(n)) return null;
+    return Math.max(min, Math.min(max, n));
+  }
   function saveSettings(e){
     if (e) e.preventDefault();
+    var storeNames = {};
+    LANGS.forEach(function(l){ var el=els['sStoreName_'+l]; var v=el?(el.value||'').trim():''; if (v) storeNames[l]=v; });
     var payload = {
-      store_name: (els.sStoreName.value||'').trim() || null,
+      store_name: storeNames.tr || storeNames.en || null,
+      store_name_i18n: storeNames,
+      logo_width: numOrNull(els.sLogoW, 24, 200),
+      logo_height: numOrNull(els.sLogoH, 24, 200),
       whatsapp: (els.sWhatsapp.value||'').trim() || null,
       phone: (els.sPhone.value||'').trim() || null,
       email: (els.sEmail.value||'').trim() || null,
@@ -816,6 +835,7 @@
     LANGS.forEach(function(l){ els['bannerText_'+l] = jget(settings.banner_text, l, ''); });
     if (els.bannerActive) els.bannerActive.checked = !!settings.banner_active;
     if (els.bannerLink) els.bannerLink.value = settings.banner_link || '';
+    if (els.bannerHeight) els.bannerHeight.value = settings.banner_height || '';
     bannerPendingFile=null;
     setLangTabsActive(els.bannerLangTabs,'tr'); bannerLang='tr'; loadBannerLangToFields('tr');
     updateBannerPreview(settings.banner_url || '');
@@ -845,6 +865,7 @@
       banner_active: !!(els.bannerActive && els.bannerActive.checked),
       banner_link: (els.bannerLink?els.bannerLink.value:'').trim() || null,
       banner_text: btext,
+      banner_height: numOrNull(els.bannerHeight, 30, 400),
       updated_at: new Date().toISOString()
     };
     var btn = els.bannerSaveBtn; if (btn) btn.disabled=true;
@@ -1160,7 +1181,7 @@
     els.bannerLink=byId('s-banner-link'); els.bannerImage=byId('s-banner-img');
     els.bannerPreview=byId('banner-preview'); els.bannerRemoveImage=byId('remove-banner-img'); els.bannerSaveBtn=byId('banner-save-btn');
     els.settingsForm=byId('branding-form'); els.settingsSaveBtn=byId('branding-save-btn');
-    els.sStoreName=byId('s-store-name'); els.sLogo=byId('s-logo'); els.logoPreview=byId('logo-preview'); els.sLogoRemove=byId('remove-logo');
+    LANGS.forEach(function(l){ els['sStoreName_'+l]=byId('s-store-name-'+l); }); els.sStoreName=els.sStoreName_tr; els.sLogoW=byId('s-logo-w'); els.sLogoH=byId('s-logo-h'); els.bannerHeight=byId('s-banner-h'); els.sLogo=byId('s-logo'); els.logoPreview=byId('logo-preview'); els.sLogoRemove=byId('remove-logo');
     els.sWhatsapp=byId('s-whatsapp'); els.sPhone=byId('s-phone'); els.sEmail=byId('s-email'); els.sAddress=byId('s-address');
     els.sInstagram=byId('s-instagram'); els.sFacebook=byId('s-facebook'); els.sYoutube=byId('s-youtube');
     els.aboutForm=null; els.aboutItemsContainer=byId('about-items-editor'); els.aboutSaveBtn=byId('about-save-btn');

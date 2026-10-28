@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=fix2">
+  <link rel="stylesheet" href="style.css?v=fix3">
 </head>
 <body class="admin-body">
 <div class="toast-stack" id="toast-stack" aria-live="polite"></div>
@@ -292,16 +292,33 @@
             <h2 class="panel-section-title">Logo &amp; Marka</h2>
             <form id="branding-form" novalidate>
               <div class="field">
-                <label for="s-store-name">Mağaza adı</label>
-                <input class="input" id="s-store-name" type="text" maxlength="80" placeholder="Şark Dokusu">
+                <label for="s-store-name-tr">Mağaza adı <span class="lang-badge">TR</span></label>
+                <input class="input" id="s-store-name-tr" type="text" maxlength="80" placeholder="Şark Dokusu">
               </div>
+              <div class="field">
+                <label for="s-store-name-en">Store name <span class="lang-badge">EN</span></label>
+                <input class="input" id="s-store-name-en" type="text" maxlength="80" placeholder="Şark Dokusu">
+              </div>
+              <div class="field">
+                <label for="s-store-name-ar">اسم المتجر <span class="lang-badge">AR</span></label>
+                <input class="input" id="s-store-name-ar" type="text" maxlength="80" placeholder="شرق دوقوسو" dir="rtl">
+              </div>
+              <div class="field">
+                <label for="s-store-name-de">Shop-Name <span class="lang-badge">DE</span></label>
+                <input class="input" id="s-store-name-de" type="text" maxlength="80" placeholder="Şark Dokusu">
+              </div>
+              <div class="field">
+                <label for="s-store-name-fr">Nom de la boutique <span class="lang-badge">FR</span></label>
+                <input class="input" id="s-store-name-fr" type="text" maxlength="80" placeholder="Şark Dokusu">
+              </div>
+              <p class="hint">Site adı, ziyaretçinin seçtiği dile göre menüde ve alt bilgide görünür. Boş bıraktığınız dilde Türkçe ad kullanılır.</p>
               <div class="field">
                 <label>Logo</label>
                 <div class="image-picker">
                   <div class="image-preview logo-preview" id="logo-preview" aria-hidden="true">Logo yok</div>
                   <div class="ip-body">
                     <input type="file" id="s-logo" accept="image/jpeg,image/png,image/webp">
-                    <span class="hint">PNG, JPG veya WebP · max 5 MB · Şeffaf PNG önerilir</span>
+                    <span class="hint">PNG, JPG veya WebP · max 5 MB · Önerilen: 512 × 512 px, kare, şeffaf zeminli PNG (yuvarlak logo ise kenarlara boşluk bırakmadan kırpın)</span>
                     <button class="btn btn-outline btn-sm" id="remove-logo" type="button" hidden>Logoyu kaldır</button>
                   </div>
                 </div>
@@ -309,13 +326,14 @@
               <div class="form-row">
                 <div class="field">
                   <label for="s-logo-w">Logo genişliği (px)</label>
-                  <input class="input" id="s-logo-w" type="number" min="16" max="200" placeholder="38">
+                  <input class="input" id="s-logo-w" type="number" min="24" max="200" placeholder="68">
                 </div>
                 <div class="field">
                   <label for="s-logo-h">Logo yüksekliği (px)</label>
-                  <input class="input" id="s-logo-h" type="number" min="16" max="200" placeholder="38">
+                  <input class="input" id="s-logo-h" type="number" min="24" max="200" placeholder="68">
                 </div>
               </div>
+              <p class="hint">Boş bırakırsanız varsayılan 68 × 68 px kullanılır. Telefonda en fazla 64 px gösterilir. Kare logoda genişlik ve yüksekliği aynı yapın.</p>
               <div class="form-actions">
                 <button class="btn" id="branding-save-btn" type="submit"><span id="branding-save-label">Kaydet</span></button>
               </div>
@@ -373,6 +391,11 @@
                     <button class="btn btn-outline btn-sm" id="remove-banner-img" type="button" hidden>Görseli kaldır</button>
                   </div>
                 </div>
+              </div>
+              <div class="field">
+                <label for="s-banner-h">Banner yüksekliği (px)</label>
+                <input class="input" id="s-banner-h" type="number" min="30" max="400" placeholder="Otomatik">
+                <span class="hint">Boş bırakırsanız yazıya göre otomatik olur. Görselli banner için önerilen: 1440 × 300 px görsel ve 120-200 px yükseklik. Yalnızca yazı için 40-60 px yeterlidir.</span>
               </div>
               <div class="form-actions">
                 <button class="btn" id="banner-save-btn" type="submit"><span id="banner-save-label">Kaydet</span></button>
@@ -464,7 +487,7 @@
   </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.0/dist/umd/supabase.min.js"
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="config.js?v=fix2"></script>
-<script src="admin.js?v=fix2"></script>
+<script src="config.js?v=fix3"></script>
+<script src="admin.js?v=fix3"></script>
 </body>
 </html>

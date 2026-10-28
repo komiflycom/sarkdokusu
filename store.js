@@ -1,4 +1,4 @@
-/* BUILD: 2026-10-28-fix1 (fetchSettings .single() kaldirildi) */
+/* BUILD: 2026-10-28-fix3 (dil bazli site adi, logo/banner boyutu) */
 /* ==========================================================================
    ŞARK DOKUSU — store.js (v2)
    Vitrin: ayarları, kategorileri ve ürünleri Supabase'den okur; çok dilli
@@ -200,11 +200,29 @@
     if (typeof obj==='string') return obj;
     return obj[lang] || obj.tr || fb || '';
   }
+  /* Dile göre site adı: store_name_i18n[dil] -> store_name -> config */
+  function brandName(){
+    var st = state.settings || {};
+    var nm = st.store_name_i18n;
+    try { if (typeof nm==='string') nm = JSON.parse(nm); } catch(e){ nm = null; }
+    var l = curLang();
+    return (nm && (nm[l] || nm.tr)) || st.store_name || CONFIG.storeName || 'Şark Dokusu';
+  }
+  function applyBrand(){
+    var name = brandName();
+    document.querySelectorAll('[data-store-name]').forEach(function(n){ n.textContent = name; });
+    document.title = document.title.replace(/Şark Dokusu/g, name);
+  }
+  function applyLogoSize(){
+    var st = state.settings || {}, root = document.documentElement;
+    var w = parseInt(st.logo_width, 10), h = parseInt(st.logo_height, 10);
+    if (isFinite(w) && w>0) root.style.setProperty('--logo-w', w+'px'); else root.style.removeProperty('--logo-w');
+    if (isFinite(h) && h>0) root.style.setProperty('--logo-h', h+'px'); else root.style.removeProperty('--logo-h');
+  }
   function applySettings(s){
     state.settings = s || {};
-    var name = state.settings.store_name || CONFIG.storeName || 'Şark Dokusu';
-    document.querySelectorAll('[data-store-name]').forEach(function(n){ n.textContent = name; });
-    if (state.settings.store_name) document.title = document.title.replace(/Şark Dokusu/g, name);
+    applyBrand();
+    applyLogoSize();
     var logo = state.settings.logo_url ? assetPublicUrl(state.settings.logo_url) : '';
     if (logo) document.querySelectorAll('.brand-mark img').forEach(function(img){ img.src = logo; });
     renderBanner();
@@ -226,6 +244,8 @@
       a.target='_blank'; a.rel='noopener noreferrer'; a.textContent='→'; inner.appendChild(a);
     }
     banner.appendChild(inner);
+    var bh = parseInt(s.banner_height, 10);
+    if (isFinite(bh) && bh>0) banner.style.minHeight = bh+'px';
     if (s.banner_url){ var u=assetPublicUrl(s.banner_url); if (u) banner.style.backgroundImage='url("'+u.replace(/"/g,'%22')+'")'; }
     var hero = document.querySelector('.hero');
     if (hero && hero.parentNode) hero.parentNode.insertBefore(banner, hero.nextSibling);
@@ -359,7 +379,7 @@
   function buildWhatsAppLink(product){
     if (!whatsappConfigured()) return null;
     var number=String(CONFIG.whatsappNumber).replace(/\D/g,'');
-    var store=(state.settings&&state.settings.store_name)||CONFIG.storeName||'Şark Dokusu';
+    var store=brandName();
     var name=getProdName(product);
     var lines=[t('wa.greeting',{store:store}),'',t('wa.product',{name:name}),t('wa.price',{price:formatPrice(product.price)}),t('wa.id',{id:String(product.id||'')})];
     return 'https://wa.me/'+number+'?text='+encodeURIComponent(lines.join('\n'));
@@ -632,7 +652,7 @@
     bindEvents();
     attachImageProtection();
     if (window.__sarkI18n){
-      window.__sarkI18n.subscribe(function(){ renderChips(); renderGrid(); renderBanner(); renderTrustItems(); });
+      window.__sarkI18n.subscribe(function(){ applyBrand(); renderChips(); renderGrid(); renderBanner(); renderTrustItems(); });
     }
     if (!initSupabase()){
       state.loading=false; state.error=t('error.fetch',{detail:'Supabase yapılandırması eksik veya geçersiz.'}); renderGrid(); return;
