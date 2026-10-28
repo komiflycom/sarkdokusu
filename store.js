@@ -1032,3 +1032,50 @@
   if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', init);
   else init();
 })();
+// LocalStorage'dan ayarları yükleme ve ekrana basma fonksiyonu
+function applyDynamicAdminSettings() {
+    const settings = JSON.parse(localStorage.getItem('sark_dokusu_settings')) || {};
+
+    // 1. Hero Banner Görseli Güncelleme
+    if (settings.heroImage) {
+        const heroImgElem = document.querySelector('.hero-image img, #hero-img');
+        if (heroImgElem) {
+            heroImgElem.src = settings.heroImage;
+        }
+    }
+
+    // 2. İletişim Alanı Arka Plan Görseli Güncelleme
+    if (settings.contactBgImage) {
+        const contactSection = document.querySelector('#contact-section, .contact-card, .contact-area');
+        if (contactSection) {
+            contactSection.style.backgroundImage = `url('${settings.contactBgImage}')`;
+            contactSection.style.backgroundSize = 'cover';
+            contactSection.style.backgroundPosition = 'center';
+        }
+    }
+
+    // 3. Hakkımızda Bilgileri Güncelleme
+    if (settings.aboutTitle) {
+        const aboutTitleElem = document.querySelector('#about-title, .about-section h2');
+        if (aboutTitleElem) aboutTitleElem.textContent = settings.aboutTitle;
+    }
+    if (settings.aboutText) {
+        const aboutTextElem = document.querySelector('#about-text, .about-section p');
+        if (aboutTextElem) aboutTextElem.textContent = settings.aboutText;
+    }
+
+    // 4. İletişim Detayları Güncelleme
+    if (settings.contactPhone) {
+        const phoneElem = document.querySelector('#contact-phone');
+        if (phoneElem) phoneElem.textContent = settings.contactPhone;
+    }
+    if (settings.contactAddress) {
+        const addrElem = document.querySelector('#contact-address');
+        if (addrElem) addrElem.textContent = settings.contactAddress;
+    }
+}
+
+// Sayfa yüklendiğinde çalıştır
+document.addEventListener('DOMContentLoaded', () => {
+    applyDynamicAdminSettings();
+});
