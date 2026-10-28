@@ -35,8 +35,8 @@
   function formatPrice(v){
     var n = Number(v);
     if (v===null||v===undefined||v===''||!isFinite(n)) return '—';
-    try { return new Intl.NumberFormat(curLang()==='tr'?'tr-TR':'en-US',{style:'currency',currency:curLang()==='tr'?'TRY':'USD',minimumFractionDigits:2,maximumFractionDigits:2}).format(n); }
-    catch(e){ return n.toFixed(2); }
+    try { return new Intl.NumberFormat(curLang()==='tr'?'tr-TR':'en-US',{style:'currency',currency:'USD',minimumFractionDigits:2,maximumFractionDigits:2}).format(n); }
+    catch(e){ return '$'+n.toFixed(2); }
   }
 
   function imgPublicUrl(path){
@@ -522,37 +522,228 @@
   /* ---- Filtreleme ---- */
   function filteredProducts(){
     var q=normalize(state.search);
+    var catSet = state.category!=='__all__' ? idSet(state.category) : null;
     return state.products.filter(function(p){
-      if (state.category!=='__all__'){
-        if (p.category_id){ if (p.category_id!==state.category) return false; }
-        else { if ((p.category||'').trim()!==state.category) return false; }
-      }
+      if (catSet && !productInSet(p,catSet)) return false;
       if (!q) return true;
       var hay=normalize([getProdName(p),getProdDesc(p),catNameById(p.category_id),p.category||''].join(' '));
       return hay.indexOf(q)>-1;
     });
   }
+  /* ---- Kategori ağacı ---- */
+  var menuState = { open:false, root:null, timer:null };
+  function isMobile(){ return !!(window.matchMedia && window.matchMedia('(max-width: 820px)').matches); }
+  function findCat(id){
+    for (var i=0;i<state.categories.length;i++){ if (state.categories[i].id===id) return state.categories[i]; }
+    return null;
+  }
+  function childrenOf(id){ return state.categories.filter(function(c){ return (c.parent_id||null)===(id||null); }); }
+  function rootsList(){ return childrenOf(null); }
+  function descendantIds(id){
+    var out=[id]; childrenOf(id).forEach(function(c){ out=out.concat(descendantIds(c.id)); }); return out;
+  }
+  function idSet(id){ var o={}; descendantIds(id).forEach(function(x){ o[x]=true; }); return o; }
+  function pathOf(id){
+    var p=[], c=findCat(id), guard=0;
+    while (c && guard++<10){ p.unshift(c); c=c.parent_id?findCat(c.parent_id):null; }
+    return p;
+  }
+  function productInSet(p,set){
+    if (p.category_id) return !!set[p.category_id];
+    return !!set[(p.category||'').trim()];
+  }
+  function countFor(id){
+    var set=idSet(id), n=0;
+    for (var i=0;i<state.products.length;i++){ if (productInSet(state.products[i],set)) n++; }
+    return n;
+  }
+  /* categories tablosu boşsa, ürünlerin düz metin kategorilerinden kök kategori türet */
+  function deriveCategories(products){
+    var seen={}, out=[];
+    products.forEach(function(p){
+      var n=(p.category||'').trim();
+      if (!n || seen[n]) return; seen[n]=1;
+      var o={ id:n, parent_id:null, sort_order:out.length };
+      ['tr','en','ar','de','fr'].forEach(function(l){ o['name_'+l]=n; });
+      out.push(o);
+    });
+    return out;
+  }
+  function selectCategory(id){
+    state.category = id || '__all__';
+    closeMenu();
+    renderChips(); renderCatBar(); renderMenu(); renderGrid();
+    var sec=byId('koleksiyon');
+    if (sec && sec.scrollIntoView){ try { sec.scrollIntoView({behavior:'smooth',block:'start'}); } catch(e){ sec.scrollIntoView(); } }
+  }
+
+  /* ---- Mega menü (Trendyol tarzı) ---- */
+  function el(tag, cls, txt){
+    var n=document.createElement(tag); if (cls) n.className=cls; if (txt!=null) n.textContent=txt; return n;
+  }
+  function chevron(){
+    var ns='http://www.w3.org/2000/svg', svg=document.createElementNS(ns,'svg');
+    svg.setAttribute('viewBox','0 0 24 24'); svg.setAttribute('width','14'); svg.setAttribute('height','14');
+    svg.setAttribute('fill','none'); svg.setAttribute('stroke','currentColor'); svg.setAttribute('stroke-width','2');
+    svg.setAttribute('stroke-linecap','round'); svg.setAttribute('stroke-linejoin','round'); svg.setAttribute('aria-hidden','true');
+    svg.setAttribute('class','cm-chev');
+    var p=document.createElementNS(ns,'path'); p.setAttribute('d','m9 6 6 6-6 6'); svg.appendChild(p);
+    return svg;
+  }
+  var PREVIEW_LIMIT = 6;
+  function buildPanel(rootId){
+    var root=findCat(rootId), panel=el('div','cm-panel');
+    if (!root) return panel;
+    var head=el('div','cm-panel-head');
+    head.appendChild(el('strong','cm-panel-title',getCatName(root)));
+    var all=el('button','cm-viewall',t('cat.view_all')); all.type='button';
+    all.appendChild(chevron());
+    all.addEventListener('click',function(){ selectCategory(root.id); });
+    head.appendChild(all);
+    panel.appendChild(head);
+    var kids=childrenOf(root.id);
+    if (!kids.length){ return panel; }
+    var cols=el('div','cm-cols');
+    kids.forEach(function(ch){
+      var g=el('div','cm-group');
+      var title=el('button','cm-group-title',getCatName(ch)); title.type='button';
+      title.appendChild(chevron());
+      title.addEventListener('click',function(){ selectCategory(ch.id); });
+      g.appendChild(title);
+      var subs=childrenOf(ch.id);
+      if (subs.length){
+        var ul=el('ul','cm-list');
+        subs.forEach(function(sc,i){
+          var li=el('li', i>=PREVIEW_LIMIT?'cm-extra':'');
+          var b=el('button','cm-link',getCatName(sc)); b.type='button';
+          b.addEventListener('click',function(){ selectCategory(sc.id); });
+          li.appendChild(b); ul.appendChild(li);
+        });
+        g.appendChild(ul);
+        if (subs.length>PREVIEW_LIMIT){
+          var more=el('button','cm-more',t('cat.more')); more.type='button';
+          more.setAttribute('aria-expanded','false');
+          more.addEventListener('click',function(){
+            var open=g.classList.toggle('is-expanded');
+            more.textContent=t(open?'cat.less':'cat.more'); more.setAttribute('aria-expanded',String(open));
+          });
+          g.appendChild(more);
+        }
+      }
+      cols.appendChild(g);
+    });
+    panel.appendChild(cols);
+    return panel;
+  }
+  function renderMenu(){
+    var ul=byId('cat-menu-roots'), side=byId('cat-menu-panel');
+    if (!ul||!side) return;
+    ul.textContent=''; side.textContent='';
+    var roots=rootsList();
+    if (!isMobile() && (!menuState.root || !findCat(menuState.root))) menuState.root = roots.length?roots[0].id:null;
+    roots.forEach(function(c){
+      var li=el('li','cm-root'+(c.id===menuState.root?' is-active':''));
+      var b=el('button','cm-root-btn'); b.type='button';
+      b.appendChild(el('span','cm-root-name',getCatName(c)));
+      var cnt=countFor(c.id);
+      if (cnt>0) b.appendChild(el('span','cm-count',String(cnt)));
+      b.appendChild(chevron());
+      var hasKids=childrenOf(c.id).length>0;
+      b.setAttribute('aria-expanded', String(c.id===menuState.root));
+      b.addEventListener('mouseenter',function(){ if (!isMobile()) setMenuRoot(c.id); });
+      b.addEventListener('focus',function(){ if (!isMobile()) setMenuRoot(c.id); });
+      b.addEventListener('click',function(){
+        if (isMobile() && hasKids){ setMenuRoot(menuState.root===c.id?null:c.id); }
+        else selectCategory(c.id);
+      });
+      li.appendChild(b);
+      if (isMobile() && c.id===menuState.root) li.appendChild(buildPanel(c.id));
+      ul.appendChild(li);
+    });
+    if (!isMobile() && menuState.root) side.appendChild(buildPanel(menuState.root));
+  }
+  function setMenuRoot(id){
+    if (menuState.root===id && !isMobile()) return;
+    menuState.root=id; renderMenu();
+  }
+  function renderCatBar(){
+    var box=byId('cat-roots'), bar=byId('cat-bar');
+    if (!box||!bar) return;
+    box.textContent='';
+    var roots=rootsList();
+    bar.hidden = roots.length===0;
+    var activeRoot = state.category!=='__all__' ? (pathOf(state.category)[0]||null) : null;
+    roots.forEach(function(c){
+      var b=el('button','cat-root',getCatName(c)); b.type='button';
+      if (activeRoot && activeRoot.id===c.id) b.setAttribute('aria-current','true');
+      b.addEventListener('mouseenter',function(){ if (!isMobile()) openMenu(c.id); });
+      b.addEventListener('focus',function(){ if (!isMobile()) openMenu(c.id); });
+      b.addEventListener('click',function(){ selectCategory(c.id); });
+      box.appendChild(b);
+    });
+  }
+  function openMenu(rootId){
+    var m=byId('cat-menu'), tg=byId('cat-toggle'); if (!m) return;
+    clearTimeout(menuState.timer);
+    if (rootId) menuState.root=rootId;
+    menuState.open=true; m.hidden=false;
+    if (tg) tg.setAttribute('aria-expanded','true');
+    document.body.classList.toggle('cat-menu-open', isMobile());
+    renderMenu();
+  }
+  function closeMenu(){
+    var m=byId('cat-menu'), tg=byId('cat-toggle'); if (!m) return;
+    clearTimeout(menuState.timer);
+    menuState.open=false; m.hidden=true;
+    if (tg) tg.setAttribute('aria-expanded','false');
+    document.body.classList.remove('cat-menu-open');
+  }
+  function bindMenuEvents(){
+    var tg=byId('cat-toggle'), bar=byId('cat-bar'), cl=byId('cat-menu-close');
+    if (tg) tg.addEventListener('click',function(){ menuState.open?closeMenu():openMenu(isMobile()?null:menuState.root); });
+    if (cl) cl.addEventListener('click', closeMenu);
+    if (bar){
+      bar.addEventListener('mouseenter',function(){ clearTimeout(menuState.timer); });
+      bar.addEventListener('mouseleave',function(){
+        if (isMobile()) return;
+        clearTimeout(menuState.timer); menuState.timer=setTimeout(closeMenu,180);
+      });
+    }
+    document.addEventListener('keydown',function(e){ if (e.key==='Escape' && menuState.open) closeMenu(); });
+    document.addEventListener('click',function(e){
+      if (menuState.open && !isMobile() && bar && !bar.contains(e.target)) closeMenu();
+    });
+    if (window.matchMedia){
+      var mq=window.matchMedia('(max-width: 820px)');
+      var onMq=function(){ closeMenu(); renderMenu(); };
+      if (mq.addEventListener) mq.addEventListener('change',onMq); else if (mq.addListener) mq.addListener(onMq);
+    }
+  }
+
+  /* ---- Filtre şeridi: yol (breadcrumb) + alt kategori çipleri ---- */
   function renderChips(){
     if (!els.chips) return;
     els.chips.textContent='';
     if (state.categories.length===0){ els.chips.hidden=true; return; }
     els.chips.hidden=false;
-    var all=document.createElement('button'); all.type='button'; all.className='chip';
-    all.textContent=t('chip.all'); all.setAttribute('aria-pressed', String(state.category==='__all__'));
-    all.addEventListener('click',function(){ state.category='__all__'; renderChips(); renderGrid(); });
-    els.chips.appendChild(all);
-    var roots=state.categories.filter(function(c){ return !c.parent_id; });
-    roots.forEach(function(c){
-      var b=document.createElement('button'); b.type='button'; b.className='chip';
-      b.textContent=getCatName(c); b.setAttribute('aria-pressed', String(state.category===c.id));
-      b.addEventListener('click',function(){ state.category=c.id; renderChips(); renderGrid(); });
-      els.chips.appendChild(b);
-      state.categories.filter(function(ch){ return ch.parent_id===c.id; }).forEach(function(ch){
-        var cb=document.createElement('button'); cb.type='button'; cb.className='chip chip-sub';
-        cb.textContent='— '+getCatName(ch); cb.setAttribute('aria-pressed', String(state.category===ch.id));
-        cb.addEventListener('click',function(){ state.category=ch.id; renderChips(); renderGrid(); });
-        els.chips.appendChild(cb);
+    function chip(label, pressed, fn, extra){
+      var b=el('button','chip'+(extra?' '+extra:''),label); b.type='button';
+      b.setAttribute('aria-pressed', String(!!pressed)); b.addEventListener('click',fn); return b;
+    }
+    els.chips.appendChild(chip(t('chip.all'), state.category==='__all__', function(){ selectCategory(null); }));
+    if (state.category==='__all__'){
+      if (isMobile()) rootsList().forEach(function(c){
+        els.chips.appendChild(chip(getCatName(c), false, function(){ selectCategory(c.id); }));
       });
+      return;
+    }
+    var path=pathOf(state.category);
+    path.forEach(function(c,i){
+      var last=i===path.length-1;
+      els.chips.appendChild(chip(getCatName(c), last, function(){ selectCategory(c.id); }, last?'chip-current':'chip-crumb'));
+    });
+    childrenOf(state.category).forEach(function(c){
+      els.chips.appendChild(chip(getCatName(c), false, function(){ selectCategory(c.id); }, 'chip-sub'));
     });
   }
   function renderGrid(){
@@ -596,10 +787,11 @@
     Promise.all([fetchSettings(), fetchCategories(), fetchProducts()])
       .then(function(results){
         applySettings(results[0]);
-        state.categories = results[1];
         state.products = results[2].filter(function(p){ return p && p.active!==false; });
+        state.categories = (results[1] && results[1].length) ? results[1] : deriveCategories(state.products);
+        if (state.category!=='__all__' && !findCat(state.category)) state.category='__all__';
         state.loading=false;
-        renderChips(); renderGrid();
+        renderChips(); renderCatBar(); renderMenu(); renderGrid();
       })
       .catch(function(err){
         state.products=[]; state.categories=[]; state.loading=false;
@@ -658,9 +850,10 @@
     els.count=byId('result-count'); els.toastStack=byId('toast-stack');
     applyConfigStatic();
     bindEvents();
+    bindMenuEvents();
     attachImageProtection();
     if (window.__sarkI18n){
-      window.__sarkI18n.subscribe(function(){ applyBrand(); renderChips(); renderGrid(); renderBanner(); renderTrustItems(); });
+      window.__sarkI18n.subscribe(function(){ applyBrand(); renderChips(); renderCatBar(); renderMenu(); renderGrid(); renderBanner(); renderTrustItems(); });
     }
     if (!initSupabase()){
       state.loading=false; state.error=t('error.fetch',{detail:'Supabase yapılandırması eksik veya geçersiz.'}); renderGrid(); return;

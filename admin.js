@@ -81,8 +81,8 @@
   function formatPrice(v){
     var n = Number(v);
     if (!isFinite(n)) return '—';
-    try { return new Intl.NumberFormat('tr-TR',{style:'currency',currency:'TRY',minimumFractionDigits:2,maximumFractionDigits:2}).format(n); }
-    catch(e){ return n.toFixed(2)+' ₺'; }
+    try { return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:2,maximumFractionDigits:2}).format(n); }
+    catch(e){ return '$'+n.toFixed(2); }
   }
   function parsePrice(raw){
     var s = String(raw==null?'':raw).replace(/[^\d.,-]/g,'').trim();

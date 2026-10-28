@@ -189,10 +189,10 @@ function langNav(lang, altPaths) {
 function formatPrice(v, lang) {
   const n = Number(v);
   if (v === null || v === undefined || v === '' || !isFinite(n)) return '';
-  try { return new Intl.NumberFormat(lang === 'tr' ? 'tr-TR' : 'en-US', { style: 'currency', currency: lang === 'tr' ? 'TRY' : 'USD', minimumFractionDigits: 2 }).format(n); }
+  try { return new Intl.NumberFormat(lang === 'tr' ? 'tr-TR' : 'en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 }).format(n); }
   catch (e) { return n.toFixed(2); }
 }
-const currencyOf = (lang) => (lang === 'tr' ? 'TRY' : 'USD');
+const currencyOf = () => 'USD';
 
 function imageUrl(cfg, p) {
   const v = p.image_url;
