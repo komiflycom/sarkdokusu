@@ -409,11 +409,6 @@
     media.style.cursor='zoom-in';
     media.addEventListener('click',function(e){
       if (e.target && e.target.closest && e.target.closest('.card-fav')) return;
-      var touchMode = window.matchMedia && window.matchMedia('(hover: none), (pointer: coarse)').matches;
-      if (touchMode && media.classList.contains('has-hover-img')) {
-        if (!media.classList.contains('is-second-image')) { media.classList.add('is-second-image'); return; }
-        media.classList.remove('is-second-image');
-      }
       openProductDetail(product);
     });
     li.appendChild(media);

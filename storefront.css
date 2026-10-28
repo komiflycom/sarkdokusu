@@ -603,10 +603,29 @@ body { background: #f6f2e9; color: #26352c; }
   .about-story-kicker { font-size: 10px; }
   .about-story-inner > p:last-child { font-size: 15px; line-height: 1.8; }
 }
-/* Dokunmatik ekranlarda ilk dokunuş ikinci ürün fotoğrafını gösterir. */
+/* Mobilde iki ürün fotoğrafını otomatik olarak 2 saniyede bir değiştir. */
 @media (hover: none), (pointer: coarse) {
   .product-card:hover { border-color: #e9e0d0; box-shadow: 0 3px 12px rgba(38,53,44,.055); }
-  .card-media.has-hover-img.is-second-image .card-img-2 { opacity: 1; }
-  .card-media.has-hover-img.is-second-image img:not(.card-img-2) { opacity: 0; }
-  .card-media.has-hover-img .card-img-2 { transition: opacity .2s ease; }
+  .card-media.has-hover-img img:not(.card-img-2) {
+    animation: sark-mobile-image-first 4s steps(1, end) infinite;
+  }
+  .card-media.has-hover-img .card-img-2 {
+    opacity: 0;
+    animation: sark-mobile-image-second 4s steps(1, end) infinite;
+  }
+}
+@keyframes sark-mobile-image-first {
+  0%, 49.99% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+@keyframes sark-mobile-image-second {
+  0%, 49.99% { opacity: 0; }
+  50%, 100% { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  @media (hover: none), (pointer: coarse) {
+    .card-media.has-hover-img img:not(.card-img-2),
+    .card-media.has-hover-img .card-img-2 { animation: none; }
+    .card-media.has-hover-img .card-img-2 { opacity: 0; }
+  }
 }
