@@ -1,204 +1,263 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Şark Dokusu - El Emeği Halı, Giyim ve Tarihi Ürünler</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="storefront.css">
+  <meta charset="utf-8">
+  <meta name="google-site-verification" content="JrWnbpdaOxWO5UBFotd2Z_9zCb93pen5kPbYpdq-3yE" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Şark Dokusu — Doğal Dokunuşlu El Emeği Ürünler</title>
+  <meta name="description" content="Şark Dokusu: özenle seçilmiş doğal ürünler, el emeği dokunuşlar ve sade bir koleksiyon. WhatsApp üzerinden kolay sipariş.">
+  <meta name="theme-color" content="#f5efe6">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Şark Dokusu">
+  <meta property="og:description" content="Özenle seçilmiş doğal ürünler ve el emeği dokunuşlar.">
+  <meta property="og:locale" content="tr_TR">
+  <meta property="og:image" content="logo.png">
+
+  <link rel="canonical" href="https://sarkdokusu.com/">
+  <link rel="icon" href="logo.png" type="image/png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css?v=fix7">
+  <link rel="stylesheet" href="storefront.css?v=ty3">
 </head>
 <body>
-    <!-- Üst Bar & Navigasyon -->
-    <header class="header">
-        <div class="container header-container">
-            <div class="logo-area">
-                <img src="logo.png" alt="Şark Dokusu Logo" id="site-logo">
-                <span class="brand-name">Şark Dokusu</span>
-            </div>
-            <div class="search-box">
-                <input type="text" id="search-input" placeholder="Ürün adı veya kategori ara...">
-            </div>
-            <div class="nav-actions">
-                <button id="admin-panel-btn" class="admin-btn">Yönetici Paneli (Admin)</button>
-                <a href="#contact-section" class="order-btn">Sipariş Ver</a>
-            </div>
-        </div>
-    </header>
+  <a class="skip-link" href="#koleksiyon" data-i18n="skip.content">İçeriğe geç</a>
 
-    <!-- Hero / Banner Alanı -->
-    <section class="hero-section" id="hero-section">
-        <div class="container hero-container">
-            <div class="hero-text">
-                <span class="badge">ELİŞİ • TARİHİ • DOĞAL</span>
-                <h1>El emeği halı, giyim ve tarihi ürünler</h1>
-                <p>Şark Dokusu; usta ellerden çıkan halılar, el işi giysiler ve geçmişten gelen özel parçaları tek koleksiyonda buluşturur. Beğendiğiniz ürünü seçin, WhatsApp'tan saniyeler içinde sipariş verin.</p>
-                <div class="hero-buttons">
-                    <a href="#collection-section" class="btn primary-btn">Koleksiyonu keşfet</a>
-                    <a href="#about-section" class="btn secondary-btn">Hikayemiz</a>
-                </div>
-            </div>
-            <div class="hero-image-area">
-                <img src="" alt="Banner Görseli" id="hero-custom-img" class="dynamic-hero-img" style="display:none;">
-                <div class="stack-cards">
-                    <div class="card-item"><img src="logo.png" alt="Şark Dokusu"></div>
-                </div>
-            </div>
-        </div>
-    </section>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="./" data-i18n="brand.aria" data-i18n-prop="aria-label" aria-label="Şark Dokusu ana sayfa">
+        <span class="brand-mark" aria-hidden="true">
+          <img src="logo.png" alt="" width="68" height="68" loading="eager" decoding="sync">
+        </span>
+        <span class="brand-text">
+          <span class="brand-name" data-store-name>Şark Dokusu</span>
+          <span class="brand-sub">Doğal &amp; El Emeği</span>
+        </span>
+      </a>
 
-    <!-- Özellikler Barı -->
-    <section class="features-bar">
-        <div class="container features-grid">
-            <div class="feature-item">
-                <span class="f-icon">❤️</span>
-                <div>
-                    <h4>El emeği</h4>
-                    <p>Her parça ustasının elinden</p>
-                </div>
-            </div>
-            <div class="feature-item">
-                <span class="f-icon">🏛️</span>
-                <div>
-                    <h4>Tarihi dokular</h4>
-                    <p>Geleneksel motifler, özel parçalar</p>
-                </div>
-            </div>
-            <div class="feature-item">
-                <span class="f-icon">💬</span>
-                <div>
-                    <h4>WhatsApp ile sipariş</h4>
-                    <p>Üyelik yok, saniyeler içinde</p>
-                </div>
-            </div>
-            <div class="feature-item">
-                <span class="f-icon">📦</span>
-                <div>
-                    <h4>Özenli paketleme</h4>
-                    <p>Tek tek kontrol edilip gönderilir</p>
-                </div>
-            </div>
-        </div>
-    </section>
+      <div class="header-search" role="search">
+          <div class="search-field">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                 stroke-linecap="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="7.5"></circle>
+              <path d="m21 21-4.2-4.2"></path>
+            </svg>
+            <label class="visually-hidden" for="search-input" data-i18n="search.label">Ürün ara</label>
+            <input id="search-input" type="search" data-i18n="search.placeholder" data-i18n-prop="placeholder"
+                   placeholder="Ürün adı veya kategori ara…" autocomplete="off" spellcheck="false">
+            <button class="search-clear" id="search-clear" type="button"
+                    data-i18n="search.clear_aria" data-i18n-prop="aria-label" aria-label="Aramayı temizle">×</button>
+          </div>
+      </div>
 
-    <!-- Koleksiyon ve Kategoriler -->
-    <section class="collection-section" id="collection-section">
-        <div class="container">
-            <div class="section-title-wrap">
-                <h2>Koleksiyon</h2>
-                <p>Özenle seçilmiş ürünlerimizi keşfedin.</p>
-            </div>
-            <!-- Dinamik Kategoriler -->
-            <div class="category-filters" id="category-filters-container">
-                <button class="cat-pill active" onclick="filterCategory('all')">Tümü</button>
-            </div>
-            <!-- Ürün Listesi -->
-            <div class="product-grid" id="product-grid">
-                <!-- Ürünler dinamik yüklenecek -->
-            </div>
-        </div>
-    </section>
-
-    <!-- Hakkımızda Alanı -->
-    <section class="about-section" id="about-section">
-        <div class="container about-container">
-            <div class="about-content">
-                <span class="badge">HİKAYEMİZ</span>
-                <h2 id="about-title-view">Şark Dokusu Hakkında</h2>
-                <p id="about-text-view">Şark Dokusu; usta ellerden çıkan halılar, el işi giysiler ve geçmişten gelen özel parçaları tek koleksiyonda buluşturur. Anadolu'nun kaybolmaya yüz tutmuş motiflerini günümüze taşıyoruz.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- İletişim / Sipariş / Final Alanı (Arka Plan Görseli Destekli) -->
-    <section class="contact-section" id="contact-section">
-        <div class="container contact-container-inner">
-            <div class="contact-card">
-                <h2>Bizimle İletişime Geçin</h2>
-                <p>Beğendiğiniz ürün veya özel siparişleriniz için bize hemen ulaşın.</p>
-                <div class="contact-info-list">
-                    <div class="c-item"><strong>📞 Telefon:</strong> <span id="view-phone">+90 (555) 000 00 00</span></div>
-                    <div class="c-item"><strong>📍 Adres:</strong> <span id="view-address">Kapalıçarşı / İstanbul</span></div>
-                    <div class="c-item"><strong>✉️ E-posta:</strong> <span id="view-email">bilgi@sarkdokusu.com</span></div>
-                </div>
-                <a href="https://wa.me/905550000000" target="_blank" class="whatsapp-direct-btn" id="view-whatsapp-link">💬 WhatsApp ile Hızlı Sipariş</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Yönetici Paneli (Admin Modal) -->
-    <div id="admin-modal" class="modal-overlay" style="display:none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Yönetici (Admin) Paneli</h3>
-                <button onclick="closeAdminModal()" class="close-modal">×</button>
-            </div>
-            <div class="modal-body">
-                <div class="admin-tabs">
-                    <button class="tab-btn active" onclick="switchTab('tab-settings')">Genel & Görseller</button>
-                    <button class="tab-btn" onclick="switchTab('tab-about')">Hakkımızda</button>
-                    <button class="tab-btn" onclick="switchTab('tab-categories')">Kategoriler</button>
-                    <button class="tab-btn" onclick="switchTab('tab-products')">Ürünler</button>
-                </div>
-
-                <!-- TAB 1: Genel & Görseller & İletişim -->
-                <div id="tab-settings" class="tab-content active">
-                    <h4>Görsel ve İletişim Ayarları</h4>
-                    <label>Hero / Banner Görsel URL:</label>
-                    <input type="text" id="admin-hero-img" placeholder="https://ornek.com/banner.jpg">
-                    
-                    <label>İletişim Alanı Arka Plan Görsel URL:</label>
-                    <input type="text" id="admin-contact-bg" placeholder="https://ornek.com/arkaplan.jpg">
-
-                    <label>Telefon Numarası:</label>
-                    <input type="text" id="admin-phone" placeholder="+90 555 ...">
-
-                    <label>WhatsApp Hattı (Sadece Rakam, örn: 90555...):</label>
-                    <input type="text" id="admin-whatsapp" placeholder="905550000000">
-
-                    <label>Adres:</label>
-                    <input type="text" id="admin-address" placeholder="Adres bilgisi...">
-                    
-                    <button onclick="saveGeneralSettings()" class="btn primary-btn mt-3">Değişiklikleri Kaydet</button>
-                </div>
-
-                <!-- TAB 2: Hakkımızda Yönetimi -->
-                <div id="tab-about" class="tab-content" style="display:none;">
-                    <h4>Hakkımızda Yazısı Düzenle</h4>
-                    <label>Başlık:</label>
-                    <input type="text" id="admin-about-title">
-                    <label>İçerik / Hikaye:</label>
-                    <textarea id="admin-about-text" rows="5"></textarea>
-                    <button onclick="saveAboutSettings()" class="btn primary-btn mt-3">Hakkımızda Kaydet</button>
-                </div>
-
-                <!-- TAB 3: Kategori Yönetimi -->
-                <div id="tab-categories" class="tab-content" style="display:none;">
-                    <h4>Kategori Yönetimi</h4>
-                    <div class="add-box">
-                        <input type="text" id="new-cat-name" placeholder="Yeni Kategori Adı (Örn: Kilim)">
-                        <button onclick="addNewCategory()" class="btn primary-btn">Kategori Ekle</button>
-                    </div>
-                    <div id="admin-category-list" class="admin-list"></div>
-                </div>
-
-                <!-- TAB 4: Ürün Yönetimi -->
-                <div id="tab-products" class="tab-content" style="display:none;">
-                    <h4>Ürün Ekle / Yönet</h4>
-                    <div class="add-box product-form">
-                        <input type="text" id="p-title" placeholder="Ürün Adı">
-                        <input type="text" id="p-price" placeholder="Fiyat (Örn: 2.500 TL)">
-                        <select id="p-category"></select>
-                        <input type="text" id="p-image" placeholder="Görsel URL">
-                        <button onclick="addNewProduct()" class="btn primary-btn">Ürün Ekle</button>
-                    </div>
-                    <div id="admin-product-list" class="admin-list"></div>
-                </div>
-            </div>
-        </div>
+      <nav class="site-nav" data-i18n="nav.aria" data-i18n-prop="aria-label" aria-label="Ana menü">
+        <a class="nav-link" href="#koleksiyon" data-i18n="nav.collection">Koleksiyon</a>
+        <a class="nav-link nav-hide-sm" href="#hakkimizda" data-i18n="nav.about">Hakkımızda</a>
+        <a class="nav-link nav-cta" href="#koleksiyon" data-i18n="nav.order">Sipariş Ver</a>
+        <a class="nav-link nav-wa" id="nav-wa" href="#" target="_blank" rel="noopener" hidden>
+          <span class="wa-dot" aria-hidden="true"></span>
+          <svg class="wa-ic" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2a9.9 9.9 0 0 0-8.5 14.9L2 22l5.25-1.38A9.9 9.9 0 1 0 12.04 2Zm0 18.1a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.11.82.83-3.04-.2-.31a8.2 8.2 0 1 1 6.97 3.86Zm4.5-6.14c-.25-.12-1.46-.72-1.69-.8-.23-.08-.39-.12-.56.13-.16.25-.64.8-.79.97-.14.16-.29.18-.54.06a6.7 6.7 0 0 1-3.3-2.88c-.25-.43.25-.4.72-1.33.08-.16.04-.3-.02-.42-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.41-.56-.42h-.47a.9.9 0 0 0-.65.3c-.22.25-.85.83-.85 2.03s.87 2.35.99 2.52c.12.16 1.7 2.6 4.12 3.65 1.53.66 2.13.72 2.9.6.47-.07 1.46-.6 1.66-1.17.2-.58.2-1.07.14-1.17-.06-.1-.22-.16-.47-.28Z"/></svg>
+          <span class="wa-label" data-i18n="nav.support">Canlı Destek</span>
+        </a>
+      </nav>
     </div>
 
-    <!-- JavaScript Bağlantıları -->
-    <script src="store.js"></script>
-    <script src="admin.js"></script>
+    <!-- Kategori çubuğu + mega menü -->
+    <div class="cat-bar" id="cat-bar" hidden>
+      <div class="wrap cat-bar-inner">
+        <button class="cat-toggle" id="cat-toggle" type="button" aria-expanded="false" aria-controls="cat-menu">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
+          <span data-i18n="cat.menu">Kategoriler</span>
+        </button>
+        <div class="cat-roots" id="cat-roots"></div>
+      </div>
+      <div class="cat-menu" id="cat-menu" hidden>
+        <div class="cat-menu-top">
+          <strong data-i18n="cat.menu">Kategoriler</strong>
+          <button class="cat-menu-close" id="cat-menu-close" type="button" data-i18n="cat.close" data-i18n-prop="aria-label" aria-label="Kapat">×</button>
+        </div>
+        <div class="wrap cat-menu-inner" data-i18n="cat.aria" data-i18n-prop="aria-label" aria-label="Kategori menüsü">
+          <ul class="cat-menu-roots" id="cat-menu-roots"></ul>
+          <div class="cat-menu-panel" id="cat-menu-panel"></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ================= HERO ================= -->
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="hero-copy">
+        <p class="eyebrow" data-i18n="hero.eyebrow">Elişi · Tarihi · Doğal</p>
+        <h1 data-i18n="hero.title" data-i18n-prop="innerHTML">El emeği <em>halı, giyim</em> ve tarihi ürünler</h1>
+        <p class="hero-lead" data-i18n="hero.lead">Şark Dokusu; usta ellerden çıkan halılar, el işi giysiler ve geçmişten gelen özel parçaları tek koleksiyonda buluşturur. Beğendiğiniz ürünü seçin, WhatsApp'tan saniyeler içinde sipariş verin.</p>
+        <div class="hero-actions">
+          <a class="btn" href="#koleksiyon" data-i18n="hero.cta_explore">Koleksiyonu keşfet</a>
+          <a class="btn btn-outline" href="#hakkimizda" data-i18n="hero.cta_story">Hikâyemiz</a>
+        </div>
+      </div>
+        <div class="hero-art" id="hero-art" aria-hidden="true"></div>
+      </div>
+    </section>
+
+
+    <!-- ================= AVANTAJLAR ================= -->
+    <section class="perks"><div class="wrap perks-grid">
+      <div class="perk"><span class="perk-ic" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8Z"/></svg></span><div><strong data-i18n="perk.1_t"></strong><span data-i18n="perk.1_d"></span></div></div>
+      <div class="perk"><span class="perk-ic" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V10M9 21V10M15 21V10M19 21V10M3 10l9-6 9 6"/></svg></span><div><strong data-i18n="perk.2_t"></strong><span data-i18n="perk.2_d"></span></div></div>
+      <div class="perk"><span class="perk-ic" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 20.5l1.6-5.1A8.4 8.4 0 1 1 21 11.5Z"/></svg></span><div><strong data-i18n="perk.3_t"></strong><span data-i18n="perk.3_d"></span></div></div>
+      <div class="perk"><span class="perk-ic" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8 12 3 3 8v8l9 5 9-5ZM3 8l9 5 9-5M12 13v8"/></svg></span><div><strong data-i18n="perk.4_t"></strong><span data-i18n="perk.4_d"></span></div></div>
+    </div></section>
+
+    <!-- ================= KATEGORİ VİTRİNİ ================= -->
+    <section class="showcase" id="cat-showcase" hidden aria-labelledby="showcase-title">
+      <div class="wrap">
+        <h2 id="showcase-title" class="section-title" data-i18n="showcase.title">Kategoriye göz atın</h2>
+        <div class="showcase-row" id="showcase-row"></div>
+      </div>
+    </section>
+
+    <!-- ================= KATALOG ================= -->
+    <section class="catalog" id="koleksiyon" aria-labelledby="koleksiyon-baslik">
+      <div class="wrap">
+        <div class="catalog-head">
+          <div>
+            <h2 id="koleksiyon-baslik" data-i18n="catalog.title">Koleksiyon</h2>
+            <p data-i18n="catalog.subtitle">Özenle seçilmiş ürünlerimizi keşfedin.</p>
+          </div>
+          <div class="head-tools">
+            <span class="result-count" id="result-count" aria-live="polite" data-i18n="loading">Yükleniyor…</span>
+            <label class="sort-box"><span class="visually-hidden" data-i18n="sort.label">Sırala</span>
+              <select id="sort-select" class="sort-select">
+                <option value="default" data-i18n="sort.default">Önerilen</option>
+                <option value="newest" data-i18n="sort.newest">En yeni</option>
+                <option value="price_asc" data-i18n="sort.price_asc">Fiyat: Artan</option>
+                <option value="price_desc" data-i18n="sort.price_desc">Fiyat: Azalan</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <div class="catalog-layout">
+          <aside class="side-cats" id="side-cats" hidden data-i18n="cat.aria" data-i18n-prop="aria-label" aria-label="Kategori menüsü"></aside>
+          <div class="catalog-main">
+        <div class="toolbar">
+
+          <div class="chips" id="category-chips" role="group"
+               data-i18n="chips.aria" data-i18n-prop="aria-label" aria-label="Kategori filtresi" hidden></div>
+        </div>
+
+        <ul class="product-grid" id="product-grid" aria-live="polite" aria-busy="true">
+          <!-- Ürünler store.js tarafından basılır -->
+        </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= GÜVEN ŞERİDİ ================= -->
+    <section class="trust" id="hakkimizda" aria-labelledby="hakkimizda-baslik">
+      <div class="wrap">
+        <h2 id="hakkimizda-baslik" class="visually-hidden" data-i18n="trust.heading">Hakkımızda</h2>
+        <div class="trust-grid">
+          <div class="trust-item">
+            <span class="ti-mark" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 20A7 7 0 0 1 4 13c0-5 4-9 9-9h7v3a9 9 0 0 1-9 9h-1"></path>
+                <path d="M4 21c1-4 3-6 6-8"></path>
+              </svg>
+            </span>
+            <div>
+              <h3 data-i18n="trust.natural_title">Doğal malzeme</h3>
+              <p data-i18n="trust.natural_desc">Ürünlerimiz doğal içerik ve geleneksel yöntemlerle, küçük partiler hâlinde hazırlanır.</p>
+            </div>
+          </div>
+
+          <div class="trust-item">
+            <span class="ti-mark" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 6 9 17l-5-5"></path>
+              </svg>
+            </span>
+            <div>
+              <h3 data-i18n="trust.easy_title">Kolay sipariş</h3>
+              <p data-i18n="trust.easy_desc">Üyelik gerekmez. Beğendiğiniz ürünü WhatsApp'tan tek dokunuşla bize iletin.</p>
+            </div>
+          </div>
+
+          <div class="trust-item">
+            <span class="ti-mark" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"></path>
+              </svg>
+            </span>
+            <div>
+              <h3 data-i18n="trust.packaging_title">Özenli paketleme</h3>
+              <p data-i18n="trust.packaging_desc">Her sipariş, yola çıkmadan önce tek tek kontrol edilerek özenle paketlenir.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="brand" href="./">
+            <span class="brand-mark" aria-hidden="true">
+              <img src="logo.png" alt="" width="68" height="68" loading="lazy" decoding="async">
+            </span>
+            <span class="brand-text">
+              <span class="brand-name" data-store-name>Şark Dokusu</span>
+              <span class="brand-sub">Doğal &amp; El Emeği</span>
+            </span>
+          </a>
+          <p class="footer-about" data-i18n="footer.about">
+            Doğal malzemelerle, sabırla ve özenle hazırlanan ürünler.
+            Siparişlerinizi WhatsApp üzerinden iletebilirsiniz.
+          </p>
+        </div>
+
+        <div>
+          <h4 data-i18n="footer.explore">Keşfet</h4>
+          <ul class="footer-links">
+            <li><a href="#koleksiyon" data-i18n="nav.collection">Koleksiyon</a></li>
+            <li><a href="#hakkimizda" data-i18n="nav.about">Hakkımızda</a></li>
+            <li><a href="admin.html" data-i18n="footer.admin">Yönetici girişi</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 data-i18n="footer.contact">İletişim</h4>
+          <ul class="footer-links">
+            <li><span data-i18n="footer.orders">Sipariş: WhatsApp</span></li>
+            <li><a href="https://sarkdokusu.com">sarkdokusu.com</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© <span id="year">2026</span> <span data-store-name>Şark Dokusu</span>. <span data-i18n="footer.rights">Tüm hakları saklıdır.</span></span>
+        <span data-i18n="footer.tagline">Doğal dokunuşlar, elden ele.</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast-stack" id="toast-stack" aria-live="polite" aria-atomic="false"></div>
+
+  <!-- Supabase JS (pinlenmiş sürüm) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.0/dist/umd/supabase.min.js"
+          crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="config.js?v=fix6"></script>
+  <script src="i18n.js?v=ty2"></script>
+  <script src="store.js?v=ty2"></script>
 </body>
 </html>
