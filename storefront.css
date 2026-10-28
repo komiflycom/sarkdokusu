@@ -653,3 +653,14 @@ body { background: #f6f2e9; color: #26352c; }
 .hero.has-custom-hero-background .hero-art {
   filter: none !important;
 }
+
+
+/* Performans: ürünleri küçük gruplar halinde göster */
+.products-load-more {
+  display: block; margin: 24px auto 8px; padding: 12px 26px;
+  border: 1px solid #c8b99f; border-radius: 4px; background: #fff;
+  color: #25382f; font: inherit; font-weight: 600; cursor: pointer;
+  transition: background-color .15s ease, border-color .15s ease;
+}
+.products-load-more:hover { background: #f7f3ec; border-color: #8b7759; }
+.products-load-more:focus-visible { outline: 2px solid #8b7759; outline-offset: 3px; }

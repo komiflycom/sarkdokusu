@@ -378,27 +378,31 @@
     var imgPath=product.image_url||'';
     var fallback=document.createElement('div'); fallback.className='media-fallback'; fallback.setAttribute('aria-hidden','true'); fallback.appendChild(iconSvg('leaf'));
     if (imgPath){
-      /* Görseli blob olarak yükle — depo URL'i kaynak görünümünde gizlenir */
-      var placeholder=document.createElement('div'); placeholder.className='card-img-placeholder'; media.appendChild(placeholder);
-      fetchImageBlob(imgPath).then(function(blobUrl){
-        placeholder.remove();
-        if (!blobUrl){ media.appendChild(fallback); return; }
-        var imgEl=new Image(); imgEl.loading='lazy'; imgEl.decoding='async';
-        imgEl.alt=name||'Ürün fotoğrafı'; imgEl.src=blobUrl; imgEl.draggable=false;
-        imgEl.addEventListener('error', function(){ imgEl.remove(); media.appendChild(fallback); });
-        media.insertBefore(imgEl, media.firstChild);
-        /* 2. görsel (yakın çekim): üzerine gelince gösterilir */
+      /* Kartlarda blob/fetch kullanma: tarayıcının gerçek lazy-load davranışı çalışsın. */
+      var imageUrl=imgPublicUrl(imgPath);
+      if (!imageUrl){ media.appendChild(fallback); }
+      else {
+        var imgEl=document.createElement('img');
+        imgEl.loading='lazy'; imgEl.decoding='async'; imgEl.fetchPriority='low';
+        imgEl.alt=name||'Ürün fotoğrafı'; imgEl.src=imageUrl; imgEl.draggable=false;
+        imgEl.addEventListener('error', function(){ imgEl.remove(); if (!media.querySelector('.media-fallback')) media.appendChild(fallback); });
+        media.appendChild(imgEl);
+        /* İkinci görseli de lazy-load et; önceden fetch ederek ağı yorma. */
         if (product.image_url_2){
-          fetchImageBlob(product.image_url_2).then(function(blob2){
-            if (!blob2) return;
-            var img2=new Image(); img2.className='card-img-2'; img2.alt=''; img2.setAttribute('aria-hidden','true');
-            img2.loading='lazy'; img2.decoding='async'; img2.draggable=false; img2.src=blob2;
+          var imageUrl2=imgPublicUrl(product.image_url_2);
+          if (imageUrl2){
+            var img2=document.createElement('img'); img2.className='card-img-2'; img2.alt=''; img2.setAttribute('aria-hidden','true');
+            img2.loading='lazy'; img2.decoding='async'; img2.fetchPriority='low'; img2.draggable=false;
+            img2.dataset.src=imageUrl2;
+            var loadSecondImage=function(){ if(img2.dataset.src){ img2.src=img2.dataset.src; delete img2.dataset.src; } };
+            media.addEventListener('pointerenter',loadSecondImage,{once:true});
+            media.addEventListener('focusin',loadSecondImage,{once:true});
             img2.addEventListener('error', function(){ img2.remove(); });
-            imgEl.insertAdjacentElement('afterend', img2);
+            media.appendChild(img2);
             media.classList.add('has-hover-img');
-          });
+          }
         }
-      });
+      }
     } else media.appendChild(fallback);
     var stock=Number(product.stock);
     var hasStock= product.stock!==null && product.stock!==undefined && product.stock!=='' && isFinite(stock);
@@ -672,6 +676,7 @@
   }
   function selectCategory(id){
     state.category = id || '__all__';
+    visibleProductLimit=PRODUCTS_PER_BATCH;
     closeMenu();
     renderChips(); renderCatBar(); renderMenu(); renderGrid(); renderShowcase(); renderSidebar(); updateCatalogTitle();
     var sec=byId('koleksiyon');
@@ -871,9 +876,12 @@
       els.chips.appendChild(chip(getCatName(c), false, function(){ selectCategory(c.id); }, 'chip-sub'));
     });
   }
+  var PRODUCTS_PER_BATCH = 24;
+  var visibleProductLimit = PRODUCTS_PER_BATCH;
   function renderGrid(){
     if (!els.grid) return;
     els.grid.setAttribute('aria-busy', String(!!state.loading));
+    var oldMore=byId('load-more-products'); if(oldMore) oldMore.remove();
     if (state.loading){
       els.grid.textContent=''; els.grid.appendChild(skeletonMarkup(6));
       if (els.count) els.count.textContent=t('loading'); return;
@@ -892,19 +900,33 @@
         title: isSearch?t('state.noresults_title'):t('state.empty_title'),
         text:  isSearch?t('state.noresults_text'):t('state.empty_text'),
         actionLabel: isSearch?t('state.noresults_action'):undefined,
-        onAction: function(){ state.search=''; state.category='__all__'; if(els.search) els.search.value=''; updateClearButton(); renderChips(); renderGrid(); }
+        onAction: function(){ state.search=''; state.category='__all__'; visibleProductLimit=PRODUCTS_PER_BATCH; if(els.search) els.search.value=''; updateClearButton(); renderChips(); renderGrid(); }
       }));
       if (els.count) els.count.textContent=t('count.products',{n:0}); return;
     }
+    var shown=list.slice(0,visibleProductLimit);
     var frag=document.createDocumentFragment();
-    list.forEach(function(p){ frag.appendChild(buildProductCard(p)); });
+    shown.forEach(function(p){ frag.appendChild(buildProductCard(p)); });
     els.grid.appendChild(frag);
     if (els.count) els.count.textContent=t('count.products',{n:list.length});
+    if (list.length>shown.length){
+      var more=document.createElement('button'); more.type='button'; more.id='load-more-products';
+      more.className='products-load-more';
+      var lang=curLang();
+      more.textContent=lang==='ar'?'عرض المزيد من المنتجات':lang==='de'?'Weitere Produkte anzeigen':lang==='fr'?'Afficher plus de produits':lang==='en'?'Show more products':'Daha fazla ürün göster';
+      more.setAttribute('aria-label',more.textContent);
+      more.addEventListener('click',function(){
+        visibleProductLimit+=PRODUCTS_PER_BATCH;
+        renderGrid();
+      });
+      els.grid.insertAdjacentElement('afterend',more);
+    }
   }
   function updateClearButton(){ if (!els.clear) return; els.clear.classList.toggle('is-visible', state.search.length>0); }
 
   /* ---- Yükleme ---- */
   function load(){
+    visibleProductLimit=PRODUCTS_PER_BATCH;
     state.loading=true; state.error=null; renderGrid();
     if (!state.supabaseReady){
       state.loading=false; state.error=t('error.fetch',{detail:'Supabase bağlantısı kurulamadı.'}); renderGrid(); finishInitialRender(); return;
@@ -938,12 +960,11 @@
     return null;
   }
   function fillImg(box, path, alt){
-    fetchImageBlob(path).then(function(u){
-      if (!u) return;
-      var im=new Image(); im.alt=alt||''; im.decoding='async'; im.draggable=false; im.src=u;
-      im.addEventListener('error',function(){ im.remove(); });
-      box.insertBefore(im, box.firstChild);
-    });
+    var u=imgPublicUrl(path);
+    if (!u) return;
+    var im=new Image(); im.alt=alt||''; im.loading='lazy'; im.decoding='async'; im.fetchPriority='low'; im.draggable=false; im.src=u;
+    im.addEventListener('error',function(){ im.remove(); });
+    box.insertBefore(im, box.firstChild);
   }
   function renderShowcase(){
     var sec=byId('cat-showcase'), row=byId('showcase-row');
@@ -1043,13 +1064,13 @@
   /* ---- Olaylar ---- */
   function bindEvents(){
     if (els.search){
-      var onSearch=debounce(function(e){ state.search=e.target.value||''; updateClearButton(); renderGrid(); }, SEARCH_DEBOUNCE);
+      var onSearch=debounce(function(e){ state.search=e.target.value||''; visibleProductLimit=PRODUCTS_PER_BATCH; updateClearButton(); renderGrid(); }, SEARCH_DEBOUNCE);
       els.search.addEventListener('input', onSearch);
     }
     var sortEl=byId('sort-select');
-    if (sortEl) sortEl.addEventListener('change', function(){ state.sort=sortEl.value||'default'; renderGrid(); });
+    if (sortEl) sortEl.addEventListener('change', function(){ state.sort=sortEl.value||'default'; visibleProductLimit=PRODUCTS_PER_BATCH; renderGrid(); });
     if (els.clear){
-      els.clear.addEventListener('click', function(){ state.search=''; if(els.search){ els.search.value=''; els.search.focus(); } updateClearButton(); renderGrid(); });
+      els.clear.addEventListener('click', function(){ state.search=''; visibleProductLimit=PRODUCTS_PER_BATCH; if(els.search){ els.search.value=''; els.search.focus(); } updateClearButton(); renderGrid(); });
     }
   }
   function applyConfigStatic(){
