@@ -238,12 +238,14 @@
     try { if(typeof items==='string') items=JSON.parse(items); } catch(e){ items=[]; }
     if(!Array.isArray(items)) items=[];
     var item=items.find(function(it){return it&&it.type==='hero_background'&&it.image_url;});
-    if(!item){hero.style.removeProperty('background-image');hero.style.removeProperty('background-size');hero.style.removeProperty('background-position');return;}
+    if(!item){hero.classList.remove('has-custom-hero-background');hero.style.removeProperty('background-image');hero.style.removeProperty('background-size');hero.style.removeProperty('background-position');hero.style.removeProperty('background-repeat');return;}
     var url=assetPublicUrl(item.image_url); if(!url) return;
-    hero.style.backgroundImage='linear-gradient(90deg, rgba(20,31,25,.88) 0%, rgba(20,31,25,.70) 48%, rgba(20,31,25,.34) 100%), url("'+url.replace(/"/g,'%22')+'")';
-    hero.style.backgroundSize='100% 100%, contain';
-    hero.style.backgroundPosition='center, center';
-    hero.style.backgroundRepeat='no-repeat, no-repeat';
+    // Yönetici tarafından yüklenen hero görselini filtre/gradient olmadan göster.
+    hero.classList.add('has-custom-hero-background');
+    hero.style.backgroundImage='url("'+url.replace(/"/g,'%22')+'")';
+    hero.style.backgroundSize='contain';
+    hero.style.backgroundPosition='center center';
+    hero.style.backgroundRepeat='no-repeat';
     hero.style.backgroundColor='#172c24';
   }
 
