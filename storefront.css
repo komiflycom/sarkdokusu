@@ -633,7 +633,7 @@ body { background: #f6f2e9; color: #26352c; }
 
 /* Yönetici tarafından yüklenen hero görselini değiştirmeden göster: efekt/filigran katmanını kapat. */
 .hero.has-custom-hero-background {
-  background-image: var(--custom-hero-background, none) !important;
+  /* Background URL is set inline by store.js; do not override it here. */
   background-size: contain !important;
   background-position: center center !important;
   background-repeat: no-repeat !important;
