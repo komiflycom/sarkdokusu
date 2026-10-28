@@ -289,6 +289,14 @@
       li.className = 'lang-option' + (lang.code === current ? ' is-active' : '');
       li.textContent = lang.label;
       li.addEventListener('click', function () {
+        /* Her dilin kendi URL'si var: seçilen dile ait adrese git */
+        var urls = window.SARK_LANG_URLS;
+        if (urls && urls[lang.code]) {
+          try { localStorage.setItem(STORAGE_KEY, lang.code); } catch (e) { /* sessiz */ }
+          if (lang.code !== current) window.location.href = urls[lang.code];
+          dropdown.hidden = true;
+          return;
+        }
         applyLang(lang.code);
         label.textContent = lang.short;
         dropdown.hidden = true;
@@ -384,6 +392,7 @@
     get langs() { return LANGS.slice(); },
     setLang: applyLang,
     subscribe: function (fn) { subscribers.push(fn); },
+    DICT: DICT,
     buildPicker: buildLangPicker,
     applyDom: applyDomTranslations,
     sampleProducts: SAMPLE_PRODUCTS,
@@ -397,6 +406,9 @@
     try { saved = localStorage.getItem(STORAGE_KEY); } catch (e) { /* sessiz */ }
     var valid = LANGS.some(function (l) { return l.code === saved; });
     current = valid ? saved : DEFAULT_LANG;
+    /* SEO: dil artık URL'den gelir (/en/, /de/ ...). Sayfa dili tercihten önceliklidir. */
+    var forced = window.SARK_PAGE_LANG;
+    if (forced && LANGS.some(function (l) { return l.code === forced; })) current = forced;
     applyLang(current);
 
     if (document.readyState === 'loading') {
