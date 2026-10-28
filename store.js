@@ -644,6 +644,29 @@
     var p=document.createElementNS(ns,'path'); p.setAttribute('d','m9 6 6 6-6 6'); svg.appendChild(p);
     return svg;
   }
+  /* Ana kategori ikonları (adına göre, bulunamazsa genel etiket ikonu) */
+  var CAT_ICONS={
+    rug:'<rect x="4" y="5" width="16" height="14" rx="1.5"/><path d="M8 5v14M16 5v14M4 10h16M4 14h16M4 3v2M8 3v2M12 3v2M16 3v2M20 3v2M4 19v2M8 19v2M12 19v2M16 19v2M20 19v2"/>',
+    cloth:'<path d="M9 4 4 7l2 4 2-1v10h8V10l2 1 2-4-5-3a3 3 0 0 1-6 0Z"/>',
+    jewel:'<circle cx="12" cy="14" r="5"/><path d="m9 6 1.5-2h3L15 6l-3 3Z"/>',
+    home:'<path d="m4 11 8-7 8 7v9H4Z"/><path d="M10 20v-6h4v6"/>',
+    antique:'<path d="M8 3h8l1 4H7Z"/><path d="M7 7c-2 3-2 8 1 11h8c3-3 3-8 1-11"/><path d="M9 21h6"/>',
+    tag:'<path d="M3 12V4h8l10 10-8 8Z"/><circle cx="7.5" cy="8.5" r="1.3"/>'
+  };
+  function catIconKey(name){
+    var n=String(name||'').toLocaleLowerCase('tr');
+    if (/halı|hali|kilim|rug|teppich|tapis|سجاد/.test(n)) return 'rug';
+    if (/giy|elbise|kıyafet|cloth|wear|kleid|vêtement|ملابس|şal|sal\b|eşarp/.test(n)) return 'cloth';
+    if (/takı|taki|aksesuar|yüzük|kolye|jewel|access|schmuck|bijou|مجوهرات/.test(n)) return 'jewel';
+    if (/ev|dekor|home|decor|wohn|maison|منزل/.test(n)) return 'home';
+    if (/tarih|antika|eski|antique|vintage|عتيق/.test(n)) return 'antique';
+    return 'tag';
+  }
+  function catIcon(name){
+    var sp=document.createElement('span'); sp.className='cm-ico'; sp.setAttribute('aria-hidden','true');
+    sp.innerHTML='<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">'+CAT_ICONS[catIconKey(name)]+'</svg>';
+    return sp;
+  }
   var PREVIEW_LIMIT = 6;
   function buildPanel(rootId){
     var root=findCat(rootId), panel=el('div','cm-panel');
@@ -698,6 +721,7 @@
     roots.forEach(function(c){
       var li=el('li','cm-root'+(c.id===menuState.root?' is-active':''));
       var b=el('button','cm-root-btn'); b.type='button';
+      b.appendChild(catIcon(getCatName(c)));
       b.appendChild(el('span','cm-root-name',getCatName(c)));
       var cnt=countFor(c.id);
       if (cnt>0) b.appendChild(el('span','cm-count',String(cnt)));
