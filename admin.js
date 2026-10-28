@@ -1,4 +1,4 @@
-/* BUILD: 2026-10-28-fix3 (dil bazli site adi, logo/banner boyutu) */
+/* BUILD: 2026-10-28-hero-tab-fix (Hero Bölümü ayrı yönetim sekmesi) */
 /* ==========================================================================
    ŞARK DOKUSU — admin.js (v2)
    Çok panelli yönetim: ürünler, kategoriler, banner, ayarlar, hakkımızda, hesap.
@@ -28,6 +28,7 @@
   var catEditingId = null, catLang = 'tr';
   var bannerLang = 'tr', bannerPendingFile = null;
   var logoPendingFile = null;
+  var heroBackgroundPendingFile = null;
   var els = {};
 
   /* ===================== Yardımcılar ===================== */
@@ -821,6 +822,7 @@
       renderSettingsForm();
       renderBannerForm();
       renderAboutForm();
+      renderHeroBackgroundForm();
       applySettingsToSidebar();
     }).catch(function(err){
       showAlert(els.globalAlert,'Site ayarları yüklenemedi: '+errText(err),'error');
@@ -1019,6 +1021,68 @@
     toast('Banner görseli kaldırıldı.','success');
   }
 
+  /* ---- Ana sayfa hero arka planı ----
+     Yeni kolon gerektirmemek için görsel yolu site_settings.about_items JSON
+     dizisinde type=hero_background kaydı olarak saklanır. */
+  function getSettingsItems(){
+    var items=[];
+    try { items=settings&&settings.about_items||[]; if(typeof items==='string') items=JSON.parse(items); if(!Array.isArray(items)) items=[]; }
+    catch(e){ items=[]; }
+    return items;
+  }
+  function getHeroBackgroundItem(){
+    var items=getSettingsItems();
+    for(var i=0;i<items.length;i++) if(items[i]&&items[i].type==='hero_background') return items[i];
+    return null;
+  }
+  function updateHeroBackgroundPreview(pathOrUrl){
+    var box=byId('hero-background-preview'); if(!box) return;
+    var src=pathOrUrl ? (/^blob:/i.test(pathOrUrl)||/^https?:/i.test(pathOrUrl)?pathOrUrl:assetPublicUrl(pathOrUrl)) : '';
+    box.style.backgroundImage=src?'url("'+src.replace(/"/g,'%22')+'")':'';
+    box.textContent=src?'':'Görsel seçilmedi';
+  }
+  function renderHeroBackgroundForm(){
+    var item=getHeroBackgroundItem();
+    heroBackgroundPendingFile=null;
+    var input=byId('hero-background-image'); if(input) input.value='';
+    updateHeroBackgroundPreview(item&&item.image_url||'');
+    var rm=byId('hero-background-remove'); if(rm) rm.hidden=!(item&&item.image_url);
+  }
+  function onHeroBackgroundFileChange(){
+    var input=byId('hero-background-image'), file=input&&input.files?input.files[0]:null;
+    if(!file){heroBackgroundPendingFile=null;return;}
+    var problem=validateFile(file,MAX_ASSET_BYTES);
+    if(problem){showAlert(els.globalAlert,problem,'error');input.value='';heroBackgroundPendingFile=null;renderHeroBackgroundForm();return;}
+    showAlert(els.globalAlert,'');heroBackgroundPendingFile=file;updateHeroBackgroundPreview(URL.createObjectURL(file));
+  }
+  function saveHeroBackground(){
+    var btn=byId('hero-background-save'); if(btn) btn.disabled=true;
+    var oldItem=getHeroBackgroundItem();
+    var upload=heroBackgroundPendingFile?uploadAsset(heroBackgroundPendingFile,'hero'):Promise.resolve(null);
+    upload.then(function(newPath){
+      var items=getSettingsItems().filter(function(it){return !(it&&it.type==='hero_background');});
+      var path=newPath||(oldItem&&oldItem.image_url)||null;
+      if(path) items.push({type:'hero_background',image_url:path});
+      return upsertSettings({about_items:items,updated_at:new Date().toISOString()}).then(function(res){
+        if(res.error) throw res.error;
+        if(newPath&&oldItem&&oldItem.image_url&&oldItem.image_url!==newPath) sb.storage.from(ASSETS_BUCKET).remove([String(oldItem.image_url).replace(/^\/+/, '')]).then(function(){},function(){});
+        heroBackgroundPendingFile=null;toast('Ana sayfa arka planı kaydedildi.','success');return loadSettings();
+      });
+    }).catch(function(err){showAlert(els.globalAlert,'Arka plan kaydedilemedi: '+errText(err),'error');})
+      .then(function(){if(btn)btn.disabled=false;});
+  }
+  function removeHeroBackground(){
+    var oldItem=getHeroBackgroundItem();
+    var items=getSettingsItems().filter(function(it){return !(it&&it.type==='hero_background');});
+    var btn=byId('hero-background-remove'); if(btn)btn.disabled=true;
+    upsertSettings({about_items:items,updated_at:new Date().toISOString()}).then(function(res){
+      if(res.error)throw res.error;
+      if(oldItem&&oldItem.image_url) sb.storage.from(ASSETS_BUCKET).remove([String(oldItem.image_url).replace(/^\/+/, '')]).then(function(){},function(){});
+      toast('Arka plan kaldırıldı.','success');return loadSettings();
+    }).catch(function(err){showAlert(els.globalAlert,'Arka plan kaldırılamadı: '+errText(err),'error');})
+      .then(function(){if(btn)btn.disabled=false;});
+  }
+
   /* ---- Hakkımızda (güven şeridi maddeleri) ---- */
   /* Sitede ilk açılışta görünen varsayılan metinler. about_items boşsa form
      bunlarla dolar; böylece mevcut metinleri görüp doğrudan düzenleyebilirsiniz. */
@@ -1047,7 +1111,7 @@
     try { items = settings && settings.about_items || []; if (typeof items==='string') items = JSON.parse(items); if (!Array.isArray(items)) items=[]; }
     catch(e){ items=[]; }
     if (items.length===0) items = ABOUT_DEFAULTS;
-    aboutItems = items.map(function(it){ return Object.assign({}, it); });
+    aboutItems = items.filter(function(it){ return !(it && it.type==='hero_background'); }).map(function(it){ return Object.assign({}, it); });
     if (!aboutItems.some(function(it){ return it && it.type==='story'; })) aboutItems.unshift(Object.assign({}, ABOUT_DEFAULTS[0]));
   }
   function renderAboutForm(){
@@ -1102,6 +1166,7 @@
     if (e) e.preventDefault();
     /* Türkçe başlık ve açıklaması boş olan maddeler kaydedilmez */
     var items = aboutItems.filter(function(it){ return it.type==='story' || (it.title_tr||'').trim() || (it.desc_tr||'').trim(); });
+    var heroItem = getHeroBackgroundItem(); if (heroItem && heroItem.image_url) items.push(heroItem);
     var btn = els.aboutSaveBtn; if (btn) btn.disabled=true;
     upsertSettings({about_items: items, updated_at:new Date().toISOString()})
       .then(function(res){
@@ -1236,6 +1301,9 @@
     if (els.settingsForm) els.settingsForm.addEventListener('submit', saveSettings);
     if (els.sLogo) els.sLogo.addEventListener('change', onLogoFileChange);
     if (els.sLogoRemove) els.sLogoRemove.addEventListener('click', removeLogo);
+    var heroBgInput=byId('hero-background-image'); if(heroBgInput) heroBgInput.addEventListener('change',onHeroBackgroundFileChange);
+    var heroBgSave=byId('hero-background-save'); if(heroBgSave) heroBgSave.addEventListener('click',saveHeroBackground);
+    var heroBgRemove=byId('hero-background-remove'); if(heroBgRemove) heroBgRemove.addEventListener('click',removeHeroBackground);
     // İletişim formu
     var contactForm = byId('contact-form');
     if (contactForm) contactForm.addEventListener('submit', saveContact);

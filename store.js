@@ -229,8 +229,22 @@
     var logo = state.settings.logo_url ? assetPublicUrl(state.settings.logo_url) : '';
     if (logo) document.querySelectorAll('.brand-mark img').forEach(function(img){ img.src = logo; });
     renderBanner();
+    renderHeroBackground();
     renderTrustItems();
   }
+  function renderHeroBackground(){
+    var hero=document.querySelector('.hero'); if(!hero) return;
+    var items=(state.settings||{}).about_items;
+    try { if(typeof items==='string') items=JSON.parse(items); } catch(e){ items=[]; }
+    if(!Array.isArray(items)) items=[];
+    var item=items.find(function(it){return it&&it.type==='hero_background'&&it.image_url;});
+    if(!item){hero.style.removeProperty('background-image');hero.style.removeProperty('background-size');hero.style.removeProperty('background-position');return;}
+    var url=assetPublicUrl(item.image_url); if(!url) return;
+    hero.style.backgroundImage='linear-gradient(90deg, rgba(20,31,25,.88) 0%, rgba(20,31,25,.70) 48%, rgba(20,31,25,.34) 100%), url("'+url.replace(/"/g,'%22')+'")';
+    hero.style.backgroundSize='cover';
+    hero.style.backgroundPosition='center';
+  }
+
   function renderBanner(){
     var existing = byId('site-banner');
     if (existing) existing.remove();

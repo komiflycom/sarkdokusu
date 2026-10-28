@@ -303,6 +303,7 @@
             <button class="stab is-active" data-stab="branding" role="tab" type="button">Logo &amp; Marka</button>
             <button class="stab" data-stab="banner"   role="tab" type="button">Banner</button>
             <button class="stab" data-stab="contact"  role="tab" type="button">İletişim</button>
+            <button class="stab" data-stab="hero"     role="tab" type="button">Hero Bölümü</button>
             <button class="stab" data-stab="about"    role="tab" type="button">Hakkımızda</button>
           </div>
 
@@ -461,6 +462,21 @@
                 <button class="btn" id="contact-save-btn" type="submit"><span id="contact-save-label">Kaydet</span></button>
               </div>
             </form>
+          </section>
+
+          <section class="stab-panel panel" id="stab-hero" hidden aria-label="Hero Bölümü">
+            <h2 class="panel-section-title">Ana Sayfa Hero Arka Planı</h2>
+            <p class="hint" style="margin-bottom:16px">Ana sayfanın en üst giriş alanındaki arka plan görselini buradan yükleyip değiştirebilirsiniz. Önerilen masaüstü ölçüsü <strong>1920 × 800 px</strong>; yatay WebP/JPG/PNG, en fazla 5 MB. Halı desenini veya ürün detayını orta bölgede tutun. Başlıkların okunması için görselin üzerine koyu bir katman uygulanır.</p>
+            <div class="field">
+              <label for="hero-background-image">Hero arka plan görseli</label>
+              <input type="file" id="hero-background-image" accept="image/jpeg,image/png,image/webp">
+              <div class="image-preview" id="hero-background-preview" style="width:100%;max-width:620px;aspect-ratio:12/5;margin-top:12px;background-size:cover;background-position:center">Görsel seçilmedi</div>
+              <div class="form-actions" style="margin-top:14px;gap:10px">
+                <button class="btn" id="hero-background-save" type="button">Arka planı kaydet</button>
+                <button class="btn btn-outline" id="hero-background-remove" type="button" hidden>Arka planı kaldır</button>
+              </div>
+              <p class="hint" style="margin-top:12px">Kaydettikten sonra ana sayfayı yenileyin. Görsel, Supabase site-assets alanına yüklenir.</p>
+            </div>
           </section>
 
           <section class="stab-panel panel" id="stab-about" hidden aria-label="Hakkımızda">
