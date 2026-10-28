@@ -1023,6 +1023,7 @@
   /* Sitede ilk açılışta görünen varsayılan metinler. about_items boşsa form
      bunlarla dolar; böylece mevcut metinleri görüp doğrudan düzenleyebilirsiniz. */
   var ABOUT_DEFAULTS = [
+    { type:'story', title_tr:'Geçmişten gelen dokular, zamana yayılan hikâyeler', desc_tr:'Şark Dokusu; geleneksel halıların, el emeği dokumaların ve kültürel miras taşıyan özel parçaların izini sürer. Her ürünü yalnızca bir eşya olarak değil, ustalığı ve hikâyesi olan bir parça olarak seçeriz. Koleksiyonumuzda geçmişin desenlerine, doğal dokulara ve zamansız tasarımlara yer açıyoruz.', title_en:'Textures from the past, stories that endure', desc_en:'Şark Dokusu brings together traditional rugs, handmade textiles and distinctive pieces shaped by cultural heritage. We see each item as more than an object: it carries craftsmanship and a story.', title_ar:'أنسجة من الماضي وحكايات باقية', desc_ar:'يجمع Şark Dokusu السجاد التقليدي والمنسوجات اليدوية والقطع المميزة التي تحمل إرثًا ثقافيًا. نرى في كل قطعة حرفةً وحكايةً تتجاوز كونها مجرد غرض.', title_de:'Texturen aus der Vergangenheit, Geschichten für die Zukunft', desc_de:'Şark Dokusu vereint traditionelle Teppiche, handgefertigte Textilien und besondere Stücke mit kulturellem Erbe. Jedes Stück erzählt von Handwerkskunst und Geschichte.', title_fr:'Des textures anciennes, des histoires intemporelles', desc_fr:'Şark Dokusu réunit tapis traditionnels, textiles faits main et pièces singulières porteuses d’un héritage culturel. Chaque objet raconte une histoire et témoigne d’un savoir-faire.' },
     { title_tr:'Doğal malzeme', desc_tr:'Ürünlerimiz doğal içerik ve geleneksel yöntemlerle, küçük partiler hâlinde hazırlanır.',
       title_en:'Natural materials', desc_en:'Our products are prepared in small batches using natural ingredients and traditional methods.',
       title_ar:'مواد طبيعية', desc_ar:'تُحضَّر منتجاتنا بمواد طبيعية وأساليب تقليدية في دفعات صغيرة.',
@@ -1047,6 +1048,7 @@
     catch(e){ items=[]; }
     if (items.length===0) items = ABOUT_DEFAULTS;
     aboutItems = items.map(function(it){ return Object.assign({}, it); });
+    if (!aboutItems.some(function(it){ return it && it.type==='story'; })) aboutItems.unshift(Object.assign({}, ABOUT_DEFAULTS[0]));
   }
   function renderAboutForm(){
     loadAboutState();
@@ -1065,7 +1067,7 @@
     box.appendChild(tabs);
     aboutItems.forEach(function(item, idx){
       var block = document.createElement('div'); block.className='about-item-block';
-      var h = document.createElement('div'); h.className='about-item-head'; h.textContent='Madde '+(idx+1);
+      var h = document.createElement('div'); h.className='about-item-head'; h.textContent=item.type==='story'?'Ana Hakkımızda Hikâyesi':'Madde '+(idx+1);
       block.appendChild(h);
       var tf = document.createElement('div'); tf.className='field';
       var tl = document.createElement('label'); tl.textContent='Başlık ('+upper(aboutLang)+')'; tf.appendChild(tl);
@@ -1083,10 +1085,12 @@
       di.addEventListener('input', function(){ item['desc_'+aboutLang] = di.value; });
       if (aboutLang==='ar') di.dir='rtl';
       df.appendChild(di); block.appendChild(df);
-      var rm = document.createElement('button'); rm.type='button'; rm.className='btn btn-outline btn-sm';
-      rm.textContent='Bu maddeyi kaldır';
-      rm.addEventListener('click', function(){ aboutItems.splice(idx,1); renderAboutView(); });
-      block.appendChild(rm);
+      if (item.type!=='story') {
+        var rm = document.createElement('button'); rm.type='button'; rm.className='btn btn-outline btn-sm';
+        rm.textContent='Bu maddeyi kaldır';
+        rm.addEventListener('click', function(){ aboutItems.splice(idx,1); renderAboutView(); });
+        block.appendChild(rm);
+      }
       box.appendChild(block);
     });
   }
@@ -1097,7 +1101,7 @@
   function saveAbout(e){
     if (e) e.preventDefault();
     /* Türkçe başlık ve açıklaması boş olan maddeler kaydedilmez */
-    var items = aboutItems.filter(function(it){ return (it.title_tr||'').trim() || (it.desc_tr||'').trim(); });
+    var items = aboutItems.filter(function(it){ return it.type==='story' || (it.title_tr||'').trim() || (it.desc_tr||'').trim(); });
     var btn = els.aboutSaveBtn; if (btn) btn.disabled=true;
     upsertSettings({about_items: items, updated_at:new Date().toISOString()})
       .then(function(res){

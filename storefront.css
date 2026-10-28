@@ -504,3 +504,109 @@ a:hover { color: var(--ty-orange-dark); }
 .cm-link:hover { color: var(--ty-orange); }
 .cm-more { font-size: 12.5px; color: var(--ty-text); }
 @media (max-width: 820px) { .cm-ico { width: 20px; height: 20px; } .cm-panel-head { display: none; } }
+
+/* ==========================================================================
+   Şark Dokusu — Heritage Atelier final polish
+   Tarihî halı, dokuma ve kültürel miras ürünleri için mücevher/antikacı paleti
+   ========================================================================== */
+:root {
+  --ty-orange: #b08a45;
+  --ty-orange-dark: #86652d;
+  --ty-orange-soft: #f4eddf;
+  --ty-bg: #f6f2e9;
+  --ty-text: #26352c;
+  --cream: #f6f2e9;
+  --cream-deep: #e9dfcc;
+  --paper: #fffdf8;
+  --olive-900: #172c24;
+  --olive-800: #244638;
+  --olive-700: #315b49;
+  --olive-500: #8f713c;
+  --olive-300: #cdbb96;
+  --brass: #b08a45;
+  --brass-soft: #e4d3ad;
+  --ink: #26352c;
+  --ink-soft: #687268;
+  --line: #e1d8c7;
+  --radius: 12px;
+  --radius-lg: 20px;
+  --shadow-sm: 0 3px 12px rgba(38, 53, 44, .06);
+  --shadow: 0 12px 30px rgba(38, 53, 44, .09);
+}
+body { background: #f6f2e9; color: #26352c; }
+.site-header { background: rgba(255,253,248,.96); box-shadow: 0 1px 0 #e1d8c7; }
+.brand-name { color: #244638; }
+.brand-sub { color: #8f713c; }
+.nav-link { color: #244638; }
+.nav-link:hover { background: #f4eddf; color: #86652d; }
+.nav-cta, .cat-toggle, .btn { background: #244638; border-color: #244638; color: #fff; }
+.nav-cta:hover, .cat-toggle:hover, .cat-toggle[aria-expanded="true"], .btn:hover { background: #172c24; border-color: #172c24; color: #fff; }
+.btn-outline { background: transparent; color: #244638; border-color: #a99469; }
+.btn-outline:hover { background: #f4eddf; color: #172c24; border-color: #86652d; }
+.header-search .search-field input:focus { border-color: #b08a45; box-shadow: 0 0 0 3px rgba(176,138,69,.17); }
+.header-search .search-field svg, .cm-group-title { color: #8f713c; }
+.cat-root:hover, .chip:hover, .side-link:hover { color: #86652d; }
+.chip[aria-pressed="true"] { background: #244638; border-color: #244638; }
+.product-card { border-color: #e9e0d0; border-radius: 12px; box-shadow: 0 3px 12px rgba(38,53,44,.055); overflow: hidden; }
+.product-card:hover { border-color: #c8b17e; box-shadow: 0 12px 28px rgba(38,53,44,.12); }
+.card-media { background: #eee7da; }
+.card-title { color: #26352c; }
+.price { color: #86652d; }
+.card-badge { color: #244638; border-radius: 5px; }
+.perks { background: #fffdf8; border-color: #e1d8c7; }
+.perk-ic, .trust-item .ti-mark { background: #f4eddf; color: #86652d; }
+.section-title, .catalog-head h2 { color: #244638; }
+.st-img { background: linear-gradient(135deg,#e8ddc6,#cdbb96); box-shadow: 0 0 0 2px #e1d8c7, 0 6px 16px rgba(38,53,44,.1); }
+.showcase-tile:hover .st-img, .showcase-tile[aria-pressed="true"] .st-img { box-shadow: 0 0 0 2px #b08a45, 0 10px 22px rgba(38,53,44,.16); }
+.showcase-tile[aria-pressed="true"] .st-name { color: #86652d; }
+.hero {
+  background: radial-gradient(760px 400px at 85% 5%, rgba(176,138,69,.24), transparent 62%),
+    radial-gradient(650px 380px at 5% 100%, rgba(83,111,81,.3), transparent 65%),
+    linear-gradient(118deg, #172c24 0%, #244638 58%, #3a5140 100%);
+}
+.hero::after { opacity: .12; background-image: linear-gradient(135deg,#e4d3ad 25%,transparent 25%),linear-gradient(225deg,#e4d3ad 25%,transparent 25%),linear-gradient(45deg,#e4d3ad 25%,transparent 25%),linear-gradient(315deg,#e4d3ad 25%,transparent 25%); }
+.hero .eyebrow { color: #e4d3ad; border-color: rgba(228,211,173,.42); background: rgba(255,255,255,.08); }
+.hero h1 em { color: #e4c98d; }
+.hero .btn { background: #b08a45; border-color: #b08a45; color: #172c24; box-shadow: 0 6px 18px rgba(0,0,0,.15); }
+.hero .btn:hover { background: #d0ad67; border-color: #d0ad67; color: #172c24; }
+.hero .btn-outline { background: transparent; color: #fff; border-color: rgba(255,255,255,.6); }
+.hero .btn-outline:hover { background: rgba(255,255,255,.1); color: #fff; border-color: #e4d3ad; }
+.site-footer { background: #172c24; color: #d8d8c9; }
+.site-footer .brand-name { color: #f5edda; }
+.site-footer a:hover { color: #e4c98d; }
+.footer-bottom { border-color: rgba(255,255,255,.16); }
+.about-story-content { position: relative; overflow: hidden; padding: clamp(42px,7vw,82px) 0; background: #fffdf8; border-bottom: 1px solid #e1d8c7; }
+.about-story-content::before { content: ""; position: absolute; width: 240px; height: 240px; right: -70px; top: -85px; border: 1px solid rgba(176,138,69,.35); transform: rotate(45deg); box-shadow: 0 0 0 18px rgba(176,138,69,.035),0 0 0 38px rgba(176,138,69,.025); pointer-events: none; }
+.about-story-inner { position: relative; max-width: 850px; }
+.about-story-kicker { margin: 0 0 12px; color: #8f713c; font-size: 11px; font-weight: 800; letter-spacing: .2em; }
+.about-story-inner h2 { color: #244638; font-family: var(--font-display); font-size: clamp(30px,4.4vw,48px); line-height: 1.08; margin: 0 0 18px; max-width: 19ch; }
+.about-story-inner > p:last-child { margin: 0; color: #59675d; font-size: clamp(15px,1.7vw,17px); line-height: 1.9; max-width: 72ch; white-space: pre-line; }
+.trust { background: #f6f2e9; border-top: 0; }
+@media (max-width: 820px) {
+  .hero-inner { grid-template-columns: minmax(0,1fr); padding: 36px 20px 40px; gap: 16px; }
+  .hero-copy { max-width: 680px; }
+  .hero-art { height: 240px; max-width: 480px; width: 100%; margin: 0 auto; }
+  .hero h1 { font-size: clamp(2rem,7vw,2.8rem); }
+  .perks-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+  .perk { padding: 8px 2px; }
+  .about-story-content { padding: 42px 0; }
+  .about-story-inner h2 { max-width: 100%; }
+}
+@media (max-width: 480px) {
+  .hero-inner { padding: 30px 18px 32px; }
+  .hero-art { height: 205px; }
+  .hero-actions { gap: 8px; }
+  .hero .btn { padding: 11px 15px; font-size: 13px; }
+  .product-grid { gap: 10px; }
+  .product-card { border-radius: 10px; }
+  .card-media { aspect-ratio: 3 / 4; }
+  .about-story-kicker { font-size: 10px; }
+  .about-story-inner > p:last-child { font-size: 15px; line-height: 1.8; }
+}
+/* Dokunmatik ekranlarda ilk dokunuş ikinci ürün fotoğrafını gösterir. */
+@media (hover: none), (pointer: coarse) {
+  .product-card:hover { border-color: #e9e0d0; box-shadow: 0 3px 12px rgba(38,53,44,.055); }
+  .card-media.has-hover-img.is-second-image .card-img-2 { opacity: 1; }
+  .card-media.has-hover-img.is-second-image img:not(.card-img-2) { opacity: 0; }
+  .card-media.has-hover-img .card-img-2 { transition: opacity .2s ease; }
+}

@@ -262,8 +262,24 @@
     if (!Array.isArray(items) || items.length===0) return;
     container.textContent='';
     var l = curLang();
+    var story = items.find(function(item){ return item && item.type==='story'; });
+    var oldStory = document.getElementById('about-story-content');
+    if (oldStory) oldStory.remove();
+    if (story) {
+      var stTitle = story['title_'+l] || story.title_tr || '';
+      var stBody = story['desc_'+l] || story.desc_tr || '';
+      if (stTitle || stBody) {
+        var section = document.createElement('section'); section.id='about-story-content'; section.className='about-story-content';
+        var inner = document.createElement('div'); inner.className='wrap about-story-inner';
+        var kicker = document.createElement('p'); kicker.className='about-story-kicker'; kicker.textContent=(l==='tr'?'ŞARK DOKUSU’NUN HİKÂYESİ':l==='ar'?'حكاية ŞARK DOKUSU':l==='de'?'DIE GESCHICHTE VON ŞARK DOKUSU':l==='fr'?'L’HISTOIRE DE ŞARK DOKUSU':'THE STORY OF ŞARK DOKUSU');
+        var heading = document.createElement('h2'); heading.textContent=stTitle;
+        var body = document.createElement('p'); body.textContent=stBody;
+        inner.appendChild(kicker); if(stTitle) inner.appendChild(heading); if(stBody) inner.appendChild(body); section.appendChild(inner);
+        var trust = document.querySelector('.trust'); if(trust && trust.parentNode) trust.parentNode.insertBefore(section, trust);
+      }
+    }
     var ICONS = ['leaf','check','shield'];
-    items.forEach(function(item, i){
+    items.filter(function(item){ return !item || item.type!=='story'; }).forEach(function(item, i){
       var title = item['title_'+l] || item.title_tr || '';
       var desc  = item['desc_'+l]  || item.desc_tr  || '';
       if (!title && !desc) return;
@@ -375,7 +391,15 @@
     media.appendChild(heart);
     /* Kart tıklaması: detay paneli aç (lightbox değil) */
     media.style.cursor='zoom-in';
-    media.addEventListener('click',function(){ openProductDetail(product); });
+    media.addEventListener('click',function(e){
+      if (e.target && e.target.closest && e.target.closest('.card-fav')) return;
+      var touchMode = window.matchMedia && window.matchMedia('(hover: none), (pointer: coarse)').matches;
+      if (touchMode && media.classList.contains('has-hover-img')) {
+        if (!media.classList.contains('is-second-image')) { media.classList.add('is-second-image'); return; }
+        media.classList.remove('is-second-image');
+      }
+      openProductDetail(product);
+    });
     li.appendChild(media);
     var body=document.createElement('div'); body.className='card-body';
     var title=document.createElement('h3'); title.className='card-title'; title.textContent=name||t('product.unnamed'); body.appendChild(title);
