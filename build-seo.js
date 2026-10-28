@@ -32,6 +32,13 @@ const LOCALE = { tr: 'tr_TR', en: 'en_US', ar: 'ar_AR', de: 'de_DE', fr: 'fr_FR'
 const LANG_NAME = { tr: 'Türkçe', en: 'English', ar: 'العربية', de: 'Deutsch', fr: 'Français' };
 const SCHEMA_LANG = { tr: 'Turkish', en: 'English', ar: 'Arabic', de: 'German', fr: 'French' };
 
+/* Google Search Console doğrulaması (DNS gerekmez):
+   - HTML etiketi: kodu (yalnızca content="..." içindeki kısmı) gsc-token.txt dosyasına yazın
+   - HTML dosyası: Google'ın verdiği google*.html dosyasını bu klasöre koyun, dist/ köküne kopyalanır */
+let GSC_TOKEN = process.env.GSC_TOKEN || '';
+try { if (!GSC_TOKEN) GSC_TOKEN = fs.readFileSync(path.join(__dirname, 'gsc-token.txt'), 'utf8').trim(); } catch (e) { /* dosya yok */ }
+GSC_TOKEN = GSC_TOKEN.replace(/^google-site-verification=/, '').replace(/[^A-Za-z0-9_\-]/g, '');
+
 const META_DESC = {
   tr: 'Şark Dokusu: özenle seçilmiş doğal ürünler, el emeği dokunuşlar ve sade bir koleksiyon. Üyelik gerekmez, WhatsApp üzerinden kolay sipariş.',
   en: 'Şark Dokusu: a curated collection of natural, handmade products made with traditional methods. No account needed — order easily via WhatsApp.',
@@ -153,6 +160,7 @@ function headBlock(o) {
     '<meta name="description" content="' + esc(o.description) + '">',
     '<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">',
     '<meta name="theme-color" content="#f5efe6">',
+    GSC_TOKEN ? '<meta name="google-site-verification" content="' + GSC_TOKEN + '">' : '',
     '<link rel="canonical" href="' + esc(o.canonical) + '">',
     hreflangLinks(o.alt),
     '<meta property="og:type" content="' + (o.ogType || 'website') + '">',
@@ -217,6 +225,7 @@ function socials(settings) {
   fs.mkdirSync(OUT, { recursive: true });
   ['style.css', 'config.js', 'i18n.js', 'store.js', 'admin.html', 'admin.js', 'logo.png'].forEach((f) => fs.copyFileSync(path.join(ROOT, f), path.join(OUT, f)));
 
+  fs.readdirSync(ROOT).filter((f) => /^google[0-9a-f]+\.html$/i.test(f)).forEach((f) => fs.copyFileSync(path.join(ROOT, f), path.join(OUT, f)));
   const template = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
   const headerHtml = (template.match(/<header class="site-header">[\s\S]*?<\/header>/) || [''])[0];
   const footerHtml = (template.match(/<footer class="site-footer">[\s\S]*?<\/footer>/) || [''])[0];
