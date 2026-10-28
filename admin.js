@@ -24,6 +24,7 @@
   var sb = null, session = null, busy = false;
   var products = [], categories = [], settings = null;
   var editingId = null, currentImagePath = '', pendingFile = null, prodLang = 'tr';
+  var currentImagePath2 = '', pendingFile2 = null, hasImg2Col = true;
   var catEditingId = null, catLang = 'tr';
   var bannerLang = 'tr', bannerPendingFile = null;
   var logoPendingFile = null;
@@ -217,12 +218,19 @@
   /* ===================== ÜRÜNLER ===================== */
   function loadProducts(){
     if (els.listState){ els.listState.hidden=false; els.listState.textContent='Ürünler yükleniyor…'; }
-    return sb.from('products')
-      .select('id,name,description,price,category,category_id,image_url,stock,active,sort_order,created_at,name_tr,name_en,name_ar,name_de,name_fr,desc_tr,desc_en,desc_ar,desc_de,desc_fr')
-      .order('created_at',{ascending:false})
+    var COLS='id,name,description,price,category,category_id,image_url,stock,active,sort_order,created_at,name_tr,name_en,name_ar,name_de,name_fr,desc_tr,desc_en,desc_ar,desc_de,desc_fr';
+    function q(cols){ return sb.from('products').select(cols).order('created_at',{ascending:false}); }
+    return q(COLS+',image_url_2').then(function(res){
+      if (!res.error){ hasImg2Col=true; return res; }
+      if (/image_url_2|does not exist|schema cache/i.test(String(res.error.message||'')) || String(res.error.code||'')==='42703'){
+        hasImg2Col=false; return q(COLS);
+      }
+      return res;
+    })
       .then(function(res){
         if (res.error) throw res.error;
         products = Array.isArray(res.data) ? res.data : [];
+        if (els.img2Warn) els.img2Warn.hidden = hasImg2Col;
         renderProductList();
         populateProductCategorySelect();
       })
@@ -350,7 +358,7 @@
     });
   }
   function clearProductForm(){
-    editingId = null; pendingFile = null; currentImagePath = '';
+    editingId = null; pendingFile = null; currentImagePath = ''; pendingFile2 = null; currentImagePath2 = '';
     LANGS.forEach(function(l){ els['pName_'+l]=''; els['pDesc_'+l]=''; });
     if (els.productForm) els.productForm.reset();
     if (els.productId) els.productId.value='';
@@ -361,11 +369,14 @@
     setLangTabsActive(els.productLangTabs, 'tr');
     prodLang='tr'; loadProductLangToFields('tr');
     updateProductPreview('');
+    updateProductPreview2('');
     setBusy(false);
     renderProductList();
   }
   function startEditProduct(p){
     editingId = p.id; pendingFile = null; currentImagePath = p.image_url || '';
+    pendingFile2 = null; currentImagePath2 = p.image_url_2 || '';
+    if (els.image2) els.image2.value='';
     if (els.productId) els.productId.value = p.id;
     LANGS.forEach(function(l){
       els['pName_'+l] = p['name_'+l] || (l==='tr' ? (p.name||'') : '');
@@ -380,6 +391,7 @@
     if (els.cancelEdit) els.cancelEdit.hidden=false;
     setLangTabsActive(els.productLangTabs,'tr'); prodLang='tr'; loadProductLangToFields('tr');
     updateProductPreview(currentImagePath);
+    updateProductPreview2(currentImagePath2);
     renderProductList();
     if (els.formTitle && els.formTitle.scrollIntoView) els.formTitle.scrollIntoView({behavior:'smooth',block:'center'});
     var first = byId('p-name-tr');
@@ -400,6 +412,22 @@
     els.preview.style.backgroundImage = src ? 'url("'+src.replace(/"/g,'%22')+'")' : '';
     els.preview.textContent = src ? '' : 'Fotoğraf yok';
     if (els.removeImage) els.removeImage.hidden = !src;
+  }
+  function onProductFileChange2(){
+    var file = els.image2 && els.image2.files ? els.image2.files[0] : null;
+    if (!file){ pendingFile2=null; return; }
+    var problem = validateFile(file, MAX_FILE_BYTES);
+    if (problem){ showAlert(els.globalAlert, problem,'error'); els.image2.value=''; pendingFile2=null; updateProductPreview2(currentImagePath2); return; }
+    showAlert(els.globalAlert,'');
+    pendingFile2 = file;
+    updateProductPreview2(URL.createObjectURL(file));
+  }
+  function updateProductPreview2(pathOrUrl){
+    if (!els.preview2) return;
+    var src = pathOrUrl ? (/^blob:/i.test(pathOrUrl)||/^https?:/i.test(pathOrUrl)?pathOrUrl:imgPublicUrl(pathOrUrl)) : '';
+    els.preview2.style.backgroundImage = src ? 'url("'+src.replace(/"/g,'%22')+'")' : '';
+    els.preview2.textContent = src ? '' : 'Fotoğraf yok';
+    if (els.removeImage2) els.removeImage2.hidden = !src;
   }
   function uploadImage(file){
     var ext = ALLOWED[String(file.type).toLowerCase()];
@@ -438,6 +466,7 @@
     else payload.category = null;
     return { value: payload };
   }
+  var newPath2 = null;
   function saveProduct(e){
     if (e) e.preventDefault();
     if (busy) return;
@@ -445,9 +474,11 @@
     var collected = collectProductForm();
     if (collected.error){ showAlert(els.globalAlert,collected.error,'error'); toast(collected.error,'error'); return; }
     var payload = collected.value;
-    setBusy(true, pendingFile?'Fotoğraf yükleniyor…':'Kaydediliyor…');
-    var uploadStep = pendingFile ? uploadImage(pendingFile) : Promise.resolve(null);
-    uploadStep.then(function(newPath){
+    setBusy(true, (pendingFile||pendingFile2)?'Fotoğraf yükleniyor…':'Kaydediliyor…');
+    var uploadStep = Promise.all([ pendingFile ? uploadImage(pendingFile) : Promise.resolve(null), pendingFile2 ? uploadImage(pendingFile2) : Promise.resolve(null) ]);
+    uploadStep.then(function(paths){
+      var newPath = paths[0]; newPath2 = paths[1];
+      if (hasImg2Col || newPath2) payload.image_url_2 = newPath2 || currentImagePath2 || null;
       if (newPath) payload.image_url = newPath;
       else if (currentImagePath) payload.image_url = currentImagePath;
       else payload.image_url = null;
@@ -460,6 +491,7 @@
       if (!res) return;
       if (res.error) throw res.error;
       if (editingId && payload.image_url!==currentImagePath && currentImagePath) removeStoredImage(currentImagePath);
+      if (editingId && currentImagePath2 && payload.image_url_2!==currentImagePath2 && payload.image_url_2!==undefined) removeStoredImage(currentImagePath2);
       var wasEdit = !!editingId;
       toast(wasEdit?'Ürün güncellendi.':'Ürün eklendi.','success');
       showAlert(els.globalAlert, wasEdit?'Ürün başarıyla güncellendi.':'Yeni ürün başarıyla eklendi.','success');
@@ -493,7 +525,7 @@
     showAlert(els.globalAlert,'');
     sb.from('products').delete().eq('id',p.id).then(function(res){
       if (res.error) throw res.error;
-      removeStoredImage(p.image_url);
+      removeStoredImage(p.image_url); removeStoredImage(p.image_url_2);
       if (editingId===p.id) clearProductForm();
       toast('Ürün silindi.','success');
       return loadProducts();
@@ -508,6 +540,7 @@
     copy.name = copy.name_tr;
     copy.active = false;
     copy.image_url = p.image_url || null;
+    if (hasImg2Col) copy.image_url_2 = p.image_url_2 || null;
     sb.from('products').insert(copy).select('id').then(function(res){
       expectOneRow(res, true);
       toast('Ürün kopyalandı (pasif). Düzenleyip yayına alın.','success');
@@ -554,6 +587,7 @@
       return {
         'Ürün ID': String(p.id==null?'':p.id),
         'Resim Link': imgPublicUrl(p.image_url),
+        'Resim 2 Link': imgPublicUrl(p.image_url_2),
         'Ürün İsmi': getProdName(p,'tr'),
         'Açıklama': p.desc_tr || p.description || '',
         'Kategori İsmi': categoryNameForProduct(p),
@@ -1164,6 +1198,12 @@
       setTimeout(function(){ if (editingId){ var p=products.filter(function(x){return x.id===editingId;})[0]; if (p){ startEditProduct(p); return; } } clearProductForm(); },0);
     });
     if (els.image) els.image.addEventListener('change', onProductFileChange);
+    if (els.image2) els.image2.addEventListener('change', onProductFileChange2);
+    if (els.removeImage2) els.removeImage2.addEventListener('click', function(){
+      pendingFile2=null; currentImagePath2='';
+      if (els.image2) els.image2.value='';
+      updateProductPreview2('');
+    });
     if (els.removeImage) els.removeImage.addEventListener('click', function(){
       pendingFile=null; currentImagePath='';
       if (els.image) els.image.value='';
@@ -1233,6 +1273,7 @@
     LANGS.forEach(function(l){ els['pName_'+l]=''; els['pDesc_'+l]=''; });
     els.price=byId('p-price'); els.stock=byId('p-stock'); els.categoryId=byId('p-category-id');
     els.image=byId('p-image'); els.preview=byId('image-preview'); els.removeImage=byId('remove-image');
+    els.image2=byId('p-image-2'); els.preview2=byId('image-preview-2'); els.removeImage2=byId('remove-image-2'); els.img2Warn=byId('img2-warn');
     els.active=byId('p-active'); els.saveBtn=byId('save-btn'); els.saveLabel=byId('save-label');
     els.resetBtn=byId('reset-btn'); els.cancelEdit=byId('cancel-edit'); els.formTitle=byId('form-title');
     els.list=byId('admin-list'); els.productCount=byId('product-count'); els.listState=byId('list-state');

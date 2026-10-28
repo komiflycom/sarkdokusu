@@ -194,8 +194,8 @@ function formatPrice(v, lang) {
 }
 const currencyOf = () => 'USD';
 
-function imageUrl(cfg, p) {
-  const v = p.image_url;
+function imageUrl(cfg, p, field) {
+  const v = p[field || 'image_url'];
   if (!v || typeof v !== 'string' || /^data:/i.test(v)) return '';
   if (/^https?:\/\//i.test(v)) return v;
   return cfg.supabaseUrl + '/storage/v1/object/public/product-images/' + v.replace(/^\/+/, '');
@@ -312,6 +312,7 @@ function socials(settings) {
       const brand = (nm && (nm[lang] || nm.tr)) || settings.store_name || cfg.storeName || 'Şark Dokusu';
       const name = pName(p, lang, DICT), desc = pDesc(p, lang);
       const img = imageUrl(cfg, p);
+      const img2 = imageUrl(cfg, p, 'image_url_2');
       const cat = cats[p.category_id] ? (cats[p.category_id]['name_' + lang] || cats[p.category_id].name_tr) : (p.category || '');
       const stock = Number(p.stock), hasStock = p.stock !== null && p.stock !== undefined && p.stock !== '' && isFinite(stock);
       const out = hasStock && stock <= 0;
@@ -324,7 +325,7 @@ function socials(settings) {
 
       const ld = [
         { '@context': 'https://schema.org', '@type': 'Product', '@id': pageUrl + '#product', name, description: desc || description, sku: String(p.id),
-          image: img ? [img] : undefined, brand: { '@type': 'Brand', name: brand }, category: cat || undefined, inLanguage: lang,
+          image: img ? (img2 ? [img, img2] : [img]) : undefined, brand: { '@type': 'Brand', name: brand }, category: cat || undefined, inLanguage: lang,
           offers: Number.isFinite(Number(p.price)) && p.price !== '' && p.price !== null ? {
             '@type': 'Offer', url: pageUrl, price: Number(p.price).toFixed(2), priceCurrency: currencyOf(lang),
             availability: out ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock', itemCondition: 'https://schema.org/NewCondition',

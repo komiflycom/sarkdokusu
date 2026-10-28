@@ -1932,3 +1932,28 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 }
 @media (max-width: 420px) { .nav-wa .wa-label { display: none; } .nav-wa { padding: 9px; } }
 @media (prefers-reduced-motion: reduce) { .nav-wa, .nav-wa .wa-dot { animation: none; } }
+
+
+/* ===== 2. ürün görseli: kartta hover, detayda küçük resimler ===== */
+.card-media .card-img-2 {
+  position: absolute; inset: 0; z-index: 1;
+  width: 100%; height: 100%; object-fit: cover;
+  opacity: 0; transition: opacity .35s var(--ease);
+  pointer-events: none;
+}
+@media (hover: hover) {
+  .product-card:hover .card-media.has-hover-img .card-img-2 { opacity: 1; }
+  .product-card:hover .card-media.has-hover-img img:not(.card-img-2) { transform: none; }
+}
+.card-media .card-badge, .card-media .card-new, .card-media .card-fav { z-index: 2; }
+.pd-thumbs {
+  position: absolute; left: 0; right: 0; bottom: 10px;
+  display: flex; justify-content: center; gap: 8px; z-index: 2;
+}
+.pd-thumb {
+  width: 52px; height: 52px; padding: 0; border-radius: 8px; overflow: hidden; cursor: pointer;
+  border: 2px solid rgba(255,255,255,.85); background: #fff; opacity: .75;
+  box-shadow: 0 1px 6px rgba(0,0,0,.25); transition: opacity .15s ease, border-color .15s ease;
+}
+.pd-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+.pd-thumb.is-on, .pd-thumb:hover { opacity: 1; border-color: var(--brass, #b8893b); }

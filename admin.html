@@ -181,6 +181,19 @@
                 </div>
               </div>
 
+              <div class="field">
+                <label for="p-image-2">2. fotoğraf (yakın çekim – isteğe bağlı)</label>
+                <div class="image-picker">
+                  <div class="image-preview" id="image-preview-2" aria-hidden="true">Fotoğraf yok</div>
+                  <div class="ip-body">
+                    <input type="file" id="p-image-2" accept="image/jpeg,image/png,image/webp">
+                    <span class="hint">Vitrinde ürünün üzerine gelince gösterilir; ürüne tıklayınca ana fotoğrafla birlikte görünür. Aynı boyut/oran önerilir (800 × 1000 px).</span>
+                    <span class="hint" id="img2-warn" hidden style="color:#b3261e">Veritabanında <b>image_url_2</b> sütunu yok. Supabase SQL Editor'de şunu çalıştırın: <code>alter table products add column image_url_2 text;</code></span>
+                    <button class="btn btn-outline btn-sm" id="remove-image-2" type="button" hidden>2. fotoğrafı kaldır</button>
+                  </div>
+                </div>
+              </div>
+
               <div class="check-row">
                 <input type="checkbox" id="p-active" checked>
                 <label for="p-active">Yayında <span class="hint">Kapalıysa vitrinde görünmez.</span></label>
