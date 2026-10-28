@@ -24,7 +24,7 @@
   var els = {};
   var state = {
     products: [], categories: [], settings: null,
-    search: '', category: '__all__', loading: true, error: null,
+    search: '', category: '__all__', sort: 'default', loading: true, error: null,
     supabaseReady: false
   };
 
@@ -350,6 +350,15 @@
       var badge=document.createElement('span'); badge.className='card-badge'+(isOut?' is-out':'');
       badge.textContent=isOut?t('badge.soldout'):catName; media.appendChild(badge);
     }
+    if (!isOut && isNewProduct(product)){ var nb=document.createElement('span'); nb.className='card-new'; nb.textContent=t('badge.new'); media.appendChild(nb); }
+    var pid=String(product.id||'');
+    var heart=document.createElement('button'); heart.type='button'; heart.className='card-fav';
+    var faved=!!favSet()[pid];
+    function paintHeart(){ heart.classList.toggle('is-on',faved); heart.setAttribute('aria-pressed',String(faved)); heart.setAttribute('aria-label',t(faved?'fav.remove':'fav.add')); }
+    heart.innerHTML='<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8Z"/></svg>';
+    paintHeart();
+    heart.addEventListener('click',function(e){ e.stopPropagation(); var f=favSet(); if (f[pid]) delete f[pid]; else f[pid]=1; favSave(f); faved=!!f[pid]; paintHeart(); });
+    media.appendChild(heart);
     /* Kart tıklaması: detay paneli aç (lightbox değil) */
     media.style.cursor='zoom-in';
     media.addEventListener('click',function(){ openProductDetail(product); });
@@ -533,12 +542,17 @@
   function filteredProducts(){
     var q=normalize(state.search);
     var catSet = state.category!=='__all__' ? idSet(state.category) : null;
-    return state.products.filter(function(p){
+    var out = state.products.filter(function(p){
       if (catSet && !productInSet(p,catSet)) return false;
       if (!q) return true;
       var hay=normalize([getProdName(p),getProdDesc(p),catNameById(p.category_id),p.category||''].join(' '));
       return hay.indexOf(q)>-1;
     });
+    var num=function(p){ var n=Number(p.price); return isFinite(n)?n:0; };
+    if (state.sort==='price_asc') out=out.slice().sort(function(a,b){ return num(a)-num(b); });
+    else if (state.sort==='price_desc') out=out.slice().sort(function(a,b){ return num(b)-num(a); });
+    else if (state.sort==='newest') out=out.slice().sort(function(a,b){ return String(b.created_at||'').localeCompare(String(a.created_at||'')); });
+    return out;
   }
   /* ---- Kategori ağacı ---- */
   var menuState = { open:false, root:null, timer:null };
@@ -582,7 +596,7 @@
   function selectCategory(id){
     state.category = id || '__all__';
     closeMenu();
-    renderChips(); renderCatBar(); renderMenu(); renderGrid();
+    renderChips(); renderCatBar(); renderMenu(); renderGrid(); renderShowcase(); renderSidebar(); updateCatalogTitle();
     var sec=byId('koleksiyon');
     if (sec && sec.scrollIntoView){ try { sec.scrollIntoView({behavior:'smooth',block:'start'}); } catch(e){ sec.scrollIntoView(); } }
   }
@@ -801,7 +815,7 @@
         state.categories = (results[1] && results[1].length) ? results[1] : deriveCategories(state.products);
         if (state.category!=='__all__' && !findCat(state.category)) state.category='__all__';
         state.loading=false;
-        renderChips(); renderCatBar(); renderMenu(); renderGrid();
+        renderChips(); renderCatBar(); renderMenu(); renderGrid(); renderShowcase(); renderSidebar(); renderHeroArt(); updateCatalogTitle();
       })
       .catch(function(err){
         state.products=[]; state.categories=[]; state.loading=false;
@@ -809,6 +823,94 @@
         state.error=t('error.fetch',{detail:detail}); renderGrid();
         if (window.console&&console.error) console.error('[Şark Dokusu] yükleme hatası:', err);
       });
+  }
+
+
+  /* ---- Kategori vitrini (yuvarlak kartlar), yan menü, hero kolajı ---- */
+  function coverProduct(id){
+    var set=idSet(id);
+    for (var i=0;i<state.products.length;i++){
+      var p=state.products[i];
+      if (p.image_url && productInSet(p,set)) return p;
+    }
+    return null;
+  }
+  function fillImg(box, path, alt){
+    fetchImageBlob(path).then(function(u){
+      if (!u) return;
+      var im=new Image(); im.alt=alt||''; im.decoding='async'; im.draggable=false; im.src=u;
+      im.addEventListener('error',function(){ im.remove(); });
+      box.insertBefore(im, box.firstChild);
+    });
+  }
+  function renderShowcase(){
+    var sec=byId('cat-showcase'), row=byId('showcase-row');
+    if (!sec||!row) return;
+    row.textContent='';
+    var roots=rootsList();
+    sec.hidden = roots.length===0;
+    if (!roots.length) return;
+    var activeRoot = state.category!=='__all__' ? (pathOf(state.category)[0]||null) : null;
+    function tile(label, count, cover, pressed, fn, glyph){
+      var b=el('button','showcase-tile'); b.type='button'; b.setAttribute('aria-pressed',String(!!pressed));
+      var img=el('span','st-img'); 
+      var ph=el('span','st-glyph',glyph||String(label||'?').trim().charAt(0).toUpperCase()); img.appendChild(ph);
+      if (cover && cover.image_url) fillImg(img, cover.image_url, label);
+      b.appendChild(img);
+      b.appendChild(el('span','st-name',label));
+      if (count!=null) b.appendChild(el('span','st-count',t('count.products',{n:count})));
+      b.addEventListener('click',fn); return b;
+    }
+    row.appendChild(tile(t('chip.all'), state.products.length, state.products.filter(function(p){return p.image_url;})[0]||null, state.category==='__all__', function(){ selectCategory(null); }, '✦'));
+    roots.forEach(function(c){
+      row.appendChild(tile(getCatName(c), countFor(c.id), coverProduct(c.id), !!(activeRoot&&activeRoot.id===c.id), function(){ selectCategory(c.id); }));
+    });
+  }
+  function renderSidebar(){
+    var box=byId('side-cats'); if (!box) return;
+    box.textContent='';
+    var roots=rootsList();
+    box.hidden = roots.length===0;
+    if (!roots.length) return;
+    box.appendChild(el('h3','side-title',t('cat.menu')));
+    var ul=el('ul','side-list');
+    function item(label, count, active, fn, sub){
+      var li=el('li'); var b=el('button','side-link'+(sub?' is-sub':'')+(active?' is-active':''));
+      b.type='button'; if (active) b.setAttribute('aria-current','true');
+      b.appendChild(el('span','sl-name',label)); b.appendChild(el('span','sl-count',String(count)));
+      b.addEventListener('click',fn); li.appendChild(b); return li;
+    }
+    ul.appendChild(item(t('chip.all'), state.products.length, state.category==='__all__', function(){ selectCategory(null); }));
+    var path = state.category!=='__all__' ? pathOf(state.category) : [];
+    var openIds={}; path.forEach(function(c){ openIds[c.id]=true; });
+    roots.forEach(function(c){
+      ul.appendChild(item(getCatName(c), countFor(c.id), state.category===c.id, function(){ selectCategory(c.id); }));
+      if (openIds[c.id]) childrenOf(c.id).forEach(function(ch){
+        ul.appendChild(item(getCatName(ch), countFor(ch.id), state.category===ch.id, function(){ selectCategory(ch.id); }, true));
+      });
+    });
+    box.appendChild(ul);
+  }
+  function renderHeroArt(){
+    var box=byId('hero-art'); if (!box) return;
+    box.textContent='';
+    var picks=state.products.filter(function(p){ return p.image_url; }).slice(0,3);
+    picks.forEach(function(p,i){
+      var f=el('div','ha-card ha-'+(i+1)); fillImg(f, p.image_url, ''); box.appendChild(f);
+    });
+  }
+  function updateCatalogTitle(){
+    var h=byId('koleksiyon-baslik'); if (!h) return;
+    var c = state.category!=='__all__' ? findCat(state.category) : null;
+    h.textContent = c ? getCatName(c) : t('catalog.title');
+  }
+  /* ---- Favoriler (yalnızca bu tarayıcıda) ---- */
+  var FAV_KEY='sark-favs';
+  function favSet(){ try { return JSON.parse(localStorage.getItem(FAV_KEY)||'{}')||{}; } catch(e){ return {}; } }
+  function favSave(o){ try { localStorage.setItem(FAV_KEY, JSON.stringify(o)); } catch(e){} }
+  function isNewProduct(p){
+    var d=Date.parse(p.created_at||''); if (!isFinite(d)) return false;
+    return (Date.now()-d) < 14*24*3600*1000;
   }
 
   /* ---- Görsel koruması (caydırıcı) ---- */
@@ -842,6 +944,8 @@
       var onSearch=debounce(function(e){ state.search=e.target.value||''; updateClearButton(); renderGrid(); }, SEARCH_DEBOUNCE);
       els.search.addEventListener('input', onSearch);
     }
+    var sortEl=byId('sort-select');
+    if (sortEl) sortEl.addEventListener('change', function(){ state.sort=sortEl.value||'default'; renderGrid(); });
     if (els.clear){
       els.clear.addEventListener('click', function(){ state.search=''; if(els.search){ els.search.value=''; els.search.focus(); } updateClearButton(); renderGrid(); });
     }
@@ -864,7 +968,7 @@
     renderSupportLink();
     attachImageProtection();
     if (window.__sarkI18n){
-      window.__sarkI18n.subscribe(function(){ applyBrand(); renderSupportLink(); renderChips(); renderCatBar(); renderMenu(); renderGrid(); renderBanner(); renderTrustItems(); });
+      window.__sarkI18n.subscribe(function(){ applyBrand(); renderSupportLink(); renderChips(); renderCatBar(); renderMenu(); renderGrid(); renderBanner(); renderTrustItems(); renderShowcase(); renderSidebar(); updateCatalogTitle(); });
     }
     if (!initSupabase()){
       state.loading=false; state.error=t('error.fetch',{detail:'Supabase yapılandırması eksik veya geçersiz.'}); renderGrid(); return;

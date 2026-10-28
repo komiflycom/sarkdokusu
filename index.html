@@ -22,7 +22,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="style.css?v=fix6">
-  <link rel="stylesheet" href="storefront.css?v=ty1">
+  <link rel="stylesheet" href="storefront.css?v=ty2">
 </head>
 <body>
   <a class="skip-link" href="#koleksiyon" data-i18n="skip.content">İçeriğe geç</a>
@@ -92,17 +92,33 @@
     <!-- ================= HERO ================= -->
     <section class="hero">
       <div class="hero-inner">
-        <p class="eyebrow" data-i18n="hero.eyebrow">Doğadan gelen dokunuş</p>
-        <h1 data-i18n="hero.title" data-i18n-prop="innerHTML">Her parçada <em>sabrın</em> ve doğanın izi</h1>
-        <p class="hero-lead" data-i18n="hero.lead">
-          Şark Dokusu; özenle seçilmiş doğal malzemelerle, el emeğiyle hazırlanan
-          sade bir koleksiyon sunar. Beğendiğiniz ürünü seçin, WhatsApp üzerinden
-          birkaç saniyede siparişinizi iletin.
-        </p>
+        <div class="hero-copy">
+        <p class="eyebrow" data-i18n="hero.eyebrow">Elişi · Tarihi · Doğal</p>
+        <h1 data-i18n="hero.title" data-i18n-prop="innerHTML">El emeği <em>halı, giyim</em> ve tarihi ürünler</h1>
+        <p class="hero-lead" data-i18n="hero.lead">Şark Dokusu; usta ellerden çıkan halılar, el işi giysiler ve geçmişten gelen özel parçaları tek koleksiyonda buluşturur. Beğendiğiniz ürünü seçin, WhatsApp'tan saniyeler içinde sipariş verin.</p>
         <div class="hero-actions">
           <a class="btn" href="#koleksiyon" data-i18n="hero.cta_explore">Koleksiyonu keşfet</a>
           <a class="btn btn-outline" href="#hakkimizda" data-i18n="hero.cta_story">Hikâyemiz</a>
         </div>
+      </div>
+        <div class="hero-art" id="hero-art" aria-hidden="true"></div>
+      </div>
+    </section>
+
+
+    <!-- ================= AVANTAJLAR ================= -->
+    <section class="perks"><div class="wrap perks-grid">
+      <div class="perk"><span class="perk-ic" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8Z"/></svg></span><div><strong data-i18n="perk.1_t"></strong><span data-i18n="perk.1_d"></span></div></div>
+      <div class="perk"><span class="perk-ic" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V10M9 21V10M15 21V10M19 21V10M3 10l9-6 9 6"/></svg></span><div><strong data-i18n="perk.2_t"></strong><span data-i18n="perk.2_d"></span></div></div>
+      <div class="perk"><span class="perk-ic" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 20.5l1.6-5.1A8.4 8.4 0 1 1 21 11.5Z"/></svg></span><div><strong data-i18n="perk.3_t"></strong><span data-i18n="perk.3_d"></span></div></div>
+      <div class="perk"><span class="perk-ic" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8 12 3 3 8v8l9 5 9-5ZM3 8l9 5 9-5M12 13v8"/></svg></span><div><strong data-i18n="perk.4_t"></strong><span data-i18n="perk.4_d"></span></div></div>
+    </div></section>
+
+    <!-- ================= KATEGORİ VİTRİNİ ================= -->
+    <section class="showcase" id="cat-showcase" hidden aria-labelledby="showcase-title">
+      <div class="wrap">
+        <h2 id="showcase-title" class="section-title" data-i18n="showcase.title">Kategoriye göz atın</h2>
+        <div class="showcase-row" id="showcase-row"></div>
       </div>
     </section>
 
@@ -114,9 +130,22 @@
             <h2 id="koleksiyon-baslik" data-i18n="catalog.title">Koleksiyon</h2>
             <p data-i18n="catalog.subtitle">Özenle seçilmiş ürünlerimizi keşfedin.</p>
           </div>
-          <span class="result-count" id="result-count" aria-live="polite" data-i18n="loading">Yükleniyor…</span>
+          <div class="head-tools">
+            <span class="result-count" id="result-count" aria-live="polite" data-i18n="loading">Yükleniyor…</span>
+            <label class="sort-box"><span class="visually-hidden" data-i18n="sort.label">Sırala</span>
+              <select id="sort-select" class="sort-select">
+                <option value="default" data-i18n="sort.default">Önerilen</option>
+                <option value="newest" data-i18n="sort.newest">En yeni</option>
+                <option value="price_asc" data-i18n="sort.price_asc">Fiyat: Artan</option>
+                <option value="price_desc" data-i18n="sort.price_desc">Fiyat: Azalan</option>
+              </select>
+            </label>
+          </div>
         </div>
 
+        <div class="catalog-layout">
+          <aside class="side-cats" id="side-cats" hidden data-i18n="cat.aria" data-i18n-prop="aria-label" aria-label="Kategori menüsü"></aside>
+          <div class="catalog-main">
         <div class="toolbar">
 
           <div class="chips" id="category-chips" role="group"
@@ -126,6 +155,8 @@
         <ul class="product-grid" id="product-grid" aria-live="polite" aria-busy="true">
           <!-- Ürünler store.js tarafından basılır -->
         </ul>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -226,7 +257,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.0/dist/umd/supabase.min.js"
           crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="config.js?v=fix6"></script>
-  <script src="i18n.js?v=fix6"></script>
-  <script src="store.js?v=fix6"></script>
+  <script src="i18n.js?v=ty2"></script>
+  <script src="store.js?v=ty2"></script>
 </body>
 </html>
