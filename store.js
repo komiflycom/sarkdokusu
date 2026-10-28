@@ -1,4 +1,4 @@
-/* BUILD: 2026-10-28-fix3 (dil bazli site adi, logo/banner boyutu) */
+/* BUILD: 2026-10-28-fix4 (dil bazli site adi, logo/banner boyutu) */
 /* ==========================================================================
    ŞARK DOKUSU — store.js (v2)
    Vitrin: ayarları, kategorileri ve ürünleri Supabase'den okur; çok dilli
@@ -259,14 +259,20 @@
     if (!Array.isArray(items) || items.length===0) return;
     container.textContent='';
     var l = curLang();
-    items.forEach(function(item){
+    var ICONS = ['leaf','check','shield'];
+    items.forEach(function(item, i){
       var title = item['title_'+l] || item.title_tr || '';
       var desc  = item['desc_'+l]  || item.desc_tr  || '';
       if (!title && !desc) return;
       var div = document.createElement('div'); div.className='trust-item';
+      var mark = document.createElement('span'); mark.className='ti-mark'; mark.setAttribute('aria-hidden','true');
+      var ic = iconSvg(ICONS[i % ICONS.length]); ic.setAttribute('width','18'); ic.setAttribute('height','18');
+      mark.appendChild(ic);
+      var body = document.createElement('div');
       var h = document.createElement('h3'); h.textContent = title;
       var p = document.createElement('p');  p.textContent = desc;
-      div.appendChild(h); div.appendChild(p);
+      body.appendChild(h); body.appendChild(p);
+      div.appendChild(mark); div.appendChild(body);
       container.appendChild(div);
     });
   }
@@ -283,6 +289,8 @@
     svg.setAttribute('stroke-linecap','round'); svg.setAttribute('stroke-linejoin','round');
     var D={
       leaf:['M11 20A7 7 0 0 1 4 13c0-5 4-9 9-9h7v3a9 9 0 0 1-9 9h-1','M4 21c1-4 3-6 6-8'],
+      check:['M20 6 9 17l-5-5'],
+      shield:['M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z'],
       alert:['M12 9v4','M12 17h.01','M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z'],
       search:['M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z','m21 21-4.3-4.3']
     };

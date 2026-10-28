@@ -894,80 +894,85 @@
     toast('Banner görseli kaldırıldı.','success');
   }
 
-  /* ---- Hakkımızda ---- */
-  function renderAboutForm(){
-    if (!els.aboutItemsContainer) return;
+  /* ---- Hakkımızda (güven şeridi maddeleri) ---- */
+  /* Sitede ilk açılışta görünen varsayılan metinler. about_items boşsa form
+     bunlarla dolar; böylece mevcut metinleri görüp doğrudan düzenleyebilirsiniz. */
+  var ABOUT_DEFAULTS = [
+    { title_tr:'Doğal malzeme', desc_tr:'Ürünlerimiz doğal içerik ve geleneksel yöntemlerle, küçük partiler hâlinde hazırlanır.',
+      title_en:'Natural materials', desc_en:'Our products are prepared in small batches using natural ingredients and traditional methods.',
+      title_ar:'مواد طبيعية', desc_ar:'تُحضَّر منتجاتنا بمواد طبيعية وأساليب تقليدية في دفعات صغيرة.',
+      title_de:'Natürliche Materialien', desc_de:'Unsere Produkte werden in kleinen Chargen mit natürlichen Zutaten und traditionellen Methoden hergestellt.',
+      title_fr:'Matières naturelles', desc_fr:'Nos produits sont préparés en petites séries avec des ingrédients naturels et des méthodes traditionnelles.' },
+    { title_tr:'Kolay sipariş', desc_tr:"Üyelik gerekmez. Beğendiğiniz ürünü WhatsApp'tan tek dokunuşla bize iletin.",
+      title_en:'Easy ordering', desc_en:'No account needed. Just tap to send your favourite product to us on WhatsApp.',
+      title_ar:'طلب سهل', desc_ar:'لا تحتاج لحساب. أرسل المنتج المفضل لديك مباشرة عبر واتساب.',
+      title_de:'Einfach bestellen', desc_de:'Kein Konto nötig. Sende dein Lieblingsprodukt direkt über WhatsApp an uns.',
+      title_fr:'Commande facile', desc_fr:'Pas de compte nécessaire. Envoyez simplement votre produit préféré via WhatsApp.' },
+    { title_tr:'Özenli paketleme', desc_tr:'Her sipariş, yola çıkmadan önce tek tek kontrol edilerek özenle paketlenir.',
+      title_en:'Careful packaging', desc_en:'Each order is individually checked and thoughtfully packed before it leaves.',
+      title_ar:'تغليف عناية', desc_ar:'يُفحص كل طلب بشكل فردي ويُعبَّأ بعناية قبل الشحن.',
+      title_de:'Sorgfältige Verpackung', desc_de:'Jede Bestellung wird einzeln geprüft und liebevoll verpackt, bevor sie das Haus verlässt.',
+      title_fr:'Emballage soigné', desc_fr:"Chaque commande est vérifiée individuellement et emballée avec soin avant d'être expédiée." }
+  ];
+  var aboutItems = [], aboutLang = 'tr';
+
+  function loadAboutState(){
     var items = [];
-    try { items = settings.about_items || []; if (typeof items==='string') items = JSON.parse(items); if (!Array.isArray(items)) items=[]; }
+    try { items = settings && settings.about_items || []; if (typeof items==='string') items = JSON.parse(items); if (!Array.isArray(items)) items=[]; }
     catch(e){ items=[]; }
-    if (items.length===0) items = [{title_tr:'',desc_tr:''},{title_tr:'',desc_tr:''},{title_tr:'',desc_tr:''}];
-    els.aboutItemsContainer.textContent='';
-    items.forEach(function(item, idx){
-      var block = document.createElement('div'); block.className='about-item-block';
-      var h = document.createElement('div'); h.className='about-item-head';
-      h.textContent = 'Madde '+(idx+1);
-      block.appendChild(h);
-      var tabs = document.createElement('div'); tabs.className='lang-tabs'; tabs.setAttribute('role','tablist');
-      LANGS.forEach(function(l, i){
-        var tb = document.createElement('button'); tb.type='button'; tb.className='ltab'+(i===0?' is-active':'');
-        tb.setAttribute('data-lang',l); tb.textContent=upper(l);
-        tabs.appendChild(tb);
-      });
-      block.appendChild(tabs);
-      var titleField = document.createElement('div'); titleField.className='field';
-      var tl = document.createElement('label'); tl.textContent='Başlık (TR)'; titleField.appendChild(tl);
-      var ti = document.createElement('input'); ti.className='input'; ti.type='text'; ti.maxLength=80;
-      ti.dataset.aboutIdx=idx; ti.dataset.aboutField='title'; ti.dataset.aboutLang='tr';
-      ti.value = item.title_tr || '';
-      titleField.appendChild(ti); block.appendChild(titleField);
-      var descField = document.createElement('div'); descField.className='field';
-      var dl = document.createElement('label'); dl.textContent='Açıklama (TR)'; descField.appendChild(dl);
-      var di = document.createElement('textarea'); di.className='textarea'; di.rows=2; di.maxLength=300;
-      di.dataset.aboutIdx=idx; di.dataset.aboutField='desc'; di.dataset.aboutLang='tr';
-      di.value = item.desc_tr || '';
-      descField.appendChild(di); block.appendChild(descField);
-      LANGS.forEach(function(l){
-        if (l==='tr') return;
-        var th = document.createElement('input'); th.type='hidden';
-        th.dataset.aboutIdx=idx; th.dataset.aboutField='title'; th.dataset.aboutLang=l;
-        th.value = item['title_'+l] || '';
-        var dh = document.createElement('input'); dh.type='hidden';
-        dh.dataset.aboutIdx=idx; dh.dataset.aboutField='desc'; dh.dataset.aboutLang=l;
-        dh.value = item['desc_'+l] || '';
-        block.appendChild(th); block.appendChild(dh);
-      });
-      tabs.querySelectorAll('.ltab').forEach(function(tab){
-        tab.addEventListener('click', function(){
-          var lang = tab.getAttribute('data-lang');
-          tabs.querySelectorAll('.ltab').forEach(function(t){ t.classList.toggle('is-active', t===tab); });
-          // save current visible values to hidden
-          block.querySelectorAll('[data-about-idx]').forEach(function(inp){
-            if (inp.type==='hidden') return;
-            var hid = block.querySelector('input[type="hidden"][data-about-field="'+inp.dataset.aboutField+'"][data-about-lang="'+inp.dataset.aboutLang+'"]');
-            if (hid) hid.value = inp.value;
-          });
-          // update labels and visible values
-          tl.textContent = 'Başlık ('+upper(lang)+')';
-          dl.textContent = 'Açıklama ('+upper(lang)+')';
-          var htv = block.querySelector('input[type="hidden"][data-about-field="title"][data-about-lang="'+lang+'"]');
-          var hdv = block.querySelector('input[type="hidden"][data-about-field="desc"][data-about-lang="'+lang+'"]');
-          if (lang==='tr'){ ti.value = item.title_tr||''; di.value = item.desc_tr||''; }
-          else { ti.value = htv ? htv.value : ''; di.value = hdv ? hdv.value : ''; }
-          ti.dataset.aboutLang = lang; di.dataset.aboutLang = lang;
-        });
-      });
-      els.aboutItemsContainer.appendChild(block);
+    if (items.length===0) items = ABOUT_DEFAULTS;
+    aboutItems = items.map(function(it){ return Object.assign({}, it); });
+  }
+  function renderAboutForm(){
+    loadAboutState();
+    renderAboutView();
+  }
+  function renderAboutView(){
+    var box = els.aboutItemsContainer; if (!box) return;
+    box.textContent='';
+    var tabs = document.createElement('div'); tabs.className='lang-tabs'; tabs.setAttribute('role','tablist');
+    LANGS.forEach(function(l){
+      var tb = document.createElement('button'); tb.type='button';
+      tb.className='ltab'+(l===aboutLang?' is-active':''); tb.textContent=upper(l);
+      tb.addEventListener('click', function(){ aboutLang=l; renderAboutView(); });
+      tabs.appendChild(tb);
     });
+    box.appendChild(tabs);
+    aboutItems.forEach(function(item, idx){
+      var block = document.createElement('div'); block.className='about-item-block';
+      var h = document.createElement('div'); h.className='about-item-head'; h.textContent='Madde '+(idx+1);
+      block.appendChild(h);
+      var tf = document.createElement('div'); tf.className='field';
+      var tl = document.createElement('label'); tl.textContent='Başlık ('+upper(aboutLang)+')'; tf.appendChild(tl);
+      var ti = document.createElement('input'); ti.className='input'; ti.type='text'; ti.maxLength=80;
+      ti.value = item['title_'+aboutLang] || '';
+      if (aboutLang!=='tr') ti.placeholder = item.title_tr || '';
+      ti.addEventListener('input', function(){ item['title_'+aboutLang] = ti.value; });
+      if (aboutLang==='ar') ti.dir='rtl';
+      tf.appendChild(ti); block.appendChild(tf);
+      var df = document.createElement('div'); df.className='field';
+      var dl = document.createElement('label'); dl.textContent='Açıklama ('+upper(aboutLang)+')'; df.appendChild(dl);
+      var di = document.createElement('textarea'); di.className='textarea'; di.rows=2; di.maxLength=300;
+      di.value = item['desc_'+aboutLang] || '';
+      if (aboutLang!=='tr') di.placeholder = item.desc_tr || '';
+      di.addEventListener('input', function(){ item['desc_'+aboutLang] = di.value; });
+      if (aboutLang==='ar') di.dir='rtl';
+      df.appendChild(di); block.appendChild(df);
+      var rm = document.createElement('button'); rm.type='button'; rm.className='btn btn-outline btn-sm';
+      rm.textContent='Bu maddeyi kaldır';
+      rm.addEventListener('click', function(){ aboutItems.splice(idx,1); renderAboutView(); });
+      block.appendChild(rm);
+      box.appendChild(block);
+    });
+  }
+  function addAboutItem(){
+    aboutItems.push({ title_tr:'', desc_tr:'' });
+    renderAboutView();
   }
   function saveAbout(e){
     if (e) e.preventDefault();
-    var groups = {};
-    document.querySelectorAll('[data-about-idx]').forEach(function(el){
-      var idx = el.dataset.aboutIdx, field = el.dataset.aboutField, lang = el.dataset.aboutLang;
-      if (!groups[idx]) groups[idx] = {};
-      groups[idx][field+'_'+lang] = el.value || '';
-    });
-    var items = Object.keys(groups).sort().map(function(k){ return groups[k]; });
+    /* Türkçe başlık ve açıklaması boş olan maddeler kaydedilmez */
+    var items = aboutItems.filter(function(it){ return (it.title_tr||'').trim() || (it.desc_tr||'').trim(); });
     var btn = els.aboutSaveBtn; if (btn) btn.disabled=true;
     upsertSettings({about_items: items, updated_at:new Date().toISOString()})
       .then(function(res){
@@ -995,37 +1000,6 @@
       .catch(function(err){ showAlert(els.globalAlert,'İletişim bilgileri kaydedilemedi: '+errText(err),'error'); })
       .then(function(){ if(btn) btn.disabled=false; });
   }
-  function addAboutItem(){
-    if (!els.aboutItemsContainer) return;
-    var idx = els.aboutItemsContainer.querySelectorAll('.about-item-block').length;
-    var block = document.createElement('div'); block.className='about-item-block';
-    var h = document.createElement('div'); h.className='about-item-head'; h.textContent='Madde '+(idx+1);
-    block.appendChild(h);
-    LANGS.forEach(function(l, i){
-      if (l==='tr'){
-        var fld = document.createElement('div'); fld.className='field';
-        var lbl = document.createElement('label'); lbl.textContent='Başlık (TR)'; fld.appendChild(lbl);
-        var inp = document.createElement('input'); inp.className='input'; inp.type='text'; inp.maxLength=80;
-        inp.dataset.aboutIdx=String(idx); inp.dataset.aboutField='title'; inp.dataset.aboutLang='tr'; inp.value='';
-        fld.appendChild(inp); block.appendChild(fld);
-        var fd2 = document.createElement('div'); fd2.className='field';
-        var lb2 = document.createElement('label'); lb2.textContent='Açıklama (TR)'; fd2.appendChild(lb2);
-        var ta = document.createElement('textarea'); ta.className='textarea'; ta.rows=2; ta.maxLength=300;
-        ta.dataset.aboutIdx=String(idx); ta.dataset.aboutField='desc'; ta.dataset.aboutLang='tr'; ta.value='';
-        fd2.appendChild(ta); block.appendChild(fd2);
-        return;
-      }
-      var th = document.createElement('input'); th.type='hidden';
-      th.dataset.aboutIdx=String(idx); th.dataset.aboutField='title'; th.dataset.aboutLang=l; th.value='';
-      var dh = document.createElement('input'); dh.type='hidden';
-      dh.dataset.aboutIdx=String(idx); dh.dataset.aboutField='desc'; dh.dataset.aboutLang=l; dh.value='';
-      block.appendChild(th); block.appendChild(dh);
-    });
-    var rmBtn = document.createElement('button'); rmBtn.type='button'; rmBtn.className='btn btn-outline btn-sm'; rmBtn.textContent='Bu maddeyi kaldır';
-    rmBtn.addEventListener('click',function(){ block.remove(); }); block.appendChild(rmBtn);
-    els.aboutItemsContainer.appendChild(block);
-  }
-
   /* ===================== HESAP ===================== */
   function changePassword(e){
     if (e) e.preventDefault();
