@@ -1,1145 +1,204 @@
 <!DOCTYPE html>
-<html lang="tr" class="scroll-smooth">
+<html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Şark Dokusu | El Emeği Halı, Kilim ve Tarihi Ürünler</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome for Authentic Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: Playfair Display (Serif) & Inter (Sans) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,900;1,600&display=swap" rel="stylesheet">
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        sark: {
-                            dark: '#1C120C',      /* Derin Kahve / Siyah Tint */
-                            primary: '#601A18',   /* Osmanlı Bordo */
-                            accent: '#D4AF37',    /* Antik Altın Sarısı */
-                            gold: '#C59B27',      /* Parlak Altın */
-                            cream: '#FDFBF7',     /* Sıcak Krem */
-                            warm: '#F5EBE1',      /* Soft Dokuma Zemin */
-                            card: '#FAF6F0',
-                            gray: '#6B5B52'
-                        }
-                    },
-                    fontFamily: {
-                        serif: ['"Playfair Display"', 'serif'],
-                        sans: ['Inter', 'sans-serif']
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        /* Modern Özel Scrollbar ve Dokuma Deseni Efektleri */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #FDFBF7;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #601A18;
-            border-radius: 4px;
-        }
-        .carpet-pattern-bg {
-            background-color: #1C120C;
-            background-image: radial-gradient(#D4AF37 0.75px, transparent 0.75px), radial-gradient(#D4AF37 0.75px, #1C120C 0.75px);
-            background-size: 30px 30px;
-            background-position: 0 0, 15px 15px;
-            opacity: 0.95;
-        }
-        .glass-dark {
-            background: rgba(28, 18, 12, 0.85);
-            backdrop-filter: blur(12px);
-        }
-        .glass-card {
-            background: rgba(253, 251, 247, 0.92);
-            backdrop-filter: blur(8px);
-        }
-    </style>
+    <title>Şark Dokusu - El Emeği Halı, Giyim ve Tarihi Ürünler</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="storefront.css">
 </head>
-<body class="bg-sark-cream text-sark-dark font-sans antialiased selection:bg-sark-accent selection:text-sark-dark">
-
-    <!-- HEADER / NAVIGATION -->
-    <header class="sticky top-0 z-40 bg-sark-cream/95 backdrop-blur-md border-b border-sark-gold/20 transition-all duration-300 shadow-sm" id="mainHeader">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                
-                <!-- Logo -->
-                <a href="#" class="flex items-center gap-3 group">
-                    <div class="w-12 h-12 rounded-full bg-sark-primary text-sark-accent flex items-center justify-center text-xl font-serif font-bold border-2 border-sark-gold shadow-md group-hover:scale-105 transition-transform">
-                        ŞD
-                    </div>
-                    <div>
-                        <span class="font-serif text-2xl font-bold tracking-tight text-sark-primary block leading-none">ŞARK DOKUSU</span>
-                        <span class="text-[10px] tracking-widest text-sark-gold font-semibold uppercase block mt-1">Geleneksel Sanat & Halı</span>
-                    </div>
-                </a>
-
-                <!-- Desktop Navigation Links -->
-                <nav class="hidden md:flex items-center gap-8 font-medium text-sm text-sark-dark">
-                    <a href="#koleksiyon" class="hover:text-sark-primary transition-colors py-2 border-b-2 border-transparent hover:border-sark-gold">Koleksiyon</a>
-                    <a href="#kategoriler" class="hover:text-sark-primary transition-colors py-2 border-b-2 border-transparent hover:border-sark-gold">Kategoriler</a>
-                    <a href="#hakkimizda" class="hover:text-sark-primary transition-colors py-2 border-b-2 border-transparent hover:border-sark-gold">Hakkımızda</a>
-                    <a href="#iletisim" class="hover:text-sark-primary transition-colors py-2 border-b-2 border-transparent hover:border-sark-gold">İletişim</a>
-                </nav>
-
-                <!-- Header Action Buttons -->
-                <div class="flex items-center gap-3">
-                    <!-- WhatsApp Quick Button -->
-                    <a id="headerWhatsappBtn" href="#" target="_blank" class="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold tracking-wide shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5">
-                        <i class="fa-brands fa-whatsapp text-lg"></i>
-                        <span>Sipariş & Bilgi</span>
-                    </a>
-
-                    <!-- Admin Panel Modal Trigger Button -->
-                    <button onclick="openAdminModal()" class="px-3.5 py-2.5 rounded-full bg-sark-primary/10 hover:bg-sark-primary text-sark-primary hover:text-sark-cream text-xs font-semibold border border-sark-primary/30 transition-all flex items-center gap-2" title="Yönetici Paneli">
-                        <i class="fa-solid fa-user-gear text-sm"></i>
-                        <span class="hidden md:inline">Yönetici Paneli</span>
-                    </button>
-
-                    <!-- Mobile Menu Toggle Button -->
-                    <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg text-sark-primary hover:bg-sark-warm transition-colors" aria-label="Menüyü Aç/Kapat">
-                        <i class="fa-solid fa-bars text-xl" id="menuIcon"></i>
-                    </button>
-                </div>
+<body>
+    <!-- Üst Bar & Navigasyon -->
+    <header class="header">
+        <div class="container header-container">
+            <div class="logo-area">
+                <img src="logo.png" alt="Şark Dokusu Logo" id="site-logo">
+                <span class="brand-name">Şark Dokusu</span>
             </div>
-        </div>
-
-        <!-- Mobile Menu Container -->
-        <div id="mobileMenu" class="hidden md:hidden border-t border-sark-gold/20 bg-sark-cream px-4 pt-3 pb-6 space-y-3">
-            <a href="#koleksiyon" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-md font-medium text-sark-dark hover:bg-sark-warm">Koleksiyon</a>
-            <a href="#kategoriler" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-md font-medium text-sark-dark hover:bg-sark-warm">Kategoriler</a>
-            <a href="#hakkimizda" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-md font-medium text-sark-dark hover:bg-sark-warm">Hakkımızda</a>
-            <a href="#iletisim" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-md font-medium text-sark-dark hover:bg-sark-warm">İletişim</a>
-            <a id="mobileWhatsappBtn" href="#" target="_blank" class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-emerald-700 text-white font-semibold text-sm">
-                <i class="fa-brands fa-whatsapp text-lg"></i>
-                <span>WhatsApp Canlı Destek</span>
-            </a>
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="Ürün adı veya kategori ara...">
+            </div>
+            <div class="nav-actions">
+                <button id="admin-panel-btn" class="admin-btn">Yönetici Paneli (Admin)</button>
+                <a href="#contact-section" class="order-btn">Sipariş Ver</a>
+            </div>
         </div>
     </header>
 
-    <!-- HERO SECTION -->
-    <section class="relative min-h-[580px] flex items-center carpet-pattern-bg text-sark-cream py-16 overflow-hidden">
-        <!-- Subtle Overlay Gradient -->
-        <div class="absolute inset-0 bg-gradient-to-r from-sark-dark via-sark-dark/85 to-transparent z-0"></div>
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                
-                <!-- Hero Left Content -->
-                <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
-                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sark-gold/20 border border-sark-gold/40 text-sark-accent text-xs font-semibold uppercase tracking-wider">
-                        <i class="fa-solid fa-gem"></i>
-                        <span>El İşi & Tarihi Miras Dokumalar</span>
-                    </div>
-
-                    <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight text-white">
-                        İlmeğinde Tarih, <br>
-                        <span class="text-sark-accent italic">Dokusunda Sanat Var.</span>
-                    </h1>
-
-                    <p class="text-sark-warm/90 text-base sm:text-lg max-w-2xl font-light leading-relaxed mx-auto lg:mx-0">
-                        Şark Dokusu; usta ellerden çıkan asırlık halılar, el işi otantik giysiler ve köklü mirasa sahip nadide parçaları yaşam alanlarınıza taşıyor.
-                    </p>
-
-                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4">
-                        <a href="#koleksiyon" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-sark-primary hover:bg-sark-primary/90 text-sark-cream font-semibold shadow-lg shadow-sark-primary/40 border border-sark-gold/30 hover:border-sark-gold text-center transition-all transform hover:-translate-y-1">
-                            Koleksiyonu Keşfet
-                        </a>
-                        <a href="#hakkimizda" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-transparent hover:bg-sark-gold/10 text-sark-accent font-semibold border border-sark-accent/50 text-center transition-all">
-                            Hikâyemiz
-                        </a>
-                    </div>
-
-                    <!-- Highlights Grid -->
-                    <div class="grid grid-cols-3 gap-4 pt-8 border-t border-sark-gold/20">
-                        <div>
-                            <span class="block text-2xl font-serif font-bold text-sark-accent">100%</span>
-                            <span class="text-xs text-sark-warm/70">El Dokuması & Doğal Kök Boya</span>
-                        </div>
-                        <div>
-                            <span class="block text-2xl font-serif font-bold text-sark-accent">50+ Yıl</span>
-                            <span class="text-xs text-sark-warm/70">Kuşaktan Kuşağa Tecrübe</span>
-                        </div>
-                        <div>
-                            <span class="block text-2xl font-serif font-bold text-sark-accent">Sertifikalı</span>
-                            <span class="text-xs text-sark-warm/70">Orijinal Tarihi Eser Niteliği</span>
-                        </div>
-                    </div>
+    <!-- Hero / Banner Alanı -->
+    <section class="hero-section" id="hero-section">
+        <div class="container hero-container">
+            <div class="hero-text">
+                <span class="badge">ELİŞİ • TARİHİ • DOĞAL</span>
+                <h1>El emeği halı, giyim ve tarihi ürünler</h1>
+                <p>Şark Dokusu; usta ellerden çıkan halılar, el işi giysiler ve geçmişten gelen özel parçaları tek koleksiyonda buluşturur. Beğendiğiniz ürünü seçin, WhatsApp'tan saniyeler içinde sipariş verin.</p>
+                <div class="hero-buttons">
+                    <a href="#collection-section" class="btn primary-btn">Koleksiyonu keşfet</a>
+                    <a href="#about-section" class="btn secondary-btn">Hikayemiz</a>
                 </div>
-
-                <!-- Hero Right Image Frame -->
-                <div class="lg:col-span-5 relative flex justify-center">
-                    <div class="relative w-full max-w-md">
-                        <!-- Decorative Golden Frame Backing -->
-                        <div class="absolute -inset-3 rounded-2xl border-2 border-sark-gold/40 rotate-2"></div>
-                        <div class="relative rounded-2xl overflow-hidden shadow-2xl border-4 border-sark-gold/70 aspect-[4/5]">
-                            <img src="https://images.unsplash.com/photo-1600121848594-d8644e57abab?auto=format&fit=crop&w=800&q=80" alt="Geleneksel El Dokuması Halı" class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700">
-                            <div class="absolute inset-0 bg-gradient-to-t from-sark-dark/80 via-transparent to-transparent"></div>
-                            <div class="absolute bottom-4 left-4 right-4 p-4 rounded-xl glass-dark text-white border border-sark-gold/30">
-                                <span class="text-xs text-sark-accent font-semibold tracking-wide uppercase">Öne Çıkan Eser</span>
-                                <h3 class="font-serif font-bold text-lg">Hereke İpek Dokuma Motif Halı</h3>
-                            </div>
-                        </div>
-                    </div>
+            </div>
+            <div class="hero-image-area">
+                <img src="" alt="Banner Görseli" id="hero-custom-img" class="dynamic-hero-img" style="display:none;">
+                <div class="stack-cards">
+                    <div class="card-item"><img src="logo.png" alt="Şark Dokusu"></div>
                 </div>
-
             </div>
         </div>
     </section>
 
-    <!-- CATEGORIES SECTION -->
-    <section id="kategoriler" class="py-20 bg-sark-warm/40">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-14">
-                <span class="text-sark-gold font-semibold uppercase text-xs tracking-widest block mb-2">Özel Kategoriler</span>
-                <h2 class="font-serif text-3xl sm:text-4xl font-bold text-sark-primary">Nadir Koleksiyon Türleri</h2>
-                <div class="w-24 h-1 bg-sark-gold mx-auto mt-4 rounded-full"></div>
-            </div>
-
-            <!-- Dynamic Categories List Container -->
-            <div id="categoriesContainer" class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                <!-- JavaScript will populate categories dynamically -->
-            </div>
-        </div>
-    </section>
-
-    <!-- PRODUCTS / KOLEKSİYON SECTION -->
-    <section id="koleksiyon" class="py-20 bg-sark-cream">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6 border-b border-sark-gold/20 pb-6">
+    <!-- Özellikler Barı -->
+    <section class="features-bar">
+        <div class="container features-grid">
+            <div class="feature-item">
+                <span class="f-icon">❤️</span>
                 <div>
-                    <span class="text-sark-gold font-semibold uppercase text-xs tracking-widest block mb-2">Eşsiz Eserler</span>
-                    <h2 class="font-serif text-3xl sm:text-4xl font-bold text-sark-primary">Seçkin Ürün Koleksiyonu</h2>
-                </div>
-
-                <!-- Category Filter Buttons -->
-                <div id="categoryFilterButtons" class="flex flex-wrap gap-2">
-                    <button onclick="filterProducts('Tümü')" class="category-filter-btn px-4 py-2 rounded-full text-xs font-semibold bg-sark-primary text-sark-cream shadow transition-all" data-category="Tümü">
-                        Tümü
-                    </button>
-                    <!-- JavaScript will append dynamic category filter buttons here -->
+                    <h4>El emeği</h4>
+                    <p>Her parça ustasının elinden</p>
                 </div>
             </div>
-
-            <!-- Dynamic Product Grid -->
-            <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- JavaScript will populate products dynamically -->
+            <div class="feature-item">
+                <span class="f-icon">🏛️</span>
+                <div>
+                    <h4>Tarihi dokular</h4>
+                    <p>Geleneksel motifler, özel parçalar</p>
+                </div>
             </div>
-        </div>
-    </section>
-
-    <!-- ABOUT / HAKKIMIZDA SECTION -->
-    <section id="hakkimizda" class="py-20 carpet-pattern-bg text-sark-cream relative overflow-hidden">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                
-                <!-- About Image Frame -->
-                <div class="lg:col-span-5 relative">
-                    <div class="relative rounded-2xl overflow-hidden border-2 border-sark-gold/40 p-2 bg-sark-dark">
-                        <img id="aboutDisplayImage" src="https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80" alt="Dokuma Usta Atölyesi" class="w-full h-96 object-cover rounded-xl shadow-lg">
-                    </div>
+            <div class="feature-item">
+                <span class="f-icon">💬</span>
+                <div>
+                    <h4>WhatsApp ile sipariş</h4>
+                    <p>Üyelik yok, saniyeler içinde</p>
                 </div>
-
-                <!-- About Content -->
-                <div class="lg:col-span-7 space-y-6">
-                    <div class="inline-flex items-center gap-2 text-sark-accent text-xs font-semibold uppercase tracking-widest">
-                        <i class="fa-solid fa-scroll"></i>
-                        <span>Köklü Gelenek & Zanaat</span>
-                    </div>
-
-                    <h2 id="aboutTitle" class="font-serif text-3xl sm:text-4xl font-bold text-white">
-                        Kültürel Mirası Yarınlara Taşıyoruz
-                    </h2>
-
-                    <p id="aboutContent" class="text-sark-warm/85 leading-relaxed font-light text-base sm:text-lg">
-                        Şark Dokusu olarak yıllardır Anadolu'nun her bir köşesinden titizlikle derlediğimiz tarihi el dokuması halıları, antika kilimleri ve el işi otantik ürünleri meraklıları ve sanatseverlerle buluşturuyoruz. Her bir ilmekte asırlık hikâyeler, ilmek usta ellerin emeği saklıdır.
-                    </p>
-
-                    <!-- Dynamic Highlight Badges -->
-                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-4 text-center sm:text-left">
-                        <div class="p-4 rounded-xl bg-sark-dark/80 border border-sark-gold/30">
-                            <span id="aboutBadge1Val" class="block font-serif text-2xl font-bold text-sark-accent">100%</span>
-                            <span id="aboutBadge1Text" class="text-xs text-sark-warm/70">Orijinal El İşi</span>
-                        </div>
-                        <div class="p-4 rounded-xl bg-sark-dark/80 border border-sark-gold/30">
-                            <span id="aboutBadge2Val" class="block font-serif text-2xl font-bold text-sark-accent">1500+</span>
-                            <span id="aboutBadge2Text" class="text-xs text-sark-warm/70">Mutlu Sanatsever</span>
-                        </div>
-                        <div class="p-4 rounded-xl bg-sark-dark/80 border border-sark-gold/30 col-span-2 sm:col-span-1">
-                            <span id="aboutBadge3Val" class="block font-serif text-2xl font-bold text-sark-accent">Usta Eller</span>
-                            <span id="aboutBadge3Text" class="text-xs text-sark-warm/70">Geleneksel Atölye</span>
-                        </div>
-                    </div>
+            </div>
+            <div class="feature-item">
+                <span class="f-icon">📦</span>
+                <div>
+                    <h4>Özenli paketleme</h4>
+                    <p>Tek tek kontrol edilip gönderilir</p>
                 </div>
-
             </div>
         </div>
     </section>
 
-    <!-- CONTACT / İLETİŞİM SECTION (Özelleştirilebilir Arka Plan Görsel Alanı) -->
-    <section id="iletisim" class="py-24 relative overflow-hidden text-sark-cream">
-        <!-- Customizable Contact Background Image Layer -->
-        <div id="contactBgOverlay" class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-700" style="background-image: url('https://images.unsplash.com/photo-1545232979-fbf59202c380?auto=format&fit=crop&w=1920&q=80');">
-            <!-- Dark Warm Tint Overlay for Legibility -->
-            <div class="absolute inset-0 bg-gradient-to-r from-sark-dark/95 via-sark-dark/90 to-sark-primary/85 backdrop-blur-[2px]"></div>
-        </div>
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center max-w-2xl mx-auto mb-16">
-                <span class="text-sark-accent font-semibold uppercase text-xs tracking-widest block mb-2">Bize Ulaşın</span>
-                <h2 class="font-serif text-3xl sm:text-4xl font-bold text-white">Sizinle İletişime Geçelim</h2>
-                <p class="text-sark-warm/80 text-sm mt-3">Tarihi ürünlerimiz, özel dokuma siparişleriniz veya atölye ziyaretleriniz için her zaman hizmetinizdeyiz.</p>
-                <div class="w-20 h-1 bg-sark-accent mx-auto mt-4 rounded-full"></div>
+    <!-- Koleksiyon ve Kategoriler -->
+    <section class="collection-section" id="collection-section">
+        <div class="container">
+            <div class="section-title-wrap">
+                <h2>Koleksiyon</h2>
+                <p>Özenle seçilmiş ürünlerimizi keşfedin.</p>
             </div>
+            <!-- Dinamik Kategoriler -->
+            <div class="category-filters" id="category-filters-container">
+                <button class="cat-pill active" onclick="filterCategory('all')">Tümü</button>
+            </div>
+            <!-- Ürün Listesi -->
+            <div class="product-grid" id="product-grid">
+                <!-- Ürünler dinamik yüklenecek -->
+            </div>
+        </div>
+    </section>
 
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-                
-                <!-- Contact Info Cards Column -->
-                <div class="lg:col-span-5 space-y-5 flex flex-col justify-between">
+    <!-- Hakkımızda Alanı -->
+    <section class="about-section" id="about-section">
+        <div class="container about-container">
+            <div class="about-content">
+                <span class="badge">HİKAYEMİZ</span>
+                <h2 id="about-title-view">Şark Dokusu Hakkında</h2>
+                <p id="about-text-view">Şark Dokusu; usta ellerden çıkan halılar, el işi giysiler ve geçmişten gelen özel parçaları tek koleksiyonda buluşturur. Anadolu'nun kaybolmaya yüz tutmuş motiflerini günümüze taşıyoruz.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- İletişim / Sipariş / Final Alanı (Arka Plan Görseli Destekli) -->
+    <section class="contact-section" id="contact-section">
+        <div class="container contact-container-inner">
+            <div class="contact-card">
+                <h2>Bizimle İletişime Geçin</h2>
+                <p>Beğendiğiniz ürün veya özel siparişleriniz için bize hemen ulaşın.</p>
+                <div class="contact-info-list">
+                    <div class="c-item"><strong>📞 Telefon:</strong> <span id="view-phone">+90 (555) 000 00 00</span></div>
+                    <div class="c-item"><strong>📍 Adres:</strong> <span id="view-address">Kapalıçarşı / İstanbul</span></div>
+                    <div class="c-item"><strong>✉️ E-posta:</strong> <span id="view-email">bilgi@sarkdokusu.com</span></div>
+                </div>
+                <a href="https://wa.me/905550000000" target="_blank" class="whatsapp-direct-btn" id="view-whatsapp-link">💬 WhatsApp ile Hızlı Sipariş</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Yönetici Paneli (Admin Modal) -->
+    <div id="admin-modal" class="modal-overlay" style="display:none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Yönetici (Admin) Paneli</h3>
+                <button onclick="closeAdminModal()" class="close-modal">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="admin-tabs">
+                    <button class="tab-btn active" onclick="switchTab('tab-settings')">Genel & Görseller</button>
+                    <button class="tab-btn" onclick="switchTab('tab-about')">Hakkımızda</button>
+                    <button class="tab-btn" onclick="switchTab('tab-categories')">Kategoriler</button>
+                    <button class="tab-btn" onclick="switchTab('tab-products')">Ürünler</button>
+                </div>
+
+                <!-- TAB 1: Genel & Görseller & İletişim -->
+                <div id="tab-settings" class="tab-content active">
+                    <h4>Görsel ve İletişim Ayarları</h4>
+                    <label>Hero / Banner Görsel URL:</label>
+                    <input type="text" id="admin-hero-img" placeholder="https://ornek.com/banner.jpg">
                     
-                    <!-- Adres Card -->
-                    <div class="p-6 rounded-2xl glass-dark border border-sark-gold/30 hover:border-sark-gold transition-all flex items-start gap-4">
-                        <div class="w-12 h-12 rounded-xl bg-sark-primary text-sark-accent flex items-center justify-center text-xl shrink-0 border border-sark-gold/40">
-                            <i class="fa-solid fa-location-dot"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-serif font-bold text-lg text-sark-accent">Atölye & Mağaza Adresi</h4>
-                            <p id="contactAddressDisplay" class="text-sm text-sark-warm/90 mt-1 leading-relaxed">Kapalıçarşı Yanı, Sahaflar Cd. No:42, Fatih / İstanbul</p>
-                        </div>
-                    </div>
+                    <label>İletişim Alanı Arka Plan Görsel URL:</label>
+                    <input type="text" id="admin-contact-bg" placeholder="https://ornek.com/arkaplan.jpg">
 
-                    <!-- Telefon Card -->
-                    <div class="p-6 rounded-2xl glass-dark border border-sark-gold/30 hover:border-sark-gold transition-all flex items-start gap-4">
-                        <div class="w-12 h-12 rounded-xl bg-sark-primary text-sark-accent flex items-center justify-center text-xl shrink-0 border border-sark-gold/40">
-                            <i class="fa-solid fa-phone"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-serif font-bold text-lg text-sark-accent">Müşteri Hizmetleri</h4>
-                            <p id="contactPhoneDisplay" class="text-sm text-sark-warm/90 mt-1 font-mono">+90 (212) 555 01 99</p>
-                            <span class="text-xs text-sark-warm/60 block mt-0.5">Hafta içi: 09:00 - 19:00</span>
-                        </div>
-                    </div>
+                    <label>Telefon Numarası:</label>
+                    <input type="text" id="admin-phone" placeholder="+90 555 ...">
 
-                    <!-- Email Card -->
-                    <div class="p-6 rounded-2xl glass-dark border border-sark-gold/30 hover:border-sark-gold transition-all flex items-start gap-4">
-                        <div class="w-12 h-12 rounded-xl bg-sark-primary text-sark-accent flex items-center justify-center text-xl shrink-0 border border-sark-gold/40">
-                            <i class="fa-solid fa-envelope"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-serif font-bold text-lg text-sark-accent">E-Posta</h4>
-                            <p id="contactEmailDisplay" class="text-sm text-sark-warm/90 mt-1">bilgi@sarkdokusu.com</p>
-                        </div>
-                    </div>
+                    <label>WhatsApp Hattı (Sadece Rakam, örn: 90555...):</label>
+                    <input type="text" id="admin-whatsapp" placeholder="905550000000">
 
-                    <!-- Direct WhatsApp CTA Box -->
-                    <a id="contactWhatsappCardBtn" href="#" target="_blank" class="p-6 rounded-2xl bg-emerald-800/90 hover:bg-emerald-800 border border-emerald-500/50 text-white transition-all flex items-center justify-between group shadow-lg">
-                        <div class="flex items-center gap-4">
-                            <i class="fa-brands fa-whatsapp text-3xl text-emerald-300"></i>
-                            <div>
-                                <h4 class="font-bold text-base">WhatsApp Canlı Destek</h4>
-                                <p class="text-xs text-emerald-100">Anında fotoğraf ve fiyat bilgisi alın</p>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-arrow-right text-lg group-hover:translate-x-1 transition-transform"></i>
-                    </a>
-
+                    <label>Adres:</label>
+                    <input type="text" id="admin-address" placeholder="Adres bilgisi...">
+                    
+                    <button onclick="saveGeneralSettings()" class="btn primary-btn mt-3">Değişiklikleri Kaydet</button>
                 </div>
 
-                <!-- Fast Contact Form -->
-                <div class="lg:col-span-7 p-8 rounded-2xl glass-dark border border-sark-gold/40 shadow-2xl flex flex-col justify-center">
-                    <h3 class="font-serif text-2xl font-bold text-sark-accent mb-2">Bize Mesaj Gönderin</h3>
-                    <p class="text-xs text-sark-warm/70 mb-6">Merak ettiğiniz halı modelleri veya özel siparişleriniz için aşağıdaki formu doldurun.</p>
-
-                    <form onsubmit="handleContactSubmit(event)" class="space-y-4">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-medium text-sark-warm mb-1">Adınız Soyadınız</label>
-                                <input type="text" required class="w-full px-4 py-3 rounded-xl bg-sark-dark/80 border border-sark-gold/30 text-white placeholder-sark-warm/40 focus:outline-none focus:border-sark-accent text-sm" placeholder="Ahmet Yılmaz">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-medium text-sark-warm mb-1">Telefon Numaranız</label>
-                                <input type="tel" required class="w-full px-4 py-3 rounded-xl bg-sark-dark/80 border border-sark-gold/30 text-white placeholder-sark-warm/40 focus:outline-none focus:border-sark-accent text-sm" placeholder="0555 000 00 00">
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-medium text-sark-warm mb-1">İlgilendiğiniz Kategori / Ürün</label>
-                            <input type="text" class="w-full px-4 py-3 rounded-xl bg-sark-dark/80 border border-sark-gold/30 text-white placeholder-sark-warm/40 focus:outline-none focus:border-sark-accent text-sm" placeholder="Örn: Tarihi Uşak Halısı">
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-medium text-sark-warm mb-1">Mesajınız</label>
-                            <textarea rows="4" required class="w-full px-4 py-3 rounded-xl bg-sark-dark/80 border border-sark-gold/30 text-white placeholder-sark-warm/40 focus:outline-none focus:border-sark-accent text-sm" placeholder="Ürün ölçüleri ve fiyat detayları hakkında bilgi almak istiyorum..."></textarea>
-                        </div>
-
-                        <button type="submit" class="w-full py-4 rounded-xl bg-sark-primary hover:bg-sark-primary/90 text-sark-cream font-bold text-sm tracking-wide border border-sark-gold/40 shadow-lg transition-all transform hover:-translate-y-0.5">
-                            Mesajı Gönder
-                        </button>
-                    </form>
+                <!-- TAB 2: Hakkımızda Yönetimi -->
+                <div id="tab-about" class="tab-content" style="display:none;">
+                    <h4>Hakkımızda Yazısı Düzenle</h4>
+                    <label>Başlık:</label>
+                    <input type="text" id="admin-about-title">
+                    <label>İçerik / Hikaye:</label>
+                    <textarea id="admin-about-text" rows="5"></textarea>
+                    <button onclick="saveAboutSettings()" class="btn primary-btn mt-3">Hakkımızda Kaydet</button>
                 </div>
 
+                <!-- TAB 3: Kategori Yönetimi -->
+                <div id="tab-categories" class="tab-content" style="display:none;">
+                    <h4>Kategori Yönetimi</h4>
+                    <div class="add-box">
+                        <input type="text" id="new-cat-name" placeholder="Yeni Kategori Adı (Örn: Kilim)">
+                        <button onclick="addNewCategory()" class="btn primary-btn">Kategori Ekle</button>
+                    </div>
+                    <div id="admin-category-list" class="admin-list"></div>
+                </div>
+
+                <!-- TAB 4: Ürün Yönetimi -->
+                <div id="tab-products" class="tab-content" style="display:none;">
+                    <h4>Ürün Ekle / Yönet</h4>
+                    <div class="add-box product-form">
+                        <input type="text" id="p-title" placeholder="Ürün Adı">
+                        <input type="text" id="p-price" placeholder="Fiyat (Örn: 2.500 TL)">
+                        <select id="p-category"></select>
+                        <input type="text" id="p-image" placeholder="Görsel URL">
+                        <button onclick="addNewProduct()" class="btn primary-btn">Ürün Ekle</button>
+                    </div>
+                    <div id="admin-product-list" class="admin-list"></div>
+                </div>
             </div>
-        </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer class="bg-sark-dark text-sark-warm border-t border-sark-gold/30 py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-                
-                <div class="space-y-4">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-sark-primary text-sark-accent flex items-center justify-center font-serif font-bold border border-sark-gold">
-                            ŞD
-                        </div>
-                        <span class="font-serif text-xl font-bold text-white tracking-wide">ŞARK DOKUSU</span>
-                    </div>
-                    <p class="text-xs text-sark-warm/70 leading-relaxed">
-                        Anadolu'nun zengin dokuma mirasından süzülen otantik el sanatları ve tarihi halı seçkisi.
-                    </p>
-                </div>
-
-                <div>
-                    <h4 class="font-serif font-bold text-sark-accent text-sm uppercase tracking-wider mb-4">Hızlı Bağlantılar</h4>
-                    <ul class="space-y-2 text-xs text-sark-warm/80">
-                        <li><a href="#koleksiyon" class="hover:text-sark-accent">Tüm Koleksiyon</a></li>
-                        <li><a href="#kategoriler" class="hover:text-sark-accent">Kategoriler</a></li>
-                        <li><a href="#hakkimizda" class="hover:text-sark-accent">Hakkımızda</a></li>
-                        <li><a href="#iletisim" class="hover:text-sark-accent">İletişim & Adres</a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h4 class="font-serif font-bold text-sark-accent text-sm uppercase tracking-wider mb-4">Güvenli Alışveriş</h4>
-                    <ul class="space-y-2 text-xs text-sark-warm/80">
-                        <li><i class="fa-solid fa-check text-sark-accent mr-2"></i> Orijinallik Sertifikası</li>
-                        <li><i class="fa-solid fa-check text-sark-accent mr-2"></i> Güvenli Paketleme</li>
-                        <li><i class="fa-solid fa-check text-sark-accent mr-2"></i> WhatsApp Anında Destek</li>
-                        <li><i class="fa-solid fa-check text-sark-accent mr-2"></i> Özel Ahşap Sandık Kargo</li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h4 class="font-serif font-bold text-sark-accent text-sm uppercase tracking-wider mb-4">Bizi Takip Edin</h4>
-                    <div class="flex gap-3 text-lg">
-                        <a href="#" class="w-9 h-9 rounded-full bg-sark-primary/40 border border-sark-gold/30 flex items-center justify-center hover:bg-sark-primary text-sark-accent transition-colors"><i class="fa-brands fa-instagram"></i></a>
-                        <a href="#" class="w-9 h-9 rounded-full bg-sark-primary/40 border border-sark-gold/30 flex items-center justify-center hover:bg-sark-primary text-sark-accent transition-colors"><i class="fa-brands fa-facebook-f"></i></a>
-                        <a href="#" class="w-9 h-9 rounded-full bg-sark-primary/40 border border-sark-gold/30 flex items-center justify-center hover:bg-sark-primary text-sark-accent transition-colors"><i class="fa-brands fa-pinterest-p"></i></a>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="border-t border-sark-gold/20 pt-6 text-center text-xs text-sark-warm/50 flex flex-col sm:flex-row justify-between items-center gap-4">
-                <p>&copy; 2026 Şark Dokusu - Tüm Hakları Saklıdır.</p>
-                <button onclick="openAdminModal()" class="text-sark-accent underline hover:text-white">Yönetici Girişi</button>
-            </div>
-        </div>
-    </footer>
-
-
-    <!-- ========================================================== -->
-    <!-- DYNAMIC ADMIN PANEL MODAL (YÖNETİCİ KONTROL MERKEZİ) -->
-    <!-- ========================================================== -->
-    <div id="adminModal" class="fixed inset-0 z-50 hidden bg-sark-dark/80 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
-        <div class="bg-sark-cream w-full max-w-4xl rounded-2xl border-2 border-sark-gold shadow-2xl overflow-hidden my-8 max-h-[90vh] flex flex-col text-sark-dark">
-            
-            <!-- Modal Header -->
-            <div class="bg-sark-primary text-sark-cream px-6 py-4 flex items-center justify-between border-b border-sark-gold">
-                <div class="flex items-center gap-3">
-                    <i class="fa-solid fa-sliders text-sark-accent text-xl"></i>
-                    <div>
-                        <h3 class="font-serif font-bold text-lg text-white">Şark Dokusu - Yönetici Paneli</h3>
-                        <p class="text-xs text-sark-accent">İçerikleri, Kategorileri ve İletişim Bilgilerini Düzenleyin</p>
-                    </div>
-                </div>
-                <button onclick="closeAdminModal()" class="w-8 h-8 rounded-full bg-sark-dark/40 hover:bg-sark-dark text-sark-accent flex items-center justify-center transition-colors">
-                    <i class="fa-solid fa-xmark text-lg"></i>
-                </button>
-            </div>
-
-            <!-- Admin Navigation Tabs -->
-            <div class="bg-sark-warm border-b border-sark-gold/30 px-6 pt-3 flex flex-wrap gap-2 overflow-x-auto text-xs font-semibold">
-                <button onclick="switchAdminTab('products')" id="tabBtn-products" class="admin-tab-btn px-4 py-2.5 rounded-t-lg bg-sark-primary text-sark-cream border-t border-x border-sark-gold/40">
-                    <i class="fa-solid fa-rug mr-1"></i> Ürün Yönetimi
-                </button>
-                <button onclick="switchAdminTab('categories')" id="tabBtn-categories" class="admin-tab-btn px-4 py-2.5 rounded-t-lg text-sark-dark hover:bg-sark-cream/60">
-                    <i class="fa-solid fa-layer-group mr-1"></i> Kategori Yönetimi
-                </button>
-                <button onclick="switchAdminTab('about')" id="tabBtn-about" class="admin-tab-btn px-4 py-2.5 rounded-t-lg text-sark-dark hover:bg-sark-cream/60">
-                    <i class="fa-solid fa-pen-to-square mr-1"></i> Hakkımızda Bilgisi
-                </button>
-                <button onclick="switchAdminTab('contact')" id="tabBtn-contact" class="admin-tab-btn px-4 py-2.5 rounded-t-lg text-sark-dark hover:bg-sark-cream/60">
-                    <i class="fa-solid fa-image mr-1"></i> İletişim & Arka Plan
-                </button>
-            </div>
-
-            <!-- Modal Content Body (Scrollable) -->
-            <div class="p-6 overflow-y-auto flex-1 space-y-6">
-                
-                <!-- TAB 1: PRODUCT MANAGEMENT -->
-                <div id="adminTab-products" class="admin-tab-content space-y-6">
-                    <div class="bg-sark-card p-4 rounded-xl border border-sark-gold/30">
-                        <h4 class="font-serif font-bold text-base text-sark-primary mb-3" id="productFormTitle">Yeni Ürün Ekle</h4>
-                        <form onsubmit="handleProductSubmit(event)" class="space-y-4">
-                            <input type="hidden" id="adminProductId">
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-xs font-semibold mb-1">Ürün Adı</label>
-                                    <input type="text" id="adminProdName" required class="w-full px-3 py-2 rounded-lg bg-white border border-sark-gold/40 text-xs" placeholder="Örn: Kayseri İpek Bünyan Halı">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold mb-1">Kategori</label>
-                                    <select id="adminProdCategory" required class="w-full px-3 py-2 rounded-lg bg-white border border-sark-gold/40 text-xs">
-                                        <!-- Will be filled dynamically -->
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-xs font-semibold mb-1">Fiyat (TL)</label>
-                                    <input type="text" id="adminProdPrice" required class="w-full px-3 py-2 rounded-lg bg-white border border-sark-gold/40 text-xs" placeholder="Örn: 18.500 ₺">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold mb-1">Görsel URL</label>
-                                    <input type="url" id="adminProdImage" required class="w-full px-3 py-2 rounded-lg bg-white border border-sark-gold/40 text-xs" placeholder="https://images.unsplash.com/...">
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold mb-1">Açıklama / Detay</label>
-                                <textarea id="adminProdDesc" rows="2" class="w-full px-3 py-2 rounded-lg bg-white border border-sark-gold/40 text-xs" placeholder="100 yıllık tarihi kök boyalı halı..."></textarea>
-                            </div>
-                            <div class="flex gap-2">
-                                <button type="submit" class="px-5 py-2 rounded-lg bg-sark-primary text-sark-cream font-semibold text-xs border border-sark-gold/40 hover:bg-sark-primary/90">
-                                    Kaydet
-                                </button>
-                                <button type="button" onclick="resetProductForm()" class="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 text-xs hover:bg-gray-300">
-                                    Temizle
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-
-                    <!-- Products Table -->
-                    <div>
-                        <h4 class="font-serif font-bold text-base text-sark-primary mb-3">Mevcut Ürün Listesi</h4>
-                        <div class="overflow-x-auto rounded-xl border border-sark-gold/30">
-                            <table class="w-full text-left text-xs text-sark-dark">
-                                <thead class="bg-sark-warm uppercase text-[10px] font-bold text-sark-primary border-b border-sark-gold/30">
-                                    <tr>
-                                        <th class="p-3">Görsel</th>
-                                        <th class="p-3">Ürün Adı</th>
-                                        <th class="p-3">Kategori</th>
-                                        <th class="p-3">Fiyat</th>
-                                        <th class="p-3 text-right">İşlemler</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="adminProductsTable" class="divide-y divide-sark-gold/20 bg-white">
-                                    <!-- Dynamic rows -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- TAB 2: CATEGORY MANAGEMENT -->
-                <div id="adminTab-categories" class="admin-tab-content space-y-6 hidden">
-                    <div class="bg-sark-card p-4 rounded-xl border border-sark-gold/30">
-                        <h4 class="font-serif font-bold text-base text-sark-primary mb-3">Yeni Kategori Ekle</h4>
-                        <form onsubmit="handleCategorySubmit(event)" class="space-y-4">
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-xs font-semibold mb-1">Kategori Adı</label>
-                                    <input type="text" id="adminCatName" required class="w-full px-3 py-2 rounded-lg bg-white border border-sark-gold/40 text-xs" placeholder="Örn: Tarihi Kilimler">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold mb-1">FontAwesome İkon Sınıfı</label>
-                                    <input type="text" id="adminCatIcon" required class="w-full px-3 py-2 rounded-lg bg-white border border-sark-gold/40 text-xs" placeholder="fa-solid fa-rug">
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold mb-1">Kısa Açıklama</label>
-                                <input type="text" id="adminCatDesc" class="w-full px-3 py-2 rounded-lg bg-white border border-sark-gold/40 text-xs" placeholder="Örn: El dokuması antik kilim modelleri">
-                            </div>
-                            <button type="submit" class="px-5 py-2 rounded-lg bg-sark-primary text-sark-cream font-semibold text-xs border border-sark-gold/40">
-                                Kategoriyi Ekle
-                            </button>
-                        </form>
-                    </div>
-
-                    <!-- Categories List -->
-                    <div>
-                        <h4 class="font-serif font-bold text-base text-sark-primary mb-3">Kayıtlı Kategoriler</h4>
-                        <div id="adminCategoriesList" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            <!-- Dynamic category cards -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- TAB 3: ABOUT US EDITING -->
-                <div id="adminTab-about" class="admin-tab-content space-y-6 hidden">
-                    <form onsubmit="handleAboutSubmit(event)" class="bg-sark-card p-4 rounded-xl border border-sark-gold/30 space-y-4">
-                        <h4 class="font-serif font-bold text-base text-sark-primary">Hakkımızda Alanını Güncelle</h4>
-                        
-                        <div>
-                            <label class="block text-xs font-semibold mb-1">Başlık</label>
-                            <input type="text" id="adminAboutTitle" required class="w-full px-3 py-2 rounded-lg bg-white border border-sark-gold/40 text-xs">
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-semibold mb-1">Metin / Hikâyemiz</label>
-                            <textarea id="adminAboutContent" rows="5" required class="w-full px-3 py-2 rounded-lg bg-white border border-sark-gold/40 text-xs"></textarea>
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-semibold mb-1">Hakkımızda Görsel URL</label>
-                            <input type="url" id="adminAboutImage" required class="w-full px-3 py-2 rounded-lg bg-white border border-sark-gold/40 text-xs">
-                        </div>
-
-                        <div class="grid grid-cols-3 gap-3 pt-2">
-                            <div>
-                                <label class="block text-[11px] font-semibold">Rozet 1 (Değer)</label>
-                                <input type="text" id="adminBadge1Val" class="w-full px-2 py-1.5 rounded bg-white border text-xs">
-                                <label class="block text-[10px] text-gray-500 mt-1">Açıklama</label>
-                                <input type="text" id="adminBadge1Text" class="w-full px-2 py-1.5 rounded bg-white border text-xs">
-                            </div>
-                            <div>
-                                <label class="block text-[11px] font-semibold">Rozet 2 (Değer)</label>
-                                <input type="text" id="adminBadge2Val" class="w-full px-2 py-1.5 rounded bg-white border text-xs">
-                                <label class="block text-[10px] text-gray-500 mt-1">Açıklama</label>
-                                <input type="text" id="adminBadge2Text" class="w-full px-2 py-1.5 rounded bg-white border text-xs">
-                            </div>
-                            <div>
-                                <label class="block text-[11px] font-semibold">Rozet 3 (Değer)</label>
-                                <input type="text" id="adminBadge3Val" class="w-full px-2 py-1.5 rounded bg-white border text-xs">
-                                <label class="block text-[10px] text-gray-500 mt-1">Açıklama</label>
-                                <input type="text" id="adminBadge3Text" class="w-full px-2 py-1.5 rounded bg-white border text-xs">
-                            </div>
-                        </div>
-
-                        <button type="submit" class="px-6 py-2.5 rounded-lg bg-sark-primary text-sark-cream font-semibold text-xs border border-sark-gold/40">
-                            Hakkımızda Bilgilerini Kaydet
-                        </button>
-                    </form>
-                </div>
-
-                <!-- TAB 4: CONTACT & BACKGROUND IMAGE EDITING -->
-                <div id="adminTab-contact" class="admin-tab-content space-y-6 hidden">
-                    <form onsubmit="handleContactConfigSubmit(event)" class="bg-sark-card p-4 rounded-xl border border-sark-gold/30 space-y-4">
-                        <h4 class="font-serif font-bold text-base text-sark-primary">İletişim Alanı & Arka Plan Düzenleme</h4>
-                        
-                        <!-- Contact Section Background Image Customization -->
-                        <div class="p-3 bg-sark-warm/60 rounded-xl border border-sark-gold/30">
-                            <label class="block text-xs font-bold text-sark-primary mb-1">İletişim Alanı Arka Plan Görseli (URL)</label>
-                            <input type="url" id="adminContactBgUrl" required class="w-full px-3 py-2 rounded-lg bg-white border border-sark-gold/40 text-xs" placeholder="https://images.unsplash.com/...">
-                            <p class="text-[11px] text-sark-gray mt-1">Bu alana girdiğiniz resim bağlantısı web sayfasının İletişim bölümünün arka plan görseli olarak ayarlanır.</p>
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-semibold mb-1">Mağaza / Atölye Adresi</label>
-                            <input type="text" id="adminContactAddress" required class="w-full px-3 py-2 rounded-lg bg-white border border-sark-gold/40 text-xs">
-                        </div>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-semibold mb-1">Telefon Numarası</label>
-                                <input type="text" id="adminContactPhone" required class="w-full px-3 py-2 rounded-lg bg-white border border-sark-gold/40 text-xs">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold mb-1">E-Posta Adresi</label>
-                                <input type="email" id="adminContactEmail" required class="w-full px-3 py-2 rounded-lg bg-white border border-sark-gold/40 text-xs">
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-semibold mb-1">WhatsApp Sipariş Hattı (Ülke kodu ile: Örn 905550000000)</label>
-                            <input type="text" id="adminContactWhatsapp" required class="w-full px-3 py-2 rounded-lg bg-white border border-sark-gold/40 text-xs">
-                        </div>
-
-                        <button type="submit" class="px-6 py-2.5 rounded-lg bg-sark-primary text-sark-cream font-semibold text-xs border border-sark-gold/40">
-                            İletişim Ayarlarını Güncelle
-                        </button>
-                    </form>
-                </div>
-
-            </div>
-
-            <!-- Modal Footer -->
-            <div class="bg-sark-warm border-t border-sark-gold/30 px-6 py-3 flex justify-end">
-                <button onclick="closeAdminModal()" class="px-5 py-2 rounded-lg bg-sark-dark text-sark-cream text-xs font-semibold">
-                    Kapat
-                </button>
-            </div>
-
         </div>
     </div>
 
-    <!-- Toast Message Container -->
-    <div id="toastMessage" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
-        <div class="bg-sark-primary text-sark-cream border-2 border-sark-gold px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3">
-            <i class="fa-solid fa-circle-check text-sark-accent text-lg"></i>
-            <span id="toastText" class="text-xs font-semibold">İşlem başarıyla gerçekleşti.</span>
-        </div>
-    </div>
-
-    <!-- APPLICATION STATE & JAVASCRIPT LOGIC -->
-    <script>
-        // Default Initial Application Data State
-        let storeData = {
-            categories: [
-                { id: 1, name: "Tarihi Halılar", icon: "fa-solid fa-rug", desc: "Asırlık el dokuması motif halılar" },
-                { id: 2, name: "Antik Kilimler", icon: "fa-solid fa-scroll", desc: "Doğal kök boyalı geleneksel kilimler" },
-                { id: 3, name: "El İşlemeli Giyim", icon: "fa-solid fa-shirt", desc: "Otantik kaftanlar ve el dokuması elbiseler" },
-                { id: 4, name: "Nadir Şark Eşyaları", icon: "fa-solid fa-box-archive", desc: "Pirinç, ahşap ve antika el sanatları" }
-            ],
-            products: [
-                {
-                    id: 101,
-                    name: "19. Yüzyıl Antik Uşak Madalyon Halı",
-                    category: "Tarihi Halılar",
-                    price: "45.000 ₺",
-                    image: "https://images.unsplash.com/photo-1600121848594-d8644e57abab?auto=format&fit=crop&w=800&q=80",
-                    desc: "Yün üzerine yün ilmek, doğal bitki boyalarıyla renklendirilmiş saray motifi."
-                },
-                {
-                    id: 102,
-                    name: "Geleneksel Kök Boya Cicim Kilim",
-                    category: "Antik Kilimler",
-                    price: "14.500 ₺",
-                    image: "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                    desc: "Anadolu koçboynuzu motifli, elde eğrilmiş koyun yünü dokuma."
-                },
-                {
-                    id: 103,
-                    name: "Sırma İşlemeli Otantik Saray Kaftanı",
-                    category: "El İşlemeli Giyim",
-                    price: "22.000 ₺",
-                    image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80",
-                    desc: "Kadife üzerine altın sırma nakışlı, özel koleksiyon ürünü."
-                },
-                {
-                    id: 104,
-                    name: "Hereke İpek Dokuma Duvar Halısı",
-                    category: "Tarihi Halılar",
-                    price: "68.000 ₺",
-                    image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80",
-                    desc: "Santimetrekarede binlerce ilmek barındıran müzelik değerde Hereke ipeği."
-                },
-                {
-                    id: 105,
-                    name: "Gaziantep El Oyması Bakır Sehpa & İbrik",
-                    category: "Nadir Şark Eşyaları",
-                    price: "9.800 ₺",
-                    image: "https://images.unsplash.com/photo-1545232979-fbf59202c380?auto=format&fit=crop&w=800&q=80",
-                    desc: "Usta bakırcıların kabartma sanatı ile işlediği koleksiyonluk parça."
-                }
-            ],
-            about: {
-                title: "Kültürel Mirası Yarınlara Taşıyoruz",
-                content: "Şark Dokusu olarak yıllardır Anadolu'nun her bir köşesinden titizlikle derlediğimiz tarihi el dokuması halıları, antika kilimleri ve el işi otantik ürünleri meraklıları ve sanatseverlerle buluşturuyoruz. Her bir ilmekte asırlık hikâyeler, usta ellerin emeği saklıdır.",
-                image: "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80",
-                badge1Val: "100%",
-                badge1Text: "Orijinal El İşi",
-                badge2Val: "1500+",
-                badge2Text: "Mutlu Sanatsever",
-                badge3Val: "Usta Eller",
-                badge3Text: "Geleneksel Atölye"
-            },
-            contact: {
-                bgUrl: "https://images.unsplash.com/photo-1545232979-fbf59202c380?auto=format&fit=crop&w=1920&q=80",
-                address: "Kapalıçarşı Yanı, Sahaflar Cd. No:42, Fatih / İstanbul",
-                phone: "+90 (212) 555 01 99",
-                email: "bilgi@sarkdokusu.com",
-                whatsapp: "905555550199"
-            }
-        };
-
-        let currentActiveCategoryFilter = "Tümü";
-
-        // Load store state from localStorage if available
-        function loadState() {
-            const saved = localStorage.getItem('sark_dokusu_store_v1');
-            if (saved) {
-                try {
-                    storeData = JSON.parse(saved);
-                } catch (e) {
-                    console.error("Storage load error:", e);
-                }
-            }
-        }
-
-        // Save current state to localStorage
-        function saveState() {
-            localStorage.setItem('sark_dokusu_store_v1', JSON.stringify(storeData));
-        }
-
-        // Initialize UI Elements
-        function renderApp() {
-            renderCategories();
-            renderCategoryFilterButtons();
-            renderProducts(currentActiveCategoryFilter);
-            renderAbout();
-            renderContact();
-            populateAdminForms();
-        }
-
-        // Render Category Cards Section
-        function renderCategories() {
-            const container = document.getElementById('categoriesContainer');
-            container.innerHTML = storeData.categories.map(cat => `
-                <div onclick="filterProducts('${cat.name}')" class="p-6 rounded-2xl bg-sark-card border border-sark-gold/30 hover:border-sark-gold transition-all shadow-md hover:shadow-xl text-center group cursor-pointer transform hover:-translate-y-1">
-                    <div class="w-14 h-14 rounded-full bg-sark-primary/10 text-sark-primary group-hover:bg-sark-primary group-hover:text-sark-accent flex items-center justify-center text-2xl mx-auto mb-4 border border-sark-gold/30 transition-colors">
-                        <i class="${cat.icon}"></i>
-                    </div>
-                    <h3 class="font-serif font-bold text-base text-sark-dark group-hover:text-sark-primary transition-colors">${cat.name}</h3>
-                    <p class="text-xs text-sark-gray mt-1 leading-relaxed">${cat.desc || ''}</p>
-                </div>
-            `).join('');
-        }
-
-        // Render Dynamic Category Filter Buttons above Products
-        function renderCategoryFilterButtons() {
-            const container = document.getElementById('categoryFilterButtons');
-            let html = `
-                <button onclick="filterProducts('Tümü')" class="category-filter-btn px-4 py-2 rounded-full text-xs font-semibold ${currentActiveCategoryFilter === 'Tümü' ? 'bg-sark-primary text-sark-cream' : 'bg-sark-warm text-sark-dark hover:bg-sark-gold/20'} transition-all" data-category="Tümü">
-                    Tümü
-                </button>
-            `;
-
-            storeData.categories.forEach(cat => {
-                const isActive = currentActiveCategoryFilter === cat.name;
-                html += `
-                    <button onclick="filterProducts('${cat.name}')" class="category-filter-btn px-4 py-2 rounded-full text-xs font-semibold ${isActive ? 'bg-sark-primary text-sark-cream' : 'bg-sark-warm text-sark-dark hover:bg-sark-gold/20'} transition-all" data-category="${cat.name}">
-                        ${cat.name}
-                    </button>
-                `;
-            });
-            container.innerHTML = html;
-        }
-
-        // Filter Products and Render Grid
-        function filterProducts(categoryName) {
-            currentActiveCategoryFilter = categoryName;
-            renderCategoryFilterButtons();
-            renderProducts(categoryName);
-        }
-
-        // Render Products Grid
-        function renderProducts(filter = "Tümü") {
-            const container = document.getElementById('productGrid');
-            const filtered = filter === "Tümü" 
-                ? storeData.products 
-                : storeData.products.filter(p => p.category === filter);
-
-            if (filtered.length === 0) {
-                container.innerHTML = `
-                    <div class="col-span-full py-12 text-center text-sark-gray">
-                        <i class="fa-solid fa-box-open text-4xl text-sark-gold mb-3"></i>
-                        <p class="font-serif text-lg">Bu kategoride henüz ürün bulunmamaktadır.</p>
-                    </div>
-                `;
-                return;
-            }
-
-            container.innerHTML = filtered.map(prod => `
-                <div class="bg-sark-card rounded-2xl overflow-hidden border border-sark-gold/30 hover:border-sark-gold shadow-md hover:shadow-2xl transition-all flex flex-col group">
-                    <div class="relative aspect-[4/3] overflow-hidden bg-sark-dark">
-                        <img src="${prod.image}" alt="${prod.name}" onerror="this.src='https://placehold.co/600x450/1C120C/D4AF37?text=Sark+Dokusu'" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                        <span class="absolute top-3 left-3 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-sark-primary text-sark-accent border border-sark-gold/40">
-                            ${prod.category}
-                        </span>
-                    </div>
-                    <div class="p-6 flex-1 flex flex-col justify-between">
-                        <div>
-                            <h3 class="font-serif font-bold text-lg text-sark-dark group-hover:text-sark-primary transition-colors leading-snug">${prod.name}</h3>
-                            <p class="text-xs text-sark-gray mt-2 line-clamp-2 leading-relaxed">${prod.desc || ''}</p>
-                        </div>
-                        <div class="mt-6 pt-4 border-t border-sark-gold/20 flex items-center justify-between">
-                            <div>
-                                <span class="text-[10px] text-sark-gray uppercase tracking-widest block">Fiyat</span>
-                                <span class="font-serif font-extrabold text-lg text-sark-primary">${prod.price}</span>
-                            </div>
-                            <a href="https://wa.me/${storeData.contact.whatsapp}?text=${encodeURIComponent('Merhaba, Şark Dokusu sayfanızdaki "' + prod.name + '" ürünü hakkında detaylı bilgi ve fiyata dair görüşmek istiyorum.')}" target="_blank" class="px-4 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold flex items-center gap-1.5 shadow transition-colors">
-                                <i class="fa-brands fa-whatsapp text-sm"></i>
-                                <span>Sipariş Et</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Render About Section
-        function renderAbout() {
-            const ab = storeData.about;
-            document.getElementById('aboutTitle').innerText = ab.title;
-            document.getElementById('aboutContent').innerText = ab.content;
-            document.getElementById('aboutDisplayImage').src = ab.image;
-            document.getElementById('aboutBadge1Val').innerText = ab.badge1Val;
-            document.getElementById('aboutBadge1Text').innerText = ab.badge1Text;
-            document.getElementById('aboutBadge2Val').innerText = ab.badge2Val;
-            document.getElementById('aboutBadge2Text').innerText = ab.badge2Text;
-            document.getElementById('aboutBadge3Val').innerText = ab.badge3Val;
-            document.getElementById('aboutBadge3Text').innerText = ab.badge3Text;
-        }
-
-        // Render Contact Section & Background Image
-        function renderContact() {
-            const c = storeData.contact;
-            document.getElementById('contactBgOverlay').style.backgroundImage = `url('${c.bgUrl}')`;
-            document.getElementById('contactAddressDisplay').innerText = c.address;
-            document.getElementById('contactPhoneDisplay').innerText = c.phone;
-            document.getElementById('contactEmailDisplay').innerText = c.email;
-
-            const waUrl = `https://wa.me/${c.whatsapp}?text=${encodeURIComponent('Merhaba Şark Dokusu, ürünleriniz hakkında bilgi almak istiyorum.')}`;
-            document.getElementById('headerWhatsappBtn').href = waUrl;
-            document.getElementById('mobileWhatsappBtn').href = waUrl;
-            document.getElementById('contactWhatsappCardBtn').href = waUrl;
-        }
-
-        // Populate Admin Form Fields with Current Values
-        function populateAdminForms() {
-            // Product Category Select Options
-            const prodCatSelect = document.getElementById('adminProdCategory');
-            prodCatSelect.innerHTML = storeData.categories.map(cat => `
-                <option value="${cat.name}">${cat.name}</option>
-            `).join('');
-
-            // Render Products List in Admin
-            const prodTable = document.getElementById('adminProductsTable');
-            prodTable.innerHTML = storeData.products.map(p => `
-                <tr>
-                    <td class="p-3">
-                        <img src="${p.image}" class="w-10 h-10 object-cover rounded border border-sark-gold">
-                    </td>
-                    <td class="p-3 font-semibold">${p.name}</td>
-                    <td class="p-3"><span class="px-2 py-0.5 rounded bg-sark-warm text-[10px] font-bold">${p.category}</span></td>
-                    <td class="p-3 font-bold text-sark-primary">${p.price}</td>
-                    <td class="p-3 text-right">
-                        <button onclick="editProduct(${p.id})" class="px-2 py-1 bg-amber-600 text-white rounded text-[10px] mr-1">Düzenle</button>
-                        <button onclick="deleteProduct(${p.id})" class="px-2 py-1 bg-rose-700 text-white rounded text-[10px]">Sil</button>
-                    </td>
-                </tr>
-            `).join('');
-
-            // Render Categories List in Admin
-            const catList = document.getElementById('adminCategoriesList');
-            catList.innerHTML = storeData.categories.map(c => `
-                <div class="p-3 bg-white rounded-lg border border-sark-gold/30 flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <i class="${c.icon} text-sark-primary text-base"></i>
-                        <div>
-                            <span class="font-bold text-xs block">${c.name}</span>
-                            <span class="text-[10px] text-gray-500">${c.desc || ''}</span>
-                        </div>
-                    </div>
-                    <button onclick="deleteCategory(${c.id})" class="text-rose-600 text-xs px-2 py-1 hover:bg-rose-50 rounded">
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
-                </div>
-            `).join('');
-
-            // Fill About Admin Inputs
-            const ab = storeData.about;
-            document.getElementById('adminAboutTitle').value = ab.title;
-            document.getElementById('adminAboutContent').value = ab.content;
-            document.getElementById('adminAboutImage').value = ab.image;
-            document.getElementById('adminBadge1Val').value = ab.badge1Val;
-            document.getElementById('adminBadge1Text').value = ab.badge1Text;
-            document.getElementById('adminBadge2Val').value = ab.badge2Val;
-            document.getElementById('adminBadge2Text').value = ab.badge2Text;
-            document.getElementById('adminBadge3Val').value = ab.badge3Val;
-            document.getElementById('adminBadge3Text').value = ab.badge3Text;
-
-            // Fill Contact Admin Inputs
-            const cnt = storeData.contact;
-            document.getElementById('adminContactBgUrl').value = cnt.bgUrl;
-            document.getElementById('adminContactAddress').value = cnt.address;
-            document.getElementById('adminContactPhone').value = cnt.phone;
-            document.getElementById('adminContactEmail').value = cnt.email;
-            document.getElementById('adminContactWhatsapp').value = cnt.whatsapp;
-        }
-
-        // Handle Product Form Add/Update
-        function handleProductSubmit(e) {
-            e.preventDefault();
-            const id = document.getElementById('adminProductId').value;
-            const name = document.getElementById('adminProdName').value;
-            const category = document.getElementById('adminProdCategory').value;
-            const price = document.getElementById('adminProdPrice').value;
-            const image = document.getElementById('adminProdImage').value;
-            const desc = document.getElementById('adminProdDesc').value;
-
-            if (id) {
-                // Edit existing
-                const index = storeData.products.findIndex(p => p.id == id);
-                if (index !== -1) {
-                    storeData.products[index] = { id: Number(id), name, category, price, image, desc };
-                    showToast("Ürün başarıyla güncellendi.");
-                }
-            } else {
-                // Add new
-                const newId = Date.now();
-                storeData.products.unshift({ id: newId, name, category, price, image, desc });
-                showToast("Yeni ürün eklendi.");
-            }
-
-            saveState();
-            resetProductForm();
-            renderApp();
-        }
-
-        function editProduct(id) {
-            const prod = storeData.products.find(p => p.id === id);
-            if (!prod) return;
-            document.getElementById('adminProductId').value = prod.id;
-            document.getElementById('adminProdName').value = prod.name;
-            document.getElementById('adminProdCategory').value = prod.category;
-            document.getElementById('adminProdPrice').value = prod.price;
-            document.getElementById('adminProdImage').value = prod.image;
-            document.getElementById('adminProdDesc').value = prod.desc || '';
-            document.getElementById('productFormTitle').innerText = "Ürünü Düzenle";
-        }
-
-        function resetProductForm() {
-            document.getElementById('adminProductId').value = '';
-            document.getElementById('adminProdName').value = '';
-            document.getElementById('adminProdPrice').value = '';
-            document.getElementById('adminProdImage').value = '';
-            document.getElementById('adminProdDesc').value = '';
-            document.getElementById('productFormTitle').innerText = "Yeni Ürün Ekle";
-        }
-
-        function deleteProduct(id) {
-            storeData.products = storeData.products.filter(p => p.id !== id);
-            saveState();
-            renderApp();
-            showToast("Ürün silindi.");
-        }
-
-        // Handle Category Form Add
-        function handleCategorySubmit(e) {
-            e.preventDefault();
-            const name = document.getElementById('adminCatName').value.trim();
-            const icon = document.getElementById('adminCatIcon').value.trim();
-            const desc = document.getElementById('adminCatDesc').value.trim();
-
-            if (storeData.categories.some(c => c.name.toLowerCase() === name.toLowerCase())) {
-                alert("Bu kategori zaten mevcut!");
-                return;
-            }
-
-            storeData.categories.push({ id: Date.now(), name, icon, desc });
-            saveState();
-            document.getElementById('adminCatName').value = '';
-            document.getElementById('adminCatIcon').value = '';
-            document.getElementById('adminCatDesc').value = '';
-            renderApp();
-            showToast("Yeni kategori başarıyla eklendi.");
-        }
-
-        function deleteCategory(id) {
-            const cat = storeData.categories.find(c => c.id === id);
-            if (!cat) return;
-            storeData.categories = storeData.categories.filter(c => c.id !== id);
-            saveState();
-            renderApp();
-            showToast(`'${cat.name}' kategorisi silindi.`);
-        }
-
-        // Handle About Information Update
-        function handleAboutSubmit(e) {
-            e.preventDefault();
-            storeData.about.title = document.getElementById('adminAboutTitle').value;
-            storeData.about.content = document.getElementById('adminAboutContent').value;
-            storeData.about.image = document.getElementById('adminAboutImage').value;
-            storeData.about.badge1Val = document.getElementById('adminBadge1Val').value;
-            storeData.about.badge1Text = document.getElementById('adminBadge1Text').value;
-            storeData.about.badge2Val = document.getElementById('adminBadge2Val').value;
-            storeData.about.badge2Text = document.getElementById('adminBadge2Text').value;
-            storeData.about.badge3Val = document.getElementById('adminBadge3Val').value;
-            storeData.about.badge3Text = document.getElementById('adminBadge3Text').value;
-
-            saveState();
-            renderApp();
-            showToast("Hakkımızda bilgileri güncellendi.");
-        }
-
-        // Handle Contact Details & Background Image Update
-        function handleContactConfigSubmit(e) {
-            e.preventDefault();
-            storeData.contact.bgUrl = document.getElementById('adminContactBgUrl').value;
-            storeData.contact.address = document.getElementById('adminContactAddress').value;
-            storeData.contact.phone = document.getElementById('adminContactPhone').value;
-            storeData.contact.email = document.getElementById('adminContactEmail').value;
-            storeData.contact.whatsapp = document.getElementById('adminContactWhatsapp').value.replace(/[^0-9]/g, '');
-
-            saveState();
-            renderApp();
-            showToast("İletişim alanı ve arka plan görseli güncellendi.");
-        }
-
-        // General Contact Form Submission Handler
-        function handleContactSubmit(e) {
-            e.preventDefault();
-            showToast("Mesajınız iletildi. En kısa sürede sizinle iletişime geçeceğiz.");
-            e.target.reset();
-        }
-
-        // Admin Modal Controls & Tabs Switching
-        function openAdminModal() {
-            document.getElementById('adminModal').classList.remove('hidden');
-        }
-
-        function closeAdminModal() {
-            document.getElementById('adminModal').classList.add('hidden');
-        }
-
-        function switchAdminTab(tabName) {
-            document.querySelectorAll('.admin-tab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.admin-tab-btn').forEach(btn => {
-                btn.classList.remove('bg-sark-primary', 'text-sark-cream', 'border-t', 'border-x', 'border-sark-gold/40');
-                btn.classList.add('text-sark-dark');
-            });
-
-            document.getElementById(`adminTab-${tabName}`).classList.remove('hidden');
-            const activeBtn = document.getElementById(`tabBtn-${tabName}`);
-            activeBtn.classList.add('bg-sark-primary', 'text-sark-cream', 'border-t', 'border-x', 'border-sark-gold/40');
-            activeBtn.classList.remove('text-sark-dark');
-        }
-
-        // Mobile Menu Toggle
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobileMenu');
-            menu.classList.toggle('hidden');
-        }
-
-        // Notification Toast Helper
-        function showToast(message) {
-            const toast = document.getElementById('toastMessage');
-            document.getElementById('toastText').innerText = message;
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            setTimeout(() => {
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 3000);
-        }
-
-        // App Initialization on Load
-        window.onload = function() {
-            loadState();
-            renderApp();
-        };
-    </script>
+    <!-- JavaScript Bağlantıları -->
+    <script src="store.js"></script>
+    <script src="admin.js"></script>
 </body>
 </html>
