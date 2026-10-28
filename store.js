@@ -393,6 +393,16 @@
     return 'https://wa.me/'+number+'?text='+encodeURIComponent(lines.join('\n'));
   }
 
+  /* ---- Üst menü: Canlı Destek (WhatsApp) ---- */
+  function renderSupportLink(){
+    var a=byId('nav-wa'); if (!a) return;
+    if (!whatsappConfigured()){ a.hidden=true; return; }
+    var number=String(CONFIG.whatsappNumber).replace(/\D/g,'');
+    a.href='https://wa.me/'+number+'?text='+encodeURIComponent(t('wa.support_greeting',{store:brandName()}));
+    a.setAttribute('aria-label', t('nav.support_aria'));
+    a.hidden=false;
+  }
+
   /* ---- Katman yığını ----
      Detay paneli açıkken üstüne lightbox açılabiliyor. Her katman kendi
      ESC dinleyicisini eklerse tek tuş ikisini birden kapatır. Bu yüzden
@@ -851,9 +861,10 @@
     applyConfigStatic();
     bindEvents();
     bindMenuEvents();
+    renderSupportLink();
     attachImageProtection();
     if (window.__sarkI18n){
-      window.__sarkI18n.subscribe(function(){ applyBrand(); renderChips(); renderCatBar(); renderMenu(); renderGrid(); renderBanner(); renderTrustItems(); });
+      window.__sarkI18n.subscribe(function(){ applyBrand(); renderSupportLink(); renderChips(); renderCatBar(); renderMenu(); renderGrid(); renderBanner(); renderTrustItems(); });
     }
     if (!initSupabase()){
       state.loading=false; state.error=t('error.fetch',{detail:'Supabase yapılandırması eksik veya geçersiz.'}); renderGrid(); return;

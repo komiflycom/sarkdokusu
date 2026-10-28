@@ -13,7 +13,7 @@
   var DICT = {
     tr: {
       'page.title': 'Şark Dokusu — Doğal Dokunuşlu El Emeği Ürünler',
-      'nav.aria': 'Ana menü', 'nav.collection': 'Koleksiyon', 'nav.about': 'Hakkımızda', 'nav.order': 'Sipariş Ver',
+      'nav.aria': 'Ana menü', 'nav.collection': 'Koleksiyon', 'nav.about': 'Hakkımızda', 'nav.order': 'Sipariş Ver', 'nav.support': 'Canlı Destek', 'nav.support_aria': 'Canlı Destek — WhatsApp', 'wa.support_greeting': 'Merhaba, {store} hakkında bilgi almak istiyorum.',
       'hero.eyebrow': 'Doğadan gelen dokunuş',
       'hero.title': 'Her parçada <em>sabrın</em> ve doğanın izi',
       'hero.lead': 'Şark Dokusu; özenle seçilmiş doğal malzemelerle, el emeğiyle hazırlanan sade bir koleksiyon sunar. Beğendiğiniz ürünü seçin, WhatsApp üzerinden birkaç saniyede siparişinizi iletin.',
@@ -52,7 +52,7 @@
     },
     en: {
       'page.title': 'Şark Dokusu — Natural Handmade Products',
-      'nav.aria': 'Main navigation', 'nav.collection': 'Collection', 'nav.about': 'About', 'nav.order': 'Order Now',
+      'nav.aria': 'Main navigation', 'nav.collection': 'Collection', 'nav.about': 'About', 'nav.order': 'Order Now', 'nav.support': 'Live Support', 'nav.support_aria': 'Live Support — WhatsApp', 'wa.support_greeting': 'Hello, I would like some information about {store}.',
       'hero.eyebrow': 'A touch from nature',
       'hero.title': 'Every piece carries the mark of <em>patience</em> and nature',
       'hero.lead': 'Şark Dokusu offers a curated collection of natural materials crafted by hand. Pick what you love and place your order in seconds via WhatsApp.',
@@ -91,7 +91,7 @@
     },
     ar: {
       'page.title': 'شرق دوقوسو — منتجات طبيعية يدوية الصنع',
-      'nav.aria': 'القائمة الرئيسية', 'nav.collection': 'المجموعة', 'nav.about': 'من نحن', 'nav.order': 'اطلب الآن',
+      'nav.aria': 'القائمة الرئيسية', 'nav.collection': 'المجموعة', 'nav.about': 'من نحن', 'nav.order': 'اطلب الآن', 'nav.support': 'دعم مباشر', 'nav.support_aria': 'دعم مباشر — WhatsApp', 'wa.support_greeting': 'مرحبًا، أرغب في الحصول على معلومات عن {store}.',
       'hero.eyebrow': 'لمسة من الطبيعة',
       'hero.title': 'كل قطعة تحمل بصمة <em>الصبر</em> والطبيعة',
       'hero.lead': 'تقدّم شرق دوقوسو مجموعة مختارة من المواد الطبيعية المصنوعة يدويًا. اختر ما يعجبك وأرسل طلبك خلال ثوانٍ عبر واتساب.',
@@ -130,7 +130,7 @@
     },
     de: {
       'page.title': 'Şark Dokusu — Natürliche Handgemachte Produkte',
-      'nav.aria': 'Hauptnavigation', 'nav.collection': 'Kollektion', 'nav.about': 'Über uns', 'nav.order': 'Jetzt bestellen',
+      'nav.aria': 'Hauptnavigation', 'nav.collection': 'Kollektion', 'nav.about': 'Über uns', 'nav.order': 'Jetzt bestellen', 'nav.support': 'Live-Support', 'nav.support_aria': 'Live-Support — WhatsApp', 'wa.support_greeting': 'Hallo, ich hätte gerne Informationen zu {store}.',
       'hero.eyebrow': 'Eine Berührung der Natur',
       'hero.title': 'Jedes Stück trägt die Spur von <em>Geduld</em> und Natur',
       'hero.lead': 'Şark Dokusu bietet eine kuratierte Kollektion aus natürlichen Materialien, handgefertigt mit Sorgfalt. Wähle dein Lieblingsprodukt und bestelle in Sekunden per WhatsApp.',
@@ -169,7 +169,7 @@
     },
     fr: {
       'page.title': 'Şark Dokusu — Produits Naturels Faits Main',
-      'nav.aria': 'Navigation principale', 'nav.collection': 'Collection', 'nav.about': 'À propos', 'nav.order': 'Commander',
+      'nav.aria': 'Navigation principale', 'nav.collection': 'Collection', 'nav.about': 'À propos', 'nav.order': 'Commander', 'nav.support': 'Assistance en direct', 'nav.support_aria': 'Assistance en direct — WhatsApp', 'wa.support_greeting': 'Bonjour, je souhaite obtenir des informations sur {store}.',
       'hero.eyebrow': 'Un souffle de la nature',
       'hero.title': 'Chaque pièce porte l\'empreinte de la <em>patience</em> et de la nature',
       'hero.lead': 'Şark Dokusu propose une collection soignée de matières naturelles façonnées à la main. Choisissez ce que vous aimez et passez commande en quelques secondes via WhatsApp.',
