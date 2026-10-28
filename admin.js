@@ -533,6 +533,97 @@
   }
   function bySort(a,b){ return (a.sort_order||0)-(b.sort_order||0); }
 
+
+  /* ===================== EXCEL'E AKTAR ===================== */
+  var XLSX_URL = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+  var exporting = false;
+  function loadXlsxLib(){
+    if (window.XLSX) return Promise.resolve(window.XLSX);
+    return new Promise(function(resolve, reject){
+      var s = document.createElement('script');
+      s.src = XLSX_URL; s.async = true; s.crossOrigin = 'anonymous'; s.referrerPolicy = 'no-referrer';
+      s.onload = function(){ window.XLSX ? resolve(window.XLSX) : reject(new Error('XLSX yok')); };
+      s.onerror = function(){ reject(new Error('Excel kitaplığı yüklenemedi')); };
+      document.head.appendChild(s);
+    });
+  }
+  function exportRows(){
+    return products.map(function(p){
+      var stock = (p.stock===null || p.stock===undefined || p.stock==='') ? '' : Number(p.stock);
+      var price = Number(p.price);
+      return {
+        'Ürün ID': String(p.id==null?'':p.id),
+        'Resim Link': imgPublicUrl(p.image_url),
+        'Ürün İsmi': getProdName(p,'tr'),
+        'Açıklama': p.desc_tr || p.description || '',
+        'Kategori İsmi': categoryNameForProduct(p),
+        'Adet': isFinite(stock) ? stock : '',
+        'Fiyat ($)': isFinite(price) ? price : ''
+      };
+    });
+  }
+  var EXPORT_COLS = ['Ürün ID','Resim Link','Ürün İsmi','Açıklama','Kategori İsmi','Adet','Fiyat ($)'];
+  function exportFileName(ext){
+    var d = new Date(), pad = function(n){ return (n<10?'0':'')+n; };
+    return 'urunler-'+d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'.'+ext;
+  }
+  function downloadBlob(blob, name){
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = name;
+    document.body.appendChild(a); a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+  }
+  /* Kitaplık yüklenemezse: Excel'in doğrudan açabildiği CSV (UTF-8 BOM, ; ayırıcı). */
+  function exportCsvFallback(rows){
+    function cell(v){
+      var s = String(v==null?'':v);
+      if (typeof v==='number') s = s.replace('.',','); /* Türkçe Excel ondalık virgül bekler */
+      else if (/^[=+\-@\t\r]/.test(s)) s = "'" + s; /* formül enjeksiyonunu engelle */
+      return '"' + s.replace(/"/g,'""') + '"';
+    }
+    var lines = [EXPORT_COLS.map(cell).join(';')];
+    rows.forEach(function(r){ lines.push(EXPORT_COLS.map(function(c){ return cell(r[c]); }).join(';')); });
+    downloadBlob(new Blob(['\ufeff'+lines.join('\r\n')], {type:'text/csv;charset=utf-8'}), exportFileName('csv'));
+  }
+  function exportProductsExcel(){
+    if (exporting || !sb) return;
+    exporting = true;
+    var btn = byId('export-xlsx-btn'), lbl = byId('export-xlsx-label');
+    if (btn) btn.disabled = true;
+    if (lbl) lbl.textContent = 'Hazırlanıyor…';
+    showAlert(els.globalAlert,'');
+    /* Güncel veri + kategori adları için ikisini de yeniden oku */
+    Promise.all([loadCategories(), loadProducts()]).then(function(){
+      if (!products.length){ toast('Aktarılacak ürün yok.','error'); return; }
+      var rows = exportRows();
+      return loadXlsxLib().then(function(XLSX){
+        var ws = XLSX.utils.json_to_sheet(rows, { header: EXPORT_COLS });
+        ws['!cols'] = [{wch:38},{wch:60},{wch:34},{wch:60},{wch:22},{wch:8},{wch:12}];
+        var range = XLSX.utils.decode_range(ws['!ref']);
+        ws['!autofilter'] = { ref: ws['!ref'] };
+        for (var r = 1; r <= range.e.r; r++){
+          var link = ws[XLSX.utils.encode_cell({r:r,c:1})];
+          if (link && link.v) link.l = { Target: String(link.v), Tooltip: 'Resmi aç' };
+          var pr = ws[XLSX.utils.encode_cell({r:r,c:6})];
+          if (pr && typeof pr.v==='number') pr.z = '0.00';
+        }
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Ürünler');
+        XLSX.writeFile(wb, exportFileName('xlsx'));
+        toast(rows.length+' ürün Excel dosyasına aktarıldı.','success');
+      }, function(){
+        exportCsvFallback(rows);
+        toast('Excel kitaplığı yüklenemedi; ürünler CSV olarak indirildi (Excel ile açılır).','success');
+      });
+    }).catch(function(err){
+      showAlert(els.globalAlert,'Excel dosyası oluşturulamadı: '+errText(err),'error');
+    }).then(function(){
+      exporting = false;
+      if (btn) btn.disabled = false;
+      if (lbl) lbl.textContent = "Excel'e aktar";
+    });
+  }
+
   /* ===================== KATEGORİLER ===================== */
   function loadCategories(){
     if (els.catListState){ els.catListState.hidden=false; els.catListState.textContent='Kategoriler yükleniyor…'; }
@@ -1065,6 +1156,8 @@
   function bind(){
     if (els.loginForm) els.loginForm.addEventListener('submit', signIn);
     if (els.productForm) els.productForm.addEventListener('submit', saveProduct);
+    var exportBtn = byId('export-xlsx-btn');
+    if (exportBtn) exportBtn.addEventListener('click', exportProductsExcel);
     if (els.logoutBtn) els.logoutBtn.addEventListener('click', signOut);
     if (els.cancelEdit) els.cancelEdit.addEventListener('click', function(){ clearProductForm(); showAlert(els.globalAlert,''); });
     if (els.resetBtn) els.resetBtn.addEventListener('click', function(){

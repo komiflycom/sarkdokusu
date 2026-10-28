@@ -144,7 +144,7 @@ const translate = (html, dict) => translateText(translateAttrs(html, dict), dict
 /* ---------- ortak parçalar ---------- */
 function absolutize(html) {
   return html
-    .replace(/(href|src)="(style\.css|config\.js|i18n\.js|store\.js|logo\.png)(\?[^"]*)?"/g, (m, a, f, q) => a + '="/' + f + (q || '') + '"')
+    .replace(/(href|src)="(style\.css|storefront\.css|config\.js|i18n\.js|store\.js|logo\.png)(\?[^"]*)?"/g, (m, a, f, q) => a + '="/' + f + (q || '') + '"')
     .replace(/href="admin\.html"/g, 'href="/admin.html"')
     .replace(/<link rel="icon" href="logo.png"/, '<link rel="icon" href="/logo.png"');
 }
@@ -223,7 +223,7 @@ function socials(settings) {
 
   fs.rmSync(OUT, { recursive: true, force: true });
   fs.mkdirSync(OUT, { recursive: true });
-  ['style.css', 'config.js', 'i18n.js', 'store.js', 'admin.html', 'admin.js', 'logo.png'].forEach((f) => fs.copyFileSync(path.join(ROOT, f), path.join(OUT, f)));
+  ['style.css', 'storefront.css', 'config.js', 'i18n.js', 'store.js', 'admin.html', 'admin.js', 'logo.png'].forEach((f) => fs.copyFileSync(path.join(ROOT, f), path.join(OUT, f)));
 
   fs.readdirSync(ROOT).filter((f) => /^google[0-9a-f]+\.html$/i.test(f)).forEach((f) => fs.copyFileSync(path.join(ROOT, f), path.join(OUT, f)));
   const template = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
@@ -337,7 +337,7 @@ function socials(settings) {
       const head = headBlock({ lang, title, description, canonical: pageUrl, alt: abs(altPaths), brand, image: img || logo, imageAlt: name, ogType: 'product', twCard: img ? 'summary_large_image' : 'summary', ld });
 
       const home = homePath(lang);
-      let header = translate(absolutize(headerHtml), dict).replace(/(<span class="brand-sub">)[^<]*(<\/span>)/, '$1' + BRAND_SUB[lang] + '$2')
+      let header = translate(absolutize(headerHtml.replace(/<div class="header-search"[\s\S]*?<\/button>\s*<\/div>\s*<\/div>/, '')), dict).replace(/(<span class="brand-sub">)[^<]*(<\/span>)/, '$1' + BRAND_SUB[lang] + '$2')
         .replace(/href="\.\/"/, 'href="' + home + '"').replace(/href="#koleksiyon"/g, 'href="' + home + '#koleksiyon"').replace(/href="#hakkimizda"/g, 'href="' + home + '#hakkimizda"');
       let footer = translate(absolutize(footerHtml), dict).replace(/(<span class="brand-sub">)[^<]*(<\/span>)/, '$1' + BRAND_SUB[lang] + '$2')
         .replace(/href="\.\/"/, 'href="' + home + '"').replace(/href="#koleksiyon"/g, 'href="' + home + '#koleksiyon"').replace(/href="#hakkimizda"/g, 'href="' + home + '#hakkimizda"')
@@ -345,7 +345,7 @@ function socials(settings) {
       const stockTxt = hasStock ? (out ? dict['stock.out'] : dict['stock.in']) : '';
 
       const page = '<!doctype html>\n<html lang="' + lang + '" dir="' + (lang === 'ar' ? 'rtl' : 'ltr') + '">\n<head>\n  <meta charset="utf-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1">\n  ' + head +
-        '\n  <link rel="icon" href="/logo.png" type="image/png">\n  <link rel="preconnect" href="https://fonts.googleapis.com">\n  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">\n  <link rel="stylesheet" href="/style.css?v=fix4">\n</head>\n<body' + (lang === 'ar' ? ' class="is-rtl"' : '') + '>\n  ' + header +
+        '\n  <link rel="icon" href="/logo.png" type="image/png">\n  <link rel="preconnect" href="https://fonts.googleapis.com">\n  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">\n  <link rel="stylesheet" href="/style.css?v=fix4">\n  <link rel="stylesheet" href="/storefront.css?v=ty1">\n</head>\n<body' + (lang === 'ar' ? ' class="is-rtl"' : '') + '>\n  ' + header +
         '\n  <main class="product-page"><div class="wrap">\n    <nav class="breadcrumb" aria-label="breadcrumb"><a href="' + home + '">' + esc(brand) + '</a> › <a href="' + home + '#koleksiyon">' + esc(dict['catalog.title']) + '</a> › <span>' + esc(name) + '</span></nav>\n    <article class="pp-grid">\n      ' +
         (img ? '<img class="pp-img" src="' + esc(img) + '" alt="' + esc(name) + '" width="800" height="800" decoding="async">' : '<div class="pp-img" role="img" aria-label="' + esc(name) + '" style="aspect-ratio:1/1"></div>') +
         '\n      <div class="pp-info">\n        ' + (cat ? '<p class="pp-cat">' + esc(cat) + '</p>' : '') + '<h1>' + esc(name) + '</h1>\n        ' + (price ? '<p class="pp-price">' + esc(price) + '</p>' : '') +

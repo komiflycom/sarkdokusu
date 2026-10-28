@@ -22,6 +22,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="style.css?v=fix6">
+  <link rel="stylesheet" href="storefront.css?v=ty1">
 </head>
 <body>
   <a class="skip-link" href="#koleksiyon" data-i18n="skip.content">İçeriğe geç</a>
@@ -37,6 +38,21 @@
           <span class="brand-sub">Doğal &amp; El Emeği</span>
         </span>
       </a>
+
+      <div class="header-search" role="search">
+          <div class="search-field">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+                 stroke-linecap="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="7.5"></circle>
+              <path d="m21 21-4.2-4.2"></path>
+            </svg>
+            <label class="visually-hidden" for="search-input" data-i18n="search.label">Ürün ara</label>
+            <input id="search-input" type="search" data-i18n="search.placeholder" data-i18n-prop="placeholder"
+                   placeholder="Ürün adı veya kategori ara…" autocomplete="off" spellcheck="false">
+            <button class="search-clear" id="search-clear" type="button"
+                    data-i18n="search.clear_aria" data-i18n-prop="aria-label" aria-label="Aramayı temizle">×</button>
+          </div>
+      </div>
 
       <nav class="site-nav" data-i18n="nav.aria" data-i18n-prop="aria-label" aria-label="Ana menü">
         <a class="nav-link" href="#koleksiyon" data-i18n="nav.collection">Koleksiyon</a>
@@ -102,18 +118,6 @@
         </div>
 
         <div class="toolbar">
-          <div class="search-field">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
-                 stroke-linecap="round" aria-hidden="true">
-              <circle cx="11" cy="11" r="7.5"></circle>
-              <path d="m21 21-4.2-4.2"></path>
-            </svg>
-            <label class="visually-hidden" for="search-input" data-i18n="search.label">Ürün ara</label>
-            <input id="search-input" type="search" data-i18n="search.placeholder" data-i18n-prop="placeholder"
-                   placeholder="Ürün adı veya kategori ara…" autocomplete="off" spellcheck="false">
-            <button class="search-clear" id="search-clear" type="button"
-                    data-i18n="search.clear_aria" data-i18n-prop="aria-label" aria-label="Aramayı temizle">×</button>
-          </div>
 
           <div class="chips" id="category-chips" role="group"
                data-i18n="chips.aria" data-i18n-prop="aria-label" aria-label="Kategori filtresi" hidden></div>
