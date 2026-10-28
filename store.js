@@ -241,8 +241,10 @@
     if(!item){hero.style.removeProperty('background-image');hero.style.removeProperty('background-size');hero.style.removeProperty('background-position');return;}
     var url=assetPublicUrl(item.image_url); if(!url) return;
     hero.style.backgroundImage='linear-gradient(90deg, rgba(20,31,25,.88) 0%, rgba(20,31,25,.70) 48%, rgba(20,31,25,.34) 100%), url("'+url.replace(/"/g,'%22')+'")';
-    hero.style.backgroundSize='cover';
-    hero.style.backgroundPosition='center';
+    hero.style.backgroundSize='100% 100%, contain';
+    hero.style.backgroundPosition='center, center';
+    hero.style.backgroundRepeat='no-repeat, no-repeat';
+    hero.style.backgroundColor='#172c24';
   }
 
   function renderBanner(){
