@@ -28,6 +28,16 @@
     supabaseReady: false
   };
 
+  // Eski/statik sayfa, güncel ayarlar ve ürünler uygulanmadan görünmesin.
+  var bootFinished = false;
+  function finishInitialRender(){
+    if (bootFinished) return;
+    bootFinished = true;
+    var screen = document.getElementById('site-boot-screen');
+    if (screen) screen.remove();
+    document.documentElement.classList.remove('site-booting');
+  }
+
   function t(key, vars){ if (!window.__sarkI18n) return key; return window.__sarkI18n.t(key, vars); }
   function curLang(){ return (window.__sarkI18n && window.__sarkI18n.current) || 'tr'; }
   function byId(id){ return document.getElementById(id); }
@@ -897,7 +907,7 @@
   function load(){
     state.loading=true; state.error=null; renderGrid();
     if (!state.supabaseReady){
-      state.loading=false; state.error=t('error.fetch',{detail:'Supabase bağlantısı kurulamadı.'}); renderGrid(); return;
+      state.loading=false; state.error=t('error.fetch',{detail:'Supabase bağlantısı kurulamadı.'}); renderGrid(); finishInitialRender(); return;
     }
     Promise.all([fetchSettings(), fetchCategories(), fetchProducts()])
       .then(function(results){
@@ -907,11 +917,12 @@
         if (state.category!=='__all__' && !findCat(state.category)) state.category='__all__';
         state.loading=false;
         renderChips(); renderCatBar(); renderMenu(); renderGrid(); renderShowcase(); renderSidebar(); renderHeroArt(); updateCatalogTitle();
+        finishInitialRender();
       })
       .catch(function(err){
         state.products=[]; state.categories=[]; state.loading=false;
         var detail = err&&(err.message||err.msg)?(err.message||err.msg):'bilinmeyen hata';
-        state.error=t('error.fetch',{detail:detail}); renderGrid();
+        state.error=t('error.fetch',{detail:detail}); renderGrid(); finishInitialRender();
         if (window.console&&console.error) console.error('[Şark Dokusu] yükleme hatası:', err);
       });
   }
@@ -1062,7 +1073,7 @@
       window.__sarkI18n.subscribe(function(){ applyBrand(); renderSupportLink(); renderChips(); renderCatBar(); renderMenu(); renderGrid(); renderBanner(); renderTrustItems(); renderShowcase(); renderSidebar(); updateCatalogTitle(); });
     }
     if (!initSupabase()){
-      state.loading=false; state.error=t('error.fetch',{detail:'Supabase yapılandırması eksik veya geçersiz.'}); renderGrid(); return;
+      state.loading=false; state.error=t('error.fetch',{detail:'Supabase yapılandırması eksik veya geçersiz.'}); renderGrid(); finishInitialRender(); return;
     }
     load();
   }

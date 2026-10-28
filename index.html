@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="tr">
+<html lang="tr" class="site-booting">
 <head>
   <meta charset="utf-8">
   <meta name="google-site-verification" content="JrWnbpdaOxWO5UBFotd2Z_9zCb93pen5kPbYpdq-3yE" />
@@ -21,10 +21,21 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=heritage1">
-  <link rel="stylesheet" href="storefront.css?v=heritage1">
+  <link rel="stylesheet" href="style.css?v=heritage2">
+  <link rel="stylesheet" href="storefront.css?v=heritage2">
+  <style>
+    /* İlk açılışta eski/statik içerik görünmesin; güncel Supabase verisi uygulanınca açılır. */
+    html.site-booting body > :not(#site-boot-screen) { visibility: hidden !important; }
+    #site-boot-screen { position: fixed; inset: 0; z-index: 99999; display: grid; place-items: center; background: #172c24; color: #f5efe6; font-family: Inter, sans-serif; text-align: center; }
+    #site-boot-screen .boot-inner { padding: 24px; }
+    #site-boot-screen .boot-name { font-family: "Cormorant Garamond", Georgia, serif; font-size: clamp(34px, 7vw, 54px); letter-spacing: .04em; }
+    #site-boot-screen .boot-line { width: 54px; height: 2px; margin: 18px auto 0; background: #c5a36a; animation: boot-pulse 1s ease-in-out infinite alternate; }
+    @keyframes boot-pulse { from { opacity: .35; transform: scaleX(.55); } to { opacity: 1; transform: scaleX(1); } }
+    @media (prefers-reduced-motion: reduce) { #site-boot-screen .boot-line { animation: none; } }
+  </style>
 </head>
 <body>
+  <div id="site-boot-screen" role="status" aria-live="polite"><div class="boot-inner"><div class="boot-name">Şark Dokusu</div><div>Güncel koleksiyon hazırlanıyor…</div><div class="boot-line"></div></div></div>
   <a class="skip-link" href="#koleksiyon" data-i18n="skip.content">İçeriğe geç</a>
 
   <header class="site-header">
@@ -256,8 +267,8 @@
   <!-- Supabase JS (pinlenmiş sürüm) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.0/dist/umd/supabase.min.js"
           crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script src="config.js?v=fix6"></script>
-  <script src="i18n.js?v=ty2"></script>
-  <script src="store.js?v=ty2"></script>
+  <script src="config.js?v=fix7"></script>
+  <script src="i18n.js?v=ty3"></script>
+  <script src="store.js?v=ty3"></script>
 </body>
 </html>
