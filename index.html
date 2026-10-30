@@ -26,7 +26,7 @@
 
   <link rel="stylesheet" href="style.css?v=heritage2">
   <link rel="stylesheet" href="storefront.css?v=heritage2">
-  <link rel="stylesheet" href="heritage.css?v=5">
+  <link rel="stylesheet" href="heritage.css?v=7">
   <script>setTimeout(function(){document.documentElement.classList.remove("site-booting");var b=document.getElementById("site-boot-screen");if(b)b.remove();},900);</script>
   <style>
     /* İlk açılışta eski/statik içerik görünmesin; güncel Supabase verisi uygulanınca açılır. */
@@ -45,6 +45,9 @@
 
   <header class="site-header">
     <div class="wrap header-inner">
+      <button class="nav-burger" id="nav-burger" type="button" aria-label="Kategoriler" aria-controls="cat-menu" aria-expanded="false">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+      </button>
       <a class="brand" href="./" data-i18n="brand.aria" data-i18n-prop="aria-label" aria-label="Şark Dokusu ana sayfa">
         <span class="brand-mark" aria-hidden="true">
           <img src="logo.png" alt="" width="68" height="68" loading="eager" decoding="sync">
@@ -280,6 +283,6 @@
   <script src="lite-supabase.js?v=2"></script>
   <script src="config.js?v=fix7"></script>
   <script src="i18n.js?v=ty3"></script>
-  <script src="store.js?v=20261030-cat4"></script>
+  <script src="store.js?v=20261030-cat6"></script>
 </body>
 </html>

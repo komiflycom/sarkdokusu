@@ -371,6 +371,34 @@
     return li;
   }
 
+
+  /* ---- İki fotoğraflı ürünlerde 2 sn'de bir 1. ↔ 2. fotoğraf geçişi ----
+     Ekranda görünen kartlar birlikte döner; görünmeyenlerde ikinci fotoğraf
+     hiç indirilmez (hız). Sekme arka plandayken ve "hareketi azalt" modunda durur. */
+  var altVisible=[], altObserver=null, altTimer=null, altOn=false;
+  function observeAltCard(media, loadFn){
+    if (!('IntersectionObserver' in window)) { media.addEventListener('pointerenter',loadFn,{once:true}); return; }
+    if (!altObserver){
+      altObserver=new IntersectionObserver(function(entries){
+        entries.forEach(function(en){
+          var m=en.target, i=altVisible.indexOf(m);
+          if (en.isIntersecting){ if (i<0) altVisible.push(m); if (m.__loadAlt) m.__loadAlt(); }
+          else { if (i>-1) altVisible.splice(i,1); m.classList.remove('is-alt'); }
+        });
+      },{rootMargin:'120px'});
+    }
+    media.__loadAlt=loadFn; altObserver.observe(media);
+    if (!altTimer){
+      altTimer=setInterval(function(){
+        if (document.hidden) return;
+        if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        altOn=!altOn;
+        altVisible=altVisible.filter(function(m){ return m.isConnected; });
+        altVisible.forEach(function(m){ m.classList.toggle('is-alt', altOn); });
+      },2000);
+    }
+  }
+
   function buildProductCard(product){
     var li=document.createElement('li'); li.className='product-card';
     var name=getProdName(product), desc=getProdDesc(product);
@@ -396,6 +424,7 @@
             img2.dataset.src=imageUrl2;
             var loadSecondImage=function(){ if(img2.dataset.src){ img2.src=img2.dataset.src; delete img2.dataset.src; } };
             media.addEventListener('pointerenter',loadSecondImage,{once:true});
+            observeAltCard(media, loadSecondImage);
             media.addEventListener('focusin',loadSecondImage,{once:true});
             img2.addEventListener('error', function(){ img2.remove(); });
             media.appendChild(img2);
@@ -820,6 +849,7 @@
     if (rootId) menuState.root=rootId;
     menuState.open=true; m.hidden=false;
     if (tg) tg.setAttribute('aria-expanded','true');
+    var bg=byId('nav-burger'); if (bg) bg.setAttribute('aria-expanded','true');
     document.body.classList.toggle('cat-menu-open', isMobile());
     renderMenu();
   }
@@ -828,10 +858,17 @@
     clearTimeout(menuState.timer);
     menuState.open=false; m.hidden=true;
     if (tg) tg.setAttribute('aria-expanded','false');
+    var bg=byId('nav-burger'); if (bg) bg.setAttribute('aria-expanded','false');
     document.body.classList.remove('cat-menu-open');
   }
   function bindMenuEvents(){
-    var tg=byId('cat-toggle'), bar=byId('cat-bar'), cl=byId('cat-menu-close');
+    var tg=byId('cat-toggle'), bar=byId('cat-bar'), cl=byId('cat-menu-close'), burger=byId('nav-burger');
+    if (burger) burger.addEventListener('click',function(e){ e.stopPropagation(); menuState.open?closeMenu():openMenu(null); });
+    document.addEventListener('click',function(e){
+      if (!menuState.open || !isMobile()) return;
+      if (!e.target.isConnected) return; /* menü yeniden çizildi; dışarı tıklama değil */
+      var m=byId('cat-menu'); if (m && !m.contains(e.target) && !(burger&&burger.contains(e.target))) closeMenu();
+    });
     if (tg) tg.addEventListener('click',function(){ menuState.open?closeMenu():openMenu(isMobile()?null:menuState.root); });
     if (cl) cl.addEventListener('click', closeMenu);
     if (bar){
