@@ -424,6 +424,93 @@
       if (df) df.hidden = (l!==lang);
     });
   }
+
+  /* ---- Otomatik çeviri (TR → EN/AR/DE/FR) ----
+     Ek kurulum gerektirmez. Birincil: Google çeviri uç noktası (gtx),
+     yedek: MyMemory. Daha kararlı/kurumsal çözüm için aşağıdaki
+     translateText() içini Supabase Edge Function + DeepL ile değiştirebilirsiniz. */
+  var translating = false;
+
+  function splitForTranslate(text, max){
+    var parts = [], cur = '';
+    text.split(/(?<=[.!?\n])/).forEach(function(s){
+      if ((cur + s).length > max && cur){ parts.push(cur); cur = ''; }
+      while (s.length > max){ parts.push(s.slice(0, max)); s = s.slice(max); }
+      cur += s;
+    });
+    if (cur) parts.push(cur);
+    return parts;
+  }
+  function translateViaGoogle(text, target){
+    var url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=tr&tl='+target+'&dt=t&q='+encodeURIComponent(text);
+    return fetch(url).then(function(r){
+      if (!r.ok) throw new Error('google '+r.status);
+      return r.json();
+    }).then(function(d){
+      if (!d || !d[0]) throw new Error('google boş yanıt');
+      return d[0].map(function(seg){ return seg && seg[0] ? seg[0] : ''; }).join('');
+    });
+  }
+  function translateViaMyMemory(text, target){
+    var chunks = splitForTranslate(text, 450);
+    return chunks.reduce(function(chain, chunk){
+      return chain.then(function(acc){
+        var url = 'https://api.mymemory.translated.net/get?q='+encodeURIComponent(chunk)+'&langpair=tr|'+target;
+        return fetch(url).then(function(r){ return r.json(); }).then(function(d){
+          if (!d || !d.responseData || d.responseStatus!==200 && d.responseStatus!=='200') throw new Error('mymemory');
+          return acc + d.responseData.translatedText;
+        });
+      });
+    }, Promise.resolve(''));
+  }
+  function translateText(text, target){
+    text = String(text||'').trim();
+    if (!text) return Promise.resolve('');
+    return translateViaGoogle(text, target).catch(function(){ return translateViaMyMemory(text, target); });
+  }
+
+  function autoTranslateProduct(){
+    if (translating) return;
+    saveProductLangFromFields(prodLang);
+    var nameTr = (els['pName_tr']||'').trim();
+    var descTr = (els['pDesc_tr']||'').trim();
+    if (!nameTr && !descTr){ toast('Önce Türkçe ad / açıklama yazın.','error'); return; }
+    var overwrite = !!(els.translateOverwrite && els.translateOverwrite.checked);
+    var targets = LANGS.filter(function(l){ return l!=='tr'; });
+    var jobs = [];
+    targets.forEach(function(l){
+      if (nameTr && (overwrite || !(els['pName_'+l]||'').trim())) jobs.push({ key:'pName_'+l, lang:l, text:nameTr, max:120 });
+      if (descTr && (overwrite || !(els['pDesc_'+l]||'').trim())) jobs.push({ key:'pDesc_'+l, lang:l, text:descTr, max:1200 });
+    });
+    if (!jobs.length){ toast('Çevrilecek boş alan yok (üzerine yazmayı işaretleyebilirsiniz).','info'); return; }
+
+    translating = true;
+    var btn = els.autoTranslate, oldLabel = btn ? btn.textContent : '';
+    if (btn){ btn.disabled = true; btn.textContent = 'Çevriliyor…'; }
+
+    var failed = 0;
+    // Diller arası paralel, istekler tek tek (hız sınırına takılmamak için dil başına sıralı)
+    var byLang = {};
+    jobs.forEach(function(job){ (byLang[job.lang] = byLang[job.lang] || []).push(job); });
+    Promise.all(Object.keys(byLang).map(function(l){
+      return byLang[l].reduce(function(chain, job){
+        return chain.then(function(){
+          return translateText(job.text, job.lang).then(function(out){
+            els[job.key] = out.slice(0, job.max);
+          }).catch(function(){ failed++; });
+        });
+      }, Promise.resolve());
+    })).then(function(){
+      loadProductLangToFields(prodLang);
+      if (failed===jobs.length) toast('Çeviri servisine ulaşılamadı. Daha sonra tekrar deneyin.','error');
+      else if (failed) toast('Bazı alanlar çevrilemedi ('+failed+'/'+jobs.length+'). Tekrar deneyebilirsiniz.','error');
+      else toast('Çeviri tamam. Dil sekmelerinden kontrol edip kaydedin.','success');
+    }).then(function(){
+      translating = false;
+      if (btn){ btn.disabled = false; btn.textContent = oldLabel; }
+    });
+  }
+
   function clearProductForm(){
     editingId = null; pendingFile = null; currentImagePath = ''; pendingFile2 = null; currentImagePath2 = '';
     LANGS.forEach(function(l){ els['pName_'+l]=''; els['pDesc_'+l]=''; });
@@ -1325,6 +1412,7 @@
   function bind(){
     if (els.loginForm) els.loginForm.addEventListener('submit', signIn);
     if (els.productForm) els.productForm.addEventListener('submit', saveProduct);
+    if (els.autoTranslate) els.autoTranslate.addEventListener('click', autoTranslateProduct);
     var exportBtn = byId('export-xlsx-btn');
     if (exportBtn) exportBtn.addEventListener('click', exportProductsExcel);
     if (els.logoutBtn) els.logoutBtn.addEventListener('click', signOut);
@@ -1408,6 +1496,7 @@
     els.panelTitle=byId('topbar-title');
     els.productForm=byId('product-form'); els.productId=byId('product-id');
     els.productLangTabs=byId('product-lang-tabs');
+    els.autoTranslate=byId('p-autotranslate'); els.translateOverwrite=byId('p-translate-overwrite');
     LANGS.forEach(function(l){ els['pName_'+l]=''; els['pDesc_'+l]=''; });
     els.price=byId('p-price'); els.stock=byId('p-stock'); els.categoryId=byId('p-category-id');
     els.image=byId('p-image'); els.preview=byId('image-preview'); els.removeImage=byId('remove-image');

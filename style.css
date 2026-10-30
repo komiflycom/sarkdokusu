@@ -1957,3 +1957,15 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 }
 .pd-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
 .pd-thumb.is-on, .pd-thumb:hover { opacity: 1; border-color: var(--brass, #b8893b); }
+
+
+/* ---- Otomatik çeviri satırı ---- */
+.translate-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin: 0 0 14px;
+}
+.translate-row .translate-overwrite { margin: 0; font-size: 13px; color: var(--ink-soft); }
+.translate-row .btn[disabled] { opacity: .6; cursor: wait; }
