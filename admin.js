@@ -134,6 +134,72 @@
     busy=state;
     if (els.saveBtn){ els.saveBtn.disabled=state; if(els.saveLabel) els.saveLabel.textContent = state ? (label||'Kaydediliyor…') : 'Ürünü kaydet'; }
   }
+
+  /* ===================== Görsel hazırlama (telefon fotoğrafları için) =====================
+     Telefon kameraları 4–12 MB fotoğraf üretir. Yüklemeden önce tarayıcıda
+     yeniden boyutlandırıp sıkıştırıyoruz; iPhone HEIC ve Android kamera çıktıları
+     da JPEG/WebP'ye çevrilir. EXIF yönü uygulanır (yan dönmüş fotoğraf olmaz). */
+  function loadBitmap(file){
+    if (window.createImageBitmap){
+      return createImageBitmap(file, { imageOrientation:'from-image' }).catch(function(){ return createImageBitmap(file); }).catch(function(){ return loadViaImg(file); });
+    }
+    return loadViaImg(file);
+  }
+  function loadViaImg(file){
+    return new Promise(function(resolve, reject){
+      var url = URL.createObjectURL(file), img = new Image();
+      img.onload = function(){ URL.revokeObjectURL(url); resolve(img); };
+      img.onerror = function(){ URL.revokeObjectURL(url); reject(new Error('Görsel okunamadı')); };
+      img.src = url;
+    });
+  }
+  function canvasToBlob(canvas, type, q){
+    return new Promise(function(res){ canvas.toBlob(function(b){ res(b); }, type, q); });
+  }
+  function prepareImage(file, maxBytes, maxDim){
+    var type = String(file.type||'').toLowerCase();
+    var isImage = /^image\//.test(type) || /\.(jpe?g|png|webp|heic|heif)$/i.test(file.name||'');
+    if (!isImage) return Promise.resolve(file);
+    if (ALLOWED[type] && file.size <= maxBytes * 0.6) return Promise.resolve(file); // zaten küçük
+    return loadBitmap(file).then(function(bmp){
+      var w = bmp.width, h = bmp.height, scale = Math.min(1, maxDim / Math.max(w, h));
+      var cw = Math.max(1, Math.round(w*scale)), ch = Math.max(1, Math.round(h*scale));
+      var attempts = [ [cw,ch,0.86], [cw,ch,0.76], [Math.round(cw*.8),Math.round(ch*.8),0.74], [Math.round(cw*.6),Math.round(ch*.6),0.7] ];
+      var keepPng = (type === 'image/png');
+      function run(i){
+        var a = attempts[Math.min(i, attempts.length-1)];
+        var c = document.createElement('canvas'); c.width=a[0]; c.height=a[1];
+        var ctx = c.getContext('2d');
+        var outType = (keepPng && i===0) ? 'image/png' : 'image/jpeg';
+        if (outType === 'image/jpeg'){ ctx.fillStyle='#fff'; ctx.fillRect(0,0,c.width,c.height); }
+        ctx.drawImage(bmp, 0, 0, c.width, c.height);
+        return canvasToBlob(c, outType, a[2]).then(function(blob){
+          if (!blob) throw new Error('Görsel sıkıştırılamadı');
+          if (blob.size > maxBytes && i < attempts.length-1) return run(i+1);
+          var ext = outType==='image/png' ? 'png' : 'jpg';
+          var base = String(file.name||'foto').replace(/\.[^.]+$/,'') || 'foto';
+          return new File([blob], base+'.'+ext, { type: outType, lastModified: Date.now() });
+        });
+      }
+      return run(0);
+    });
+  }
+  /* input değişince dosyayı hazırla, sonra asıl işleyiciyi çalıştır */
+  function withPrepare(input, handler, maxBytes, maxDim){
+    return function(){
+      var f = input.files && input.files[0];
+      if (!f) return handler();
+      showAlert(els.globalAlert, 'Fotoğraf hazırlanıyor…', 'info');
+      prepareImage(f, maxBytes, maxDim).then(function(nf){
+        try { var dt = new DataTransfer(); dt.items.add(nf); input.files = dt.files; } catch(e){}
+        showAlert(els.globalAlert, '');
+        handler();
+      }).catch(function(){
+        showAlert(els.globalAlert, '');
+        handler(); // orijinal dosya ile devam; boyut/format hatası normal şekilde gösterilir
+      });
+    };
+  }
   function validateFile(file, max){
     if (!file) return null;
     var type = String(file.type||'').toLowerCase();
@@ -1266,8 +1332,8 @@
     if (els.resetBtn) els.resetBtn.addEventListener('click', function(){
       setTimeout(function(){ if (editingId){ var p=products.filter(function(x){return x.id===editingId;})[0]; if (p){ startEditProduct(p); return; } } clearProductForm(); },0);
     });
-    if (els.image) els.image.addEventListener('change', onProductFileChange);
-    if (els.image2) els.image2.addEventListener('change', onProductFileChange2);
+    if (els.image) els.image.addEventListener('change', withPrepare(els.image, onProductFileChange, MAX_FILE_BYTES, 1600));
+    if (els.image2) els.image2.addEventListener('change', withPrepare(els.image2, onProductFileChange2, MAX_FILE_BYTES, 1600));
     if (els.removeImage2) els.removeImage2.addEventListener('click', function(){
       pendingFile2=null; currentImagePath2='';
       if (els.image2) els.image2.value='';
@@ -1296,12 +1362,12 @@
       setTimeout(function(){ if (catEditingId){ var c=categories.filter(function(x){return x.id===catEditingId;})[0]; if (c){ startEditCategory(c); return; } } clearCategoryForm(); },0);
     });
     if (els.bannerForm) els.bannerForm.addEventListener('submit', saveBanner);
-    if (els.bannerImage) els.bannerImage.addEventListener('change', onBannerFileChange);
+    if (els.bannerImage) els.bannerImage.addEventListener('change', withPrepare(els.bannerImage, onBannerFileChange, MAX_ASSET_BYTES, 2000));
     if (els.bannerRemoveImage) els.bannerRemoveImage.addEventListener('click', removeBannerImage);
     if (els.settingsForm) els.settingsForm.addEventListener('submit', saveSettings);
-    if (els.sLogo) els.sLogo.addEventListener('change', onLogoFileChange);
+    if (els.sLogo) els.sLogo.addEventListener('change', withPrepare(els.sLogo, onLogoFileChange, MAX_ASSET_BYTES, 1024));
     if (els.sLogoRemove) els.sLogoRemove.addEventListener('click', removeLogo);
-    var heroBgInput=byId('hero-background-image'); if(heroBgInput) heroBgInput.addEventListener('change',onHeroBackgroundFileChange);
+    var heroBgInput=byId('hero-background-image'); if(heroBgInput) heroBgInput.addEventListener('change',withPrepare(heroBgInput,onHeroBackgroundFileChange,MAX_ASSET_BYTES,2200));
     var heroBgSave=byId('hero-background-save'); if(heroBgSave) heroBgSave.addEventListener('click',saveHeroBackground);
     var heroBgRemove=byId('hero-background-remove'); if(heroBgRemove) heroBgRemove.addEventListener('click',removeHeroBackground);
     // İletişim formu

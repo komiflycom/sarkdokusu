@@ -174,8 +174,8 @@
                 <div class="image-picker">
                   <div class="image-preview" id="image-preview" aria-hidden="true">Fotoğraf yok</div>
                   <div class="ip-body">
-                    <input type="file" id="p-image" accept="image/jpeg,image/png,image/webp">
-                    <span class="hint">JPG, PNG veya WebP · max 3 MB · Önerilen: 800 × 1000 px (4:5 oran)</span>
+                    <input type="file" id="p-image" accept="image/*">
+                    <span class="hint">Galeriden seç veya kamerayla çek · otomatik küçültülür · Önerilen: 800 × 1000 px (4:5 oran)</span>
                     <button class="btn btn-outline btn-sm" id="remove-image" type="button" hidden>Fotoğrafı kaldır</button>
                   </div>
                 </div>
@@ -186,7 +186,7 @@
                 <div class="image-picker">
                   <div class="image-preview" id="image-preview-2" aria-hidden="true">Fotoğraf yok</div>
                   <div class="ip-body">
-                    <input type="file" id="p-image-2" accept="image/jpeg,image/png,image/webp">
+                    <input type="file" id="p-image-2" accept="image/*">
                     <span class="hint">Vitrinde ürünün üzerine gelince gösterilir; ürüne tıklayınca ana fotoğrafla birlikte görünür. Aynı boyut/oran önerilir (800 × 1000 px).</span>
                     <span class="hint" id="img2-warn" hidden style="color:#b3261e">Veritabanında <b>image_url_2</b> sütunu yok. Supabase SQL Editor'de şunu çalıştırın: <code>alter table products add column image_url_2 text;</code></span>
                     <button class="btn btn-outline btn-sm" id="remove-image-2" type="button" hidden>2. fotoğrafı kaldır</button>
@@ -336,7 +336,7 @@
                 <div class="image-picker">
                   <div class="image-preview logo-preview" id="logo-preview" aria-hidden="true">Logo yok</div>
                   <div class="ip-body">
-                    <input type="file" id="s-logo" accept="image/jpeg,image/png,image/webp">
+                    <input type="file" id="s-logo" accept="image/*">
                     <span class="hint">PNG, JPG veya WebP · max 5 MB · Önerilen: 512 × 512 px, kare, şeffaf zeminli PNG (yuvarlak logo ise kenarlara boşluk bırakmadan kırpın)</span>
                     <button class="btn btn-outline btn-sm" id="remove-logo" type="button" hidden>Logoyu kaldır</button>
                   </div>
@@ -405,7 +405,7 @@
                 <div class="image-picker">
                   <div class="image-preview banner-preview" id="banner-preview" aria-hidden="true">Görsel yok</div>
                   <div class="ip-body">
-                    <input type="file" id="s-banner-img" accept="image/jpeg,image/png,image/webp">
+                    <input type="file" id="s-banner-img" accept="image/*">
                     <span class="hint">JPG, PNG veya WebP · max 5 MB · Önerilen: 1440 × 300 px (yatay, tam genişlik)</span>
                     <button class="btn btn-outline btn-sm" id="remove-banner-img" type="button" hidden>Görseli kaldır</button>
                   </div>
@@ -469,7 +469,7 @@
             <p class="hint" style="margin-bottom:16px">Ana sayfanın en üst giriş alanındaki arka plan görselini buradan yükleyip değiştirebilirsiniz. Önerilen masaüstü ölçüsü <strong>1920 × 800 px</strong>; yatay WebP/JPG/PNG, en fazla 5 MB. Halı desenini veya ürün detayını orta bölgede tutun. Başlıkların okunması için görselin üzerine koyu bir katman uygulanır.</p>
             <div class="field">
               <label for="hero-background-image">Hero arka plan görseli</label>
-              <input type="file" id="hero-background-image" accept="image/jpeg,image/png,image/webp">
+              <input type="file" id="hero-background-image" accept="image/*">
               <div class="image-preview" id="hero-background-preview" style="width:100%;max-width:620px;aspect-ratio:12/5;margin-top:12px;background-size:cover;background-position:center">Görsel seçilmedi</div>
               <div class="form-actions" style="margin-top:14px;gap:10px">
                 <button class="btn" id="hero-background-save" type="button">Arka planı kaydet</button>

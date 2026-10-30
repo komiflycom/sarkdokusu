@@ -14,8 +14,8 @@
     tr: {
       'page.title': 'Şark Dokusu — Doğal Dokunuşlu El Emeği Ürünler',
       'nav.aria': 'Ana menü', 'nav.collection': 'Koleksiyon', 'nav.about': 'Hakkımızda', 'nav.order': 'Sipariş Ver', 'nav.support': 'Canlı Destek', 'nav.support_aria': 'Canlı Destek — WhatsApp', 'wa.support_greeting': 'Merhaba, {store} hakkında bilgi almak istiyorum.',
-      'hero.eyebrow': 'Elişi · Tarihi · Doğal',
-      'hero.title': 'El emeği <em>halı, giyim</em> ve tarihi ürünler',
+      'hero.eyebrow': 'Antika · El Dokuma · Şark Mirası',
+      'hero.title': 'Asırlık motifler, <em>el dokuma halılar</em> ve tarihi parçalar',
       'hero.lead': 'Şark Dokusu; usta ellerden çıkan halılar, el işi giysiler ve geçmişten gelen özel parçaları tek koleksiyonda buluşturur. Beğendiğiniz ürünü seçin, WhatsApp\'tan saniyeler içinde sipariş verin.',
       'hero.cta_explore': 'Koleksiyonu keşfet', 'hero.cta_story': 'Hikâyemiz',
       'catalog.title': 'Koleksiyon', 'catalog.subtitle': 'Özenle seçilmiş ürünlerimizi keşfedin.',
