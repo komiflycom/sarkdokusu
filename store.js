@@ -172,16 +172,16 @@
     });
   }
   function fetchCategories(){
-    return window.__sarkSupabase.from('categories')
-      .select('id,name_tr,name_en,name_ar,name_de,name_fr,parent_id,sort_order,active')
-      .eq('active',true).order('sort_order',{ascending:true})
+    /* Filtre/sıralama sunucuda değil istemcide yapılır: active kolonu NULL olsa
+       ya da sort_order kolonu eksik olsa bile kategoriler kaybolmaz. Hata olursa
+       vitrin bozulmaz, kategoriler ürünlerden türetilir. */
+    return window.__sarkSupabase.from('categories').select('*')
       .then(function(res){
-        if (res.error){
-          /* categories tablosu yoksa kategorileri ürünlerden türet */
-          if (isSchemaError(res.error)) return [];
-          throw res.error;
-        }
-        return Array.isArray(res.data)?res.data:[];
+        if (res.error){ if (window.console&&console.warn) console.warn('[Şark Dokusu] kategoriler okunamadı:', res.error); return []; }
+        var rows=Array.isArray(res.data)?res.data:[];
+        rows=rows.filter(function(c){ return c && c.active!==false; });
+        rows.sort(function(x,y){ return (Number(x.sort_order)||0)-(Number(y.sort_order)||0); });
+        return rows;
       });
   }
   /* site_settings tek satırlık bir tablodur ama satır henüz oluşmamış olabilir.
@@ -926,7 +926,7 @@
   function updateClearButton(){ if (!els.clear) return; els.clear.classList.toggle('is-visible', state.search.length>0); }
 
   /* ---- Yükleme (önbellekli: ikinci ziyarette anında açılır) ---- */
-  var CACHE_KEY='sark-data-v2', CACHE_TTL=24*3600*1000;
+  var CACHE_KEY='sark-data-v3', CACHE_TTL=24*3600*1000;
   function readCache(){
     try { var c=JSON.parse(localStorage.getItem(CACHE_KEY)||'null'); if (c&&c.t&&Date.now()-c.t<CACHE_TTL&&Array.isArray(c.products)) return c; } catch(e){}
     return null;
