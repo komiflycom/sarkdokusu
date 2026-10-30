@@ -198,6 +198,17 @@ h1, h2, h3, .section-title, .catalog-head h2, .card-title { font-family: var(--f
   .card-foot .btn { font-size: 12px; padding: 10px 8px; }
 }
 .cs-pill.is-sub.is-active { background: var(--h-wine); border-color: var(--h-wine); color: var(--h-gold-light); }
-.cat-roots { display: none; }
 .hero-inner { padding-top: clamp(36px, 5vw, 64px); padding-bottom: clamp(44px, 5.5vw, 72px); }
 .hero h1 { font-size: clamp(2.3rem, 5vw, 3.9rem); }
+
+/* Masaüstünde Trendyol tarzı menü (üstte ana kategoriler + hover'da mega menü + yan filtre); şerit yalnızca mobilde */
+@media (min-width: 821px) { .cat-strip { display: none !important; } }
+.cat-root { font-weight: 600; }
+.cat-menu { background: var(--h-paper); border-top: 1px solid var(--h-gold); box-shadow: 0 18px 40px rgba(59,15,19,.25); }
+.cm-root-btn { color: var(--h-walnut); border-radius: 2px; }
+.cm-root.is-active > .cm-root-btn, .cm-root-btn:hover { background: rgba(201,164,92,.2); color: var(--h-wine); }
+.cm-root.is-active > .cm-root-btn .cm-ico, .cm-root-btn:hover .cm-ico { color: var(--h-wine); }
+.cm-group-title { color: var(--h-wine); font-family: var(--font-display); font-size: 18px; font-weight: 700; }
+.cm-link { color: var(--h-walnut); }
+.cm-link:hover, .cm-viewall { color: var(--h-wine); }
+.side-cats { position: sticky; top: 16px; align-self: start; }
