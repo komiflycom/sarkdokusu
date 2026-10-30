@@ -212,3 +212,9 @@ h1, h2, h3, .section-title, .catalog-head h2, .card-title { font-family: var(--f
 .cm-link { color: var(--h-walnut); }
 .cm-link:hover, .cm-viewall { color: var(--h-wine); }
 .side-cats { position: sticky; top: 16px; align-self: start; }
+
+/* Tablet genişliğinde de soldaki kategori paneli görünsün */
+@media (min-width: 821px) and (max-width: 980px) {
+  .catalog-layout { grid-template-columns: 200px minmax(0, 1fr); }
+  .side-cats { display: block; }
+}

@@ -654,8 +654,9 @@
     return p;
   }
   function productInSet(p,set){
-    if (p.category_id) return !!set[p.category_id];
-    return !!set[(p.category||'').trim()];
+    if (p.category_id && set[p.category_id]) return true;
+    var n=(p.category||'').trim();
+    return !!(n && set[n]);
   }
   function countFor(id){
     var set=idSet(id), n=0;
