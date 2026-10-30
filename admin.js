@@ -1332,8 +1332,8 @@
     if (els.resetBtn) els.resetBtn.addEventListener('click', function(){
       setTimeout(function(){ if (editingId){ var p=products.filter(function(x){return x.id===editingId;})[0]; if (p){ startEditProduct(p); return; } } clearProductForm(); },0);
     });
-    if (els.image) els.image.addEventListener('change', withPrepare(els.image, onProductFileChange, MAX_FILE_BYTES, 1600));
-    if (els.image2) els.image2.addEventListener('change', withPrepare(els.image2, onProductFileChange2, MAX_FILE_BYTES, 1600));
+    if (els.image) els.image.addEventListener('change', withPrepare(els.image, onProductFileChange, 600*1024, 1200));
+    if (els.image2) els.image2.addEventListener('change', withPrepare(els.image2, onProductFileChange2, 600*1024, 1200));
     if (els.removeImage2) els.removeImage2.addEventListener('click', function(){
       pendingFile2=null; currentImagePath2='';
       if (els.image2) els.image2.value='';

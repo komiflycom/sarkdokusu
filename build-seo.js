@@ -223,7 +223,7 @@ function socials(settings) {
 
   fs.rmSync(OUT, { recursive: true, force: true });
   fs.mkdirSync(OUT, { recursive: true });
-  ['style.css', 'storefront.css', 'heritage.css', 'config.js', 'i18n.js', 'store.js', 'admin.html', 'admin.js', 'logo.png'].forEach((f) => fs.copyFileSync(path.join(ROOT, f), path.join(OUT, f)));
+  ['style.css', 'storefront.css', 'heritage.css', 'lite-supabase.js', 'config.js', 'i18n.js', 'store.js', 'admin.html', 'admin.js', 'logo.png'].forEach((f) => fs.copyFileSync(path.join(ROOT, f), path.join(OUT, f)));
 
   fs.readdirSync(ROOT).filter((f) => /^google[0-9a-f]+\.html$/i.test(f)).forEach((f) => fs.copyFileSync(path.join(ROOT, f), path.join(OUT, f)));
   const template = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
