@@ -517,6 +517,33 @@
     });
   }
 
+  function autoTranslateCategory(){
+    if (translating) return;
+    saveCatLangFromFields(catLang);
+    var nameTr = (els['catName_tr']||'').trim();
+    if (!nameTr){ toast('Önce Türkçe kategori adını yazın.','error'); return; }
+    var overwrite = !!(els.catTranslateOverwrite && els.catTranslateOverwrite.checked);
+    var jobs = LANGS.filter(function(l){ return l!=='tr' && (overwrite || !(els['catName_'+l]||'').trim()); });
+    if (!jobs.length){ toast('Çevrilecek boş alan yok (üzerine yazmayı işaretleyebilirsiniz).','info'); return; }
+    translating = true;
+    var btn = els.catAutoTranslate, oldLabel = btn ? btn.textContent : '';
+    if (btn){ btn.disabled = true; btn.textContent = 'Çevriliyor…'; }
+    var failed = 0;
+    Promise.all(jobs.map(function(l){
+      return translateText(nameTr, l).then(function(out){
+        els['catName_'+l] = out.slice(0, 80);
+      }).catch(function(){ failed++; });
+    })).then(function(){
+      loadCatLangToFields(catLang);
+      if (failed===jobs.length) toast('Çeviri servisine ulaşılamadı. Daha sonra tekrar deneyin.','error');
+      else if (failed) toast('Bazı diller çevrilemedi ('+failed+'/'+jobs.length+'). Tekrar deneyebilirsiniz.','error');
+      else toast('Çeviri tamam. Dil sekmelerinden kontrol edip kaydedin.','success');
+    }).then(function(){
+      translating = false;
+      if (btn){ btn.disabled = false; btn.textContent = oldLabel; }
+    });
+  }
+
   function clearProductForm(){
     editingId = null; setGallery([], []);
     LANGS.forEach(function(l){ els['pName_'+l]=''; els['pDesc_'+l]=''; });
@@ -1474,6 +1501,7 @@
     if (els.loginForm) els.loginForm.addEventListener('submit', signIn);
     if (els.productForm) els.productForm.addEventListener('submit', saveProduct);
     if (els.autoTranslate) els.autoTranslate.addEventListener('click', autoTranslateProduct);
+    if (els.catAutoTranslate) els.catAutoTranslate.addEventListener('click', autoTranslateCategory);
     var exportBtn = byId('export-xlsx-btn');
     if (exportBtn) exportBtn.addEventListener('click', exportProductsExcel);
     if (els.logoutBtn) els.logoutBtn.addEventListener('click', signOut);
@@ -1557,6 +1585,7 @@
     els.list=byId('admin-list'); els.productCount=byId('product-count'); els.listState=byId('list-state');
     els.categoryForm=byId('category-form'); els.catId=byId('cat-id'); els.catLangTabs=byId('cat-lang-tabs');
     LANGS.forEach(function(l){ els['catName_'+l]=''; });
+    els.catAutoTranslate=byId('cat-autotranslate'); els.catTranslateOverwrite=byId('cat-translate-overwrite');
     els.catParent=byId('cat-parent'); els.catSort=byId('cat-sort'); els.catActive=byId('cat-active');
     els.catSaveBtn=byId('cat-save-btn'); els.catSaveLabel=byId('cat-save-label');
     els.catResetBtn=byId('cat-reset-btn'); els.catCancelEdit=byId('cat-cancel-edit');
