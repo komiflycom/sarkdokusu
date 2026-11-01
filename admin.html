@@ -180,8 +180,12 @@
               <div class="field">
                 <label for="p-images">Ürün fotoğrafları <span class="hint" style="font-weight:400">(en fazla 8)</span></label>
                 <div class="gallery-picker">
-                  <input type="file" id="p-images" accept="image/*" multiple>
-                  <span class="hint">Birden fazla fotoğrafı aynı anda seçebilirsiniz (telefonda galeriden çoklu seçim). Otomatik küçültülür · Önerilen: 800 × 1000 px (4:5 oran). <b>İlk fotoğraf ana fotoğraftır</b>; ok düğmeleriyle sırayı değiştirebilirsiniz. Vitrinde 2. fotoğraf, ürünün üzerine gelince gösterilir; ürüne tıklayınca hepsi galeride görünür.</span>
+                  <div class="gallery-btns">
+                    <input type="file" id="p-images" accept="image/*" multiple>
+                    <button class="btn btn-outline btn-sm" id="p-camera-btn" type="button">📷 Kamerayla çek</button>
+                    <input type="file" id="p-camera" accept="image/*" capture="environment" hidden>
+                  </div>
+                  <span class="hint">Galeriden birden fazla fotoğraf seçebilir, <b>Kamerayla çek</b> düğmesiyle tek tek çekebilirsiniz (her çekim galeriye eklenir). Otomatik küçültülür · Önerilen: 800 × 1000 px (4:5 oran). <b>İlk fotoğraf ana fotoğraftır</b>; ok düğmeleriyle sırayı değiştirebilirsiniz. Vitrinde 2. fotoğraf, ürünün üzerine gelince gösterilir; ürüne tıklayınca hepsi galeride görünür.</span>
                   <span class="hint" id="img2-warn" hidden style="color:#b3261e">Veritabanında <b>images</b> sütunu yok; şu an yalnızca 2 fotoğraf kaydedilebilir. Supabase SQL Editor'de şunu çalıştırın: <code>alter table public.products add column if not exists images jsonb not null default '[]'::jsonb;</code></span>
                   <div class="gallery-grid" id="gallery-grid" aria-live="polite"></div>
                   <div class="gallery-empty" id="gallery-empty">Henüz fotoğraf yok</div>
