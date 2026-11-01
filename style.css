@@ -952,6 +952,46 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.
 }
 .image-picker input[type="file"]::file-selector-button:hover { background: var(--cream-deep); }
 
+/* Gallery picker (çoklu ürün fotoğrafı) */
+.gallery-picker {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--cream);
+}
+.gallery-picker input[type="file"] { font-size: 12.5px; width: 100%; max-width: 100%; }
+.gallery-picker input[type="file"]::file-selector-button {
+  font-size: 12.5px; padding: 6px 12px; margin-right: 10px;
+  border: 1px solid var(--line); border-radius: 999px;
+  background: #fff; color: var(--olive-800); cursor: pointer;
+}
+.gallery-picker input[type="file"]::file-selector-button:hover { background: var(--cream-deep); }
+.gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 10px; }
+.gallery-grid:empty { display: none; }
+.gallery-empty { font-size: 12px; color: #a9b19e; text-align: center; padding: 6px 0; }
+.gallery-grid:not(:empty) + .gallery-empty { display: none; }
+.gal-item { position: relative; display: grid; gap: 4px; }
+.gal-thumb {
+  position: relative; aspect-ratio: 4 / 5; border-radius: var(--radius-sm);
+  border: 1px solid var(--line); background: var(--cream-deep) center/cover no-repeat; overflow: hidden;
+}
+.gal-item.is-cover .gal-thumb { outline: 2px solid var(--olive-800); outline-offset: 1px; }
+.gal-badge {
+  position: absolute; left: 4px; top: 4px; font-size: 10px; line-height: 1;
+  padding: 3px 6px; border-radius: 999px; background: var(--olive-800); color: #fff;
+}
+.gal-new { position: absolute; right: 4px; top: 4px; font-size: 10px; line-height: 1; padding: 3px 6px; border-radius: 999px; background: #fff; color: var(--olive-800); border: 1px solid var(--line); }
+.gal-actions { display: flex; gap: 4px; justify-content: space-between; }
+.gal-actions button {
+  flex: 1; min-height: 30px; padding: 0; font-size: 14px; line-height: 1;
+  border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--olive-800); cursor: pointer;
+}
+.gal-actions button:hover:not(:disabled) { background: var(--cream-deep); }
+.gal-actions button:disabled { opacity: .35; cursor: default; }
+.gal-actions .gal-del { color: #b3261e; }
+
 /* Admin product list */
 .admin-list { display: grid; gap: 10px; list-style: none; margin: 0; padding: 0; }
 

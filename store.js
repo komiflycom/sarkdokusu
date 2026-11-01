@@ -151,6 +151,7 @@
      eksik kolon tüm vitrini boş bırakmaz. */
   var PRODUCT_COLS_FULL='id,name,description,price,category,category_id,image_url,stock,active,created_at,name_tr,name_en,name_ar,name_de,name_fr,desc_tr,desc_en,desc_ar,desc_de,desc_fr';
   var PRODUCT_COLS_IMG2=PRODUCT_COLS_FULL+',image_url_2';
+  var PRODUCT_COLS_GALLERY=PRODUCT_COLS_IMG2+',images';
   var PRODUCT_COLS_BASE='id,name,description,price,category,image_url,stock,active,created_at';
   function isSchemaError(err){
     if (!err) return false;
@@ -160,14 +161,18 @@
   function fetchProducts(){
     var sb=window.__sarkSupabase;
     function q(cols){ return sb.from('products').select(cols).eq('active',true).order('created_at',{ascending:false}); }
-    /* Sırayla dene: 2. görselli tam set -> tam set -> temel set */
-    return q(PRODUCT_COLS_IMG2).then(function(res){
-      if (!res.error) return Array.isArray(res.data)?res.data:[];
-      if (!isSchemaError(res.error)) throw res.error;
-      return q(PRODUCT_COLS_FULL).then(function(r1){
-        if (!r1.error) return Array.isArray(r1.data)?r1.data:[];
-        if (!isSchemaError(r1.error)) throw r1.error;
-        return q(PRODUCT_COLS_BASE).then(function(r2){ if (r2.error) throw r2.error; return Array.isArray(r2.data)?r2.data:[]; });
+    /* Sırayla dene: galeri (images) -> 2. görselli set -> tam set -> temel set */
+    return q(PRODUCT_COLS_GALLERY).then(function(res0){
+      if (!res0.error) return Array.isArray(res0.data)?res0.data:[];
+      if (!isSchemaError(res0.error)) throw res0.error;
+      return q(PRODUCT_COLS_IMG2).then(function(res){
+        if (!res.error) return Array.isArray(res.data)?res.data:[];
+        if (!isSchemaError(res.error)) throw res.error;
+        return q(PRODUCT_COLS_FULL).then(function(r1){
+          if (!r1.error) return Array.isArray(r1.data)?r1.data:[];
+          if (!isSchemaError(r1.error)) throw r1.error;
+          return q(PRODUCT_COLS_BASE).then(function(r2){ if (r2.error) throw r2.error; return Array.isArray(r2.data)?r2.data:[]; });
+        });
       });
     });
   }
@@ -557,9 +562,19 @@
   }
 
   /* ---- Ürün detay paneli ---- */
+  /* Galeri: images (jsonb dizi) varsa onu, yoksa eski image_url / image_url_2 alanlarını kullan. */
+  function productImagePaths(product){
+    var list=product&&product.images;
+    if (typeof list==='string'){ try{ list=JSON.parse(list); }catch(e){ list=null; } }
+    if (Array.isArray(list)){
+      list=list.filter(function(x){ return typeof x==='string'&&x.trim(); });
+      if (list.length) return list;
+    }
+    return [product&&product.image_url,product&&product.image_url_2].filter(function(x){ return x&&String(x).trim(); });
+  }
   function openProductDetail(product){
     var name=getProdName(product), desc=getProdDesc(product);
-    var paths=[product.image_url,product.image_url_2].filter(function(x){ return x && String(x).trim(); });
+    var paths=productImagePaths(product);
     var panel=document.createElement('div'); panel.className='prod-detail-overlay';
     panel.setAttribute('role','dialog'); panel.setAttribute('aria-modal','true');
     panel.setAttribute('aria-label',name||'Ürün detayı');

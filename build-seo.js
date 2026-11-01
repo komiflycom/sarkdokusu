@@ -200,6 +200,18 @@ function imageUrl(cfg, p, field) {
   if (/^https?:\/\//i.test(v)) return v;
   return cfg.supabaseUrl + '/storage/v1/object/public/product-images/' + v.replace(/^\/+/, '');
 }
+function productImageList(cfg, p) {
+  let list = p.images;
+  if (typeof list === 'string') { try { list = JSON.parse(list); } catch (e) { list = null; } }
+  const raw = Array.isArray(list) && list.length ? list : [p.image_url, p.image_url_2];
+  const out = [];
+  raw.forEach((v) => {
+    if (typeof v !== 'string' || !v.trim()) return;
+    const u = imageUrl(cfg, { _x: v.trim() }, '_x');
+    if (u && out.indexOf(u) === -1) out.push(u);
+  });
+  return out.slice(0, 8);
+}
 const pName = (p, l, dict) => p['name_' + l] || p.name || p.name_tr || dict[l]['product.unnamed'];
 const pDesc = (p, l) => p['desc_' + l] || p.description || p.desc_tr || '';
 
@@ -311,8 +323,8 @@ function socials(settings) {
       const nm = settings.store_name_i18n && typeof settings.store_name_i18n === 'object' ? settings.store_name_i18n : null;
       const brand = (nm && (nm[lang] || nm.tr)) || settings.store_name || cfg.storeName || 'Şark Dokusu';
       const name = pName(p, lang, DICT), desc = pDesc(p, lang);
-      const img = imageUrl(cfg, p);
-      const img2 = imageUrl(cfg, p, 'image_url_2');
+      const gallery = productImageList(cfg, p);
+      const img = gallery[0] || '';
       const cat = cats[p.category_id] ? (cats[p.category_id]['name_' + lang] || cats[p.category_id].name_tr) : (p.category || '');
       const stock = Number(p.stock), hasStock = p.stock !== null && p.stock !== undefined && p.stock !== '' && isFinite(stock);
       const out = hasStock && stock <= 0;
@@ -325,7 +337,7 @@ function socials(settings) {
 
       const ld = [
         { '@context': 'https://schema.org', '@type': 'Product', '@id': pageUrl + '#product', name, description: desc || description, sku: String(p.id),
-          image: img ? (img2 ? [img, img2] : [img]) : undefined, brand: { '@type': 'Brand', name: brand }, category: cat || undefined, inLanguage: lang,
+          image: gallery.length ? gallery : undefined, brand: { '@type': 'Brand', name: brand }, category: cat || undefined, inLanguage: lang,
           offers: Number.isFinite(Number(p.price)) && p.price !== '' && p.price !== null ? {
             '@type': 'Offer', url: pageUrl, price: Number(p.price).toFixed(2), priceCurrency: currencyOf(lang),
             availability: out ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock', itemCondition: 'https://schema.org/NewCondition',
